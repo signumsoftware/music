@@ -153,8 +153,9 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.EntityOperationClick(ProcessOperation.Execute);
 
             selenium.WaitAjaxFinished(() => 
-                !selenium.EntityOperationEnabled(ProcessOperation.Execute) &&
-                !selenium.EntityOperationEnabled(ProcessOperation.Suspend));
+                selenium.EntityOperationDisabled(ProcessOperation.Execute) &&
+                selenium.EntityOperationDisabled(ProcessOperation.Cancel) &&
+                selenium.EntityOperationDisabled(ProcessOperation.Suspend));
 
             selenium.PopupCancel("New_");
         }
@@ -192,8 +193,9 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.EntityOperationClick(ProcessOperation.Execute);
 
             selenium.WaitAjaxFinished(() =>
-                !selenium.EntityOperationEnabled(ProcessOperation.Execute) &&
-                !selenium.EntityOperationEnabled(ProcessOperation.Suspend));
+                selenium.EntityOperationDisabled(ProcessOperation.Execute) &&
+                selenium.EntityOperationDisabled(ProcessOperation.Cancel) &&
+                selenium.EntityOperationDisabled(ProcessOperation.Suspend));
 
             selenium.PopupCancel("New_");
 

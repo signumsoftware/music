@@ -77,7 +77,7 @@ namespace Signum.Web.Extensions.Sample.Test
         {
             CheckLoginAndOpen(ViewRoute("Album", 1));
 
-            Assert.IsFalse(selenium.EntityOperationEnabled(AlbumOperation.Save));
+            Assert.IsTrue(selenium.EntityOperationDisabled(AlbumOperation.Save));
 
             selenium.EntityMenuConstructFromClick(AlbumOperation.Clone);
             selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlbumOperation.Save));
