@@ -79,7 +79,7 @@ namespace Signum.Web.Extensions.Sample.Test
             CreateNewPart("UserQueryPart");
             string part0 = partsPrefix + "0_";
             selenium.Type(part0 + "Title", "Last Albums");
-            selenium.LineFindAndSelectElements(part0 + "Content_UserQuery_", false, new int[]{ 0 });
+            selenium.LineFindAndSelectElements(part0 + "Content_UserQuery_", new int[]{ 0 });
 
             //CountSearchControlPart with userquery created in UQ_Create test
             CreateNewPart("CountSearchControlPart");
@@ -88,7 +88,7 @@ namespace Signum.Web.Extensions.Sample.Test
             string part1ContentUQsPrefix = part1 + "Content_UserQueries_";
             selenium.LineCreate(part1ContentUQsPrefix, false, 0);
             selenium.RepeaterWaitUntilItemLoaded(part1ContentUQsPrefix, 0);
-            selenium.LineFindAndSelectElements(part1ContentUQsPrefix + "0_UserQuery_", false, new int[] { 0 });
+            selenium.LineFindAndSelectElements(part1ContentUQsPrefix + "0_UserQuery_", new int[] { 0 });
             
             //LinkListPart - drag to second column
             CreateNewPart("LinkListPart");

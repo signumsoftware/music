@@ -74,7 +74,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.Type("New_Name", "ctxtest");
             selenium.Type("New_Year", DateTime.Now.Year.ToString());
 
-            selenium.LineFindAndSelectElements("New_Label_", false, new int[] { 0 });
+            selenium.LineFindAndSelectElements("New_Label_", new int[] { 0 });
 
             selenium.Click("New_btnOk");
             selenium.WaitForPageToLoad(PageLoadTimeout);

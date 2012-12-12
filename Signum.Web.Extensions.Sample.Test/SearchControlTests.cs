@@ -414,7 +414,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(10));
 
             selenium.AddFilter(0);
-            selenium.LineFindAndSelectElements("value_0_", false, new int[] { 2 });
+            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
             selenium.Search();
             selenium.AssertMultiplyMessage(true);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
@@ -428,7 +428,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.CheckAddColumnEnabled(false);
 
             selenium.AddFilter(0);
-            selenium.LineFindAndSelectElements("value_0_", false, new int[] { 2 });
+            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
             selenium.Search();
             selenium.AssertMultiplyMessage(false);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
@@ -454,7 +454,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             selenium.AddFilter(0);
             selenium.FilterSelectOperation(0, "value=DistinctTo");
-            selenium.LineFindAndSelectElements("value_0_", false, new int[] { 2 });
+            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
             selenium.Search();
             selenium.AssertMultiplyMessage(false);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));

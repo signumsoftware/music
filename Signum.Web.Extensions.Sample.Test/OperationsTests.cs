@@ -52,7 +52,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             selenium.Type("Name", "test");
             selenium.Type("Year", "2010");
-            selenium.LineFindWithImplAndSelectElements("Author_", "Band", false, new int[]{0});
+            selenium.LineFindWithImplAndSelectElements("Author_", "Band", new int[]{0});
             selenium.Select("Label_sfCombo", "label=Virgin");
 
             selenium.EntityOperationClick(AlbumOperation.Save);
@@ -101,7 +101,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             selenium.Type("{0}Name".Formato(popupPrefix), "test2");
             selenium.Type("{0}Year".Formato(popupPrefix), "2010");
-            selenium.LineFindAndSelectElements("{0}Label_".Formato(popupPrefix), false, new int[] { 0 });
+            selenium.LineFindAndSelectElements("{0}Label_".Formato(popupPrefix), new int[] { 0 });
 
             selenium.Click("{0}btnOk".Formato(popupPrefix));
             selenium.WaitForPageToLoad(PageLoadTimeout);

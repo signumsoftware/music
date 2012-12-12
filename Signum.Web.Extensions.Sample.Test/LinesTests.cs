@@ -63,7 +63,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             //find with implementations
             selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, false, new int[] { 0 });
+            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 });
             selenium.EntityLineHasValue(prefix, true);
         }
 
@@ -93,7 +93,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             //find with implementations
             selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", false, new int[] { 0 });
+            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", new int[] { 0 });
             selenium.EntityLineHasValue(prefix, true);
         }
 
@@ -118,7 +118,7 @@ namespace Signum.Web.Extensions.Sample.Test
 
             //find with implementations
             selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", false, new int[]{0});
+            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", new int[]{0});
             selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
         }
 
@@ -146,7 +146,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.ListLineElementExists(prefix, 4, false);
 
             //Find multiple
-            selenium.LineFindAndSelectElements(prefix, true, new int[] { 4, 5 }, 4);
+            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 4);
             selenium.ListLineElementExists(prefix, 4, true);
             selenium.ListLineElementExists(prefix, 5, true);
 
@@ -160,7 +160,7 @@ namespace Signum.Web.Extensions.Sample.Test
             Assert.IsTrue(selenium.IsElementPresent("jq=#OtherAwards_0_sfEntity"));
 
             //find with implementations
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, true, new int[] { 0 }, 1);
+            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 }, 1);
             selenium.ListLineElementExists(prefix, 1, true);
 
             //Delete
@@ -190,7 +190,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.ListLineElementExists(prefix, 1, true);
 
             //find multiple
-            selenium.LineFindAndSelectElements(prefix, true, new int[]{4,5}, 2);
+            selenium.LineFindAndSelectElements(prefix, new int[]{4,5}, 2);
             selenium.ListLineElementExists(prefix, 2, true);
             selenium.ListLineElementExists(prefix, 3, true);
 
@@ -226,7 +226,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.EntityListDetailHasValue(prefix, false);
 
             //find multiple
-            selenium.LineFindAndSelectElements(prefix, true, new int[] { 4, 5 }, 4);
+            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 4);
             selenium.ListLineElementExists(prefix, 4, true);
             selenium.ListLineElementExists(prefix, 5, true);
             selenium.EntityListDetailHasValue(prefix, true);
@@ -240,7 +240,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.Type("{0}0_Category".Formato(prefix), "test");
 
             //find with implementations
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, true, new int[] { 0 }, 1);
+            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 }, 1);
             selenium.ListLineElementExists(prefix, 1, true);
             selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
 
@@ -281,7 +281,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.RepeaterItemExists(prefix, 0, false);
 
             //find multiple: it exists because Find is overriden to true in this EntityRepeater
-            selenium.LineFindAndSelectElements(prefix, true, new int[]{4,5}, 4);
+            selenium.LineFindAndSelectElements(prefix, new int[]{4,5}, 4);
             selenium.RepeaterItemExists(prefix, 4, true);
             selenium.RepeaterItemExists(prefix, 5, true);
 
