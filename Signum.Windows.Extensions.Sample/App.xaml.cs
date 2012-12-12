@@ -11,7 +11,6 @@ using Signum.Windows.Operations;
 using Signum.Windows.Processes;
 using Signum.Windows.Reports;
 using Signum.Windows.Scheduler;
-using Signum.Entities.Operations;
 using Signum.Entities;
 using Signum.Entities.Basics;
 using Signum.Windows.Files;

@@ -3,10 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         
     xmlns:m="clr-namespace:Signum.Windows;assembly=Signum.Windows"
-   xmlns:ses="clr-namespace:Signum.Entities.Scheduler;assembly=Signum.Entities.Extensions"
+    xmlns:seb="clr-namespace:Signum.Entities.Basics;assembly=Signum.Entities"
+    xmlns:ses="clr-namespace:Signum.Entities.Scheduler;assembly=Signum.Entities.Extensions"
     xmlns:sep="clr-namespace:Signum.Entities.Processes;assembly=Signum.Entities.Extensions"
     xmlns:sea="clr-namespace:Signum.Entities.Authorization;assembly=Signum.Entities.Extensions"
-    xmlns:seo="clr-namespace:Signum.Entities.Operations;assembly=Signum.Entities.Extensions"
     xmlns:sef="clr-namespace:Signum.Entities.Files;assembly=Signum.Entities.Extensions"
     xmlns:ser="clr-namespace:Signum.Entities.Reports;assembly=Signum.Entities.Extensions"
     xmlns:seuq="clr-namespace:Signum.Entities.UserQueries;assembly=Signum.Entities.Extensions"
@@ -61,7 +61,7 @@
                     <MenuItem Tag="{m:Explore QueryName={x:Type ser:ExcelReportDN}}"/>
                 </MenuItem>
                 <MenuItem Header="Operations">
-                    <MenuItem Tag="{m:Explore QueryName={x:Type seo:OperationLogDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type seb:OperationLogDN}}"/>
                 </MenuItem>
                 <!--<MenuItem Header="Files">
                     <MenuItem Tag="{m:Explore QueryName={x:Type sef:FileRepositoryDN}}"/>
