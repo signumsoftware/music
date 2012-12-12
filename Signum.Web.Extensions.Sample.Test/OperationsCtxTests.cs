@@ -53,7 +53,7 @@ namespace Signum.Web.Extensions.Sample.Test
             //For Michael Jackson there are no operations enabled
             selenium.EntityContextMenu(5);
             //There's not a menu with hrefs => only some text saying there are no operations
-            Assert.IsFalse(selenium.IsElementPresent("{0} a".Formato(SearchTestExtensions.EntityContextMenuSelector(selenium, 5))));
+            Assert.IsTrue(selenium.IsElementPresent("{0} a.sf-disabled".Formato(SearchTestExtensions.EntityContextMenuSelector(selenium, 5))));
         }
 
         [TestMethod]
