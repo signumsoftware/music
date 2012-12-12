@@ -114,12 +114,12 @@
     <Content Include="Content\smoothness\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\smoothness\jquery-ui-1.8.14.css" />
+    <Content Include="Content\smoothness\jquery-ui-1.9.2.custom.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\calendar.png" />
     <Content Include="Scripts\d3.v2.min.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.18.custom.min.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\jquery-ui-1.9.2.custom.min.js" />
     <Content Include="Scripts\newcontent.js" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Music\Album.cshtml" />
