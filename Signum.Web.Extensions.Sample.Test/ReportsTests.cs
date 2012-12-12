@@ -15,6 +15,7 @@ using Signum.Engine.Authorization;
 using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
+using Signum.Entities.Reports;
 
 namespace Signum.Web.Extensions.Sample.Test
 {
@@ -50,23 +51,20 @@ namespace Signum.Web.Extensions.Sample.Test
 
             string pathSampleReport = "D:\\Signum\\Pruebas\\Framework\\Albumchulo.xlsx";
             
-            string saveReportId = "ebReportSave";
-            string deleteId = "ebReportDelete";
-
             //create when there's no query created => direct navigation to create page
             selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
             selenium.Type("DisplayName", "test");
             selenium.Type("File_sfFile", pathSampleReport);
-            selenium.EntityButtonClick(saveReportId);
+            selenium.EntityOperationClick(ExcelReportOperation.Save);
             selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
             selenium.MainEntityHasId();
 
             //modify
             selenium.Type("DisplayName", "test 2");
-            selenium.EntityButtonClick(saveReportId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.EntityOperationClick(ExcelReportOperation.Save);
+            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=.sf-entity-title:contains('test 2')"));
 
             //created appears modified in menu
             selenium.Open(pathAlbumSearch);
@@ -79,7 +77,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1))); //SearchOnLoad
             selenium.EntityClick("ExcelReport;1");
             selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.EntityButtonClick(deleteId);
+            selenium.EntityOperationClick(ExcelReportOperation.Delete);
             Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
@@ -95,7 +93,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.WaitForPageToLoad(PageLoadTimeout);
             selenium.Type("DisplayName", "test 3");
             selenium.Type("File_sfFile", pathSampleReport);
-            selenium.EntityButtonClick(saveReportId);
+            selenium.EntityOperationClick(ExcelReportOperation.Save);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
             //created appears in menu
