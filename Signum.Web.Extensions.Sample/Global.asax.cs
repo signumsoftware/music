@@ -23,13 +23,14 @@ using Signum.Entities.ControlPanel;
 using Signum.Web.Combine;
 using System.Reflection;
 using Signum.Web.PortableAreas;
-using Signum.Web.Widgets;
 using Signum.Web.Chart;
 using Signum.Utilities;
 using Signum.Web.Files;
 using Signum.Web.Processes;
 using Signum.Web.Basic;
 using Signum.Engine.Processes;
+using Signum.Web.Notes;
+using Signum.Web.Alerts;
 
 namespace Signum.Web.Extensions.Sample
 {
@@ -120,8 +121,8 @@ namespace Signum.Web.Extensions.Sample
             ProcessLogic.StartBackgroundProcess(5 * 1000);
 
             QuickLinkWidgetHelper.Start();
-            NotesClient.Start();
-            AlertsClient.Start();
+            NoteClient.Start();
+            AlertClient.Start();
 
             MusicClient.Start();
 

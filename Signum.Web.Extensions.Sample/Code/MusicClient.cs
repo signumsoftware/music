@@ -24,12 +24,14 @@ namespace Signum.Web.Extensions.Sample
                 Navigator.AddSettings(new List<EntitySettings>
                 {
                     new EntitySettings<AlbumDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Album") },
-                    new EntitySettings<AmericanMusicAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("AmericanMusicAward") },
                     new EntitySettings<ArtistDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("Artist") },
                     new EntitySettings<BandDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Band") },
+                    
                     new EntitySettings<GrammyAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("GrammyAward") },
-                    new EntitySettings<LabelDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Label") },
+                    new EntitySettings<AmericanMusicAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("AmericanMusicAward") },
                     new EntitySettings<PersonalAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("PersonalAward") },
+                    
+                    new EntitySettings<LabelDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Label") },
                     new EmbeddedEntitySettings<SongDN>() { PartialViewName = e => ViewPrefix.Formato("Song")},
 
                     new EntitySettings<NoteWithDateDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("NoteWithDate") },
