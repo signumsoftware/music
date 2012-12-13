@@ -13,6 +13,8 @@ using Signum.Web.Extensions.Sample.Test.Properties;
 using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
+using Signum.Entities.Notes;
+using Signum.Entities.Alerts;
 
 namespace Signum.Web.Extensions.Sample.Test
 {
@@ -71,7 +73,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
             selenium.Type(popupPrefix + "Text", "note test");
-            selenium.PopupSave(popupPrefix);
+            selenium.EntityOperationClick(NoteOperation.Save);
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
             selenium.GetAlert();
@@ -105,13 +107,16 @@ namespace Signum.Web.Extensions.Sample.Test
 
             selenium.Type(popupPrefix + "Text", "alert test");
             selenium.Type(popupPrefix + "AlertDate", DateTime.Today.AddDays(1).ToString("dd/MM/yyyy hh:mm"));
-            selenium.PopupSave(popupPrefix);
+            selenium.Select("{0}AlertType_sfCombo".Formato(popupPrefix), "index=1");
+            
+            selenium.EntityOperationClick(AlertOperation.SaveNew);
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-
-            selenium.GetAlert();
+            
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, future));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, warned));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
+
+            selenium.GetAlert();
 
             //Create past
             selenium.AlertsCreateClick();
@@ -119,14 +124,17 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
             selenium.Type(popupPrefix + "Text", "warned alert test");
+            selenium.Select("{0}AlertType_sfCombo".Formato(popupPrefix), "index=1");
             selenium.Type(popupPrefix + "AlertDate", DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy hh:mm"));
-            selenium.PopupSave(popupPrefix);
+            
+            selenium.EntityOperationClick(AlertOperation.SaveNew);
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
-            selenium.GetAlert();
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, future));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, warned));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
+
+            selenium.GetAlert();
 
             //View warned alert and attend it
             selenium.AlertsViewClick(warned);
@@ -136,9 +144,9 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.EntityClick(1, popupPrefix);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
-            selenium.Type("CheckDate", DateTime.Today.ToString("dd/MM/yyyy hh:mm"));
-            selenium.EntityButtonSaveClick();
-
+            selenium.EntityOperationClick(AlertOperation.Attend);
+            selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlertOperation.Unattend));
+            
             selenium.Open(viewRoute);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 

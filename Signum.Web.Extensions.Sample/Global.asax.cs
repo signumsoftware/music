@@ -121,8 +121,8 @@ namespace Signum.Web.Extensions.Sample
             ProcessLogic.StartBackgroundProcess(5 * 1000);
 
             QuickLinkWidgetHelper.Start();
-            NoteClient.Start();
-            AlertClient.Start();
+            NoteClient.Start(typeof(LabelDN));
+            AlertClient.Start(typeof(LabelDN));
 
             MusicClient.Start();
 
