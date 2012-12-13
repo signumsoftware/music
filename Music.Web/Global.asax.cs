@@ -32,6 +32,7 @@ using Signum.Engine.Processes;
 using Signum.Web.Notes;
 using Signum.Web.Alerts;
 using Signum.Web;
+using Signum.Web.Exceptions;
 
 namespace Music.Web
 {
@@ -80,6 +81,7 @@ namespace Music.Web
             {
                 Schema.Current.Initialize();
                 WebStart();
+                ProcessLogic.StartBackgroundProcess(1000);
             }
 
             RegisterRoutes(RouteTable.Routes);
@@ -117,9 +119,9 @@ namespace Music.Web
             FilesClient.Start(true, true, true);
             ChartClient.Start();
             ReportsClient.Start(true, true);
+            ExceptionClient.Start();
 
             ProcessesClient.Start(packages: true, packageOperations: true);
-            ProcessLogic.StartBackgroundProcess(5 * 1000);
 
             QuickLinkWidgetHelper.Start();
             NoteClient.Start(typeof(LabelDN));
