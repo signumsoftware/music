@@ -20,6 +20,7 @@ using Signum.Entities.DynamicQuery;
 using Signum.Engine.DynamicQuery;
 using Signum.Entities.UserQueries;
 using Signum.Engine.UserQueries;
+using Signum.Entities.ControlPanel;
 
 namespace Signum.Web.Extensions.Sample.Test
 {
@@ -70,7 +71,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.Click("HomePage");
             selenium.Type("NumberOfColumns", "2");
 
-            selenium.EntityButtonSaveClick();
+            selenium.EntityOperationClick(ControlPanelOperation.Save);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
             string partsPrefix = "Parts_";
@@ -97,22 +98,11 @@ namespace Signum.Web.Extensions.Sample.Test
             CreateLinkListPartItem(selenium, part2, 0, "Best Band", "http://localhost/Signum.Web.Extensions.Sample/View/Band/1");
             CreateLinkListPartItem(selenium, part2, 1, "Best Artist", "http://localhost/Signum.Web.Extensions.Sample/View/Artist/1");
             
-            //selenium.MouseDown("jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-part:eq(2)");
-            //selenium.MouseMove("jq=#sfCpAdminContainer td[data-column=2] .sf-ftbl-droppable");
-            //selenium.MouseUp("jq=#sfCpAdminContainer td[data-column=2] .sf-ftbl-droppable");
-
             selenium.DragAndDropToObject("jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-part:eq(2)",
                 "jq=#sfCpAdminContainer td[data-column=2] .sf-ftbl-droppable");
 
-            selenium.EntityButtonSaveClick();
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            ////view
-            //selenium.Open("/Signum.Web.Extensions.Sample/");
-            //selenium.WaitForPageToLoad(PageLoadTimeout);
-            //Assert.IsTrue(selenium.IsElementPresent("{0} #r1c1_divSearchControl".Formato(PartFrontEndSelector(1, 1))));
-            //Assert.IsTrue(selenium.IsElementPresent("{0} #lblr2c1 + a.count-search".Formato(PartFrontEndSelector(2, 1))));
-            //Assert.IsTrue(selenium.IsElementPresent("{0} li:nth-child(2) > a".Formato(PartFrontEndSelector(2, 2))));
+            selenium.EntityOperationClick(ControlPanelOperation.Save);
+            selenium.MainEntityHasId();
         }
 
         void CreateNewPart(string partType)

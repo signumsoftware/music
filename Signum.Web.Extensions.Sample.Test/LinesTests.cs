@@ -58,6 +58,8 @@ namespace Signum.Web.Extensions.Sample.Test
             //create with implementations
             selenium.LineCreateWithImpl(prefix, true, grammyAward);
             selenium.Type("{0}Category".Formato(prefix), "test");
+            selenium.EntityOperationClick(AwardOperation.Save);
+            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
             selenium.PopupOk(prefix);
             selenium.EntityLineHasValue(prefix, true);
 
@@ -88,6 +90,8 @@ namespace Signum.Web.Extensions.Sample.Test
             //create with implementations
             selenium.LineCreateWithImpl(prefix, true, "AmericanMusicAward");
             selenium.Type("{0}Category".Formato(prefix), "test");
+            selenium.EntityOperationClick(AwardOperation.Save);
+            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
             selenium.PopupOk(prefix);
             selenium.EntityLineHasValue(prefix, true);
 
@@ -137,6 +141,8 @@ namespace Signum.Web.Extensions.Sample.Test
             //Create and ok
             selenium.LineCreate(prefix, true, 4);
             selenium.Type("{0}4_Name".Formato(prefix), "test");
+            selenium.EntityOperationClick(ArtistOperation.Save);
+            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}4_".Formato(prefix)));
             selenium.PopupOk("{0}4_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 4, true);
             Assert.IsTrue(selenium.IsElementPresent("jq=#Members_4_sfEntity"));
@@ -155,6 +161,8 @@ namespace Signum.Web.Extensions.Sample.Test
             //Create with implementations
             selenium.LineCreateWithImpl(prefix, true, grammyAward, 0);
             selenium.Type("{0}0_Category".Formato(prefix), "test");
+            selenium.EntityOperationClick(AwardOperation.Save);
+            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}0_".Formato(prefix)));
             selenium.PopupOk("{0}0_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 0, true);
             Assert.IsTrue(selenium.IsElementPresent("jq=#OtherAwards_0_sfEntity"));
@@ -184,13 +192,14 @@ namespace Signum.Web.Extensions.Sample.Test
 
             //create
             selenium.LineCreate(prefix, true, 1);
-
             selenium.Type("{0}1_Name".Formato(prefix), "test");
+            selenium.Click("jq=#{0}1_panelPopup #ArtistOperation_Save".Formato(prefix));
+            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}1_".Formato(prefix)));
             selenium.PopupOk("{0}1_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 1, true);
 
             //find multiple
-            selenium.LineFindAndSelectElements(prefix, new int[]{4,5}, 2);
+            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 2);
             selenium.ListLineElementExists(prefix, 2, true);
             selenium.ListLineElementExists(prefix, 3, true);
 

@@ -338,8 +338,8 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.Search();
 
             //Results of implementing types
-            Assert.IsTrue(selenium.IsEntityInRow(1, new Lite<ArtistDN>(1).Key()));
-            Assert.IsTrue(selenium.IsEntityInRow(9, new Lite<BandDN>(1).Key()));
+            Assert.IsTrue(selenium.IsEntityInRow(1, "{0};{1}".Formato(Lite.UniqueTypeName(typeof(ArtistDN)), 1)));
+            Assert.IsTrue(selenium.IsEntityInRow(9, "{0};{1}".Formato(Lite.UniqueTypeName(typeof(BandDN)), 1)));
 
             //Filters
             selenium.FilterSelectToken(0, "label=Id", false);
