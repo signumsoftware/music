@@ -408,7 +408,7 @@ namespace Signum.Web.Extensions.Sample.Test
             selenium.CheckAddFilterEnabled(true);
             selenium.CheckAddColumnEnabled(true);
             
-            selenium.AddColumn("Entity.Friends.Count");
+            selenium.AddColumn("Entity.Friends.Element");
             selenium.Search();
             selenium.AssertMultiplyMessage(true);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(10));
