@@ -23,18 +23,18 @@ namespace Music.Web
             {
                 Navigator.AddSettings(new List<EntitySettings>
                 {
-                    new EntitySettings<AlbumDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Album") },
-                    new EntitySettings<ArtistDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("Artist") },
-                    new EntitySettings<BandDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Band") },
+                    new EntitySettings<AlbumDN>() { PartialViewName = e => ViewPrefix.Formato("Album") },
+                    new EntitySettings<ArtistDN>() { PartialViewName = e => ViewPrefix.Formato("Artist") },
+                    new EntitySettings<BandDN>() { PartialViewName = e => ViewPrefix.Formato("Band") },
                     
-                    new EntitySettings<GrammyAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("GrammyAward") },
-                    new EntitySettings<AmericanMusicAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("AmericanMusicAward") },
-                    new EntitySettings<PersonalAwardDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("PersonalAward") },
+                    new EntitySettings<GrammyAwardDN>() { PartialViewName = e => ViewPrefix.Formato("GrammyAward") },
+                    new EntitySettings<AmericanMusicAwardDN>() { PartialViewName = e => ViewPrefix.Formato("AmericanMusicAward") },
+                    new EntitySettings<PersonalAwardDN>() { PartialViewName = e => ViewPrefix.Formato("PersonalAward") },
                     
-                    new EntitySettings<LabelDN>(EntityType.Main) { PartialViewName = e => ViewPrefix.Formato("Label") },
+                    new EntitySettings<LabelDN>() { PartialViewName = e => ViewPrefix.Formato("Label") },
                     new EmbeddedEntitySettings<SongDN>() { PartialViewName = e => ViewPrefix.Formato("Song")},
 
-                    new EntitySettings<NoteWithDateDN>(EntityType.Shared) { PartialViewName = e => ViewPrefix.Formato("NoteWithDate") },
+                    new EntitySettings<NoteWithDateDN>() { PartialViewName = e => ViewPrefix.Formato("NoteWithDate") },
 
                     new EmbeddedEntitySettings<AlbumFromBandModel>(){PartialViewName = e => ViewPrefix.Formato("AlbumFromBandModel")},
                 });
@@ -110,8 +110,8 @@ namespace Music.Web
 
                 Navigator.AddSettings(new List<EntitySettings>
                 {
-                    new EntitySettings<DemoPackageDN>(EntityType.Main){ PartialViewName = e => ViewPrefix.Formato("DemoPackage"), },
-                    new EntitySettings<DemoPackageLineDN>(EntityType.Main){ PartialViewName = e => ViewPrefix.Formato("DemoPackageLine"), },
+                    new EntitySettings<DemoPackageDN>(){ PartialViewName = e => ViewPrefix.Formato("DemoPackage"), },
+                    new EntitySettings<DemoPackageLineDN>(){ PartialViewName = e => ViewPrefix.Formato("DemoPackageLine"), },
                 });
             }
         }
