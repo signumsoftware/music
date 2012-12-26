@@ -68,7 +68,7 @@ namespace Music.Test.Web
 
             //Related is RoleDN.Current, and when available UserDN.Current
             selenium.Type("DisplayName", "Control Panel Home Page");
-            selenium.Click("HomePage");
+            selenium.Click("HomePagePriority");
             selenium.Type("NumberOfColumns", "2");
 
             selenium.EntityOperationClick(ControlPanelOperation.Save);
@@ -98,8 +98,8 @@ namespace Music.Test.Web
             CreateLinkListPartItem(selenium, part2, 0, "Best Band", "http://localhost/Music.Web/View/Band/1");
             CreateLinkListPartItem(selenium, part2, 1, "Best Artist", "http://localhost/Music.Web/View/Artist/1");
             
-            selenium.DragAndDropToObject("jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-part:eq(2)",
-                "jq=#sfCpAdminContainer td[data-column=2] .sf-ftbl-droppable");
+            selenium.DragAndDropToObject("jq=#sfCpAdminContainer td[data-column=0] .sf-ftbl-part:eq(1)",
+                "jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-droppable");
 
             selenium.EntityOperationClick(ControlPanelOperation.Save);
             selenium.MainEntityHasId();
