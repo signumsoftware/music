@@ -67,7 +67,7 @@ namespace Music.Test.Web
             string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
 
             selenium.EntityContextMenu(1);
-            selenium.EntityContextMenuClick(1, "AlbumOperation_CreateFromBand");
+            selenium.EntityContextMenuClick(1, "AlbumOperation_CreateAlbumFromBand");
 
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
 
