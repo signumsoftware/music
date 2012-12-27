@@ -73,18 +73,18 @@ namespace Music.Web
 
                 OperationsClient.AddSettings( new List<OperationSettings>
                 {
-                    new EntityOperationSettings(AlbumOperation.CreateFromBand)
+                    new EntityOperationSettings(AlbumOperation.CreateAlbumFromBand)
                     { 
                         OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
                             .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk),
 
-                        Contextual = new ContextualOperationSettings(AlbumOperation.CreateFromBand)
+                        Contextual = new ContextualOperationSettings(AlbumOperation.CreateAlbumFromBand)
                         {
                             OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
                                 .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk)
                         },
 
-                        ContextualFromMany = new ContextualOperationSettings(AlbumOperation.CreateFromBand)
+                        ContextualFromMany = new ContextualOperationSettings(AlbumOperation.CreateAlbumFromBand)
                     },
                     new ContextualOperationSettings(AlbumOperation.CreateGreatestHitsAlbum)
                     {

@@ -31,13 +31,6 @@ namespace Music.Windows
             //this.MaxHeight = this.ActualHeight;
             MenuManager.ProcessMenu(menu);
         }
-
-        private void generarMenuItems_Click(object sender, RoutedEventArgs e)
-        {
-            MenuManager.MenuItemFactory("menu.txt");
-            e.Handled = true;
-        }
-
    
         private void miUpdateRules_Click(object sender, RoutedEventArgs e)
         {

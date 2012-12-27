@@ -96,7 +96,7 @@ namespace Music.Test.Web
         {
             CheckLoginAndOpen(ViewRoute("Band", 1));
 
-            selenium.EntityMenuConstructFromClick(AlbumOperation.CreateFromBand);
+            selenium.EntityMenuConstructFromClick(AlbumOperation.CreateAlbumFromBand);
             string popupPrefix = "New_";
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
