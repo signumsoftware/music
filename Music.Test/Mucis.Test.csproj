@@ -71,7 +71,7 @@
     <Compile Include="DemoPackageLogic.cs" />
     <Compile Include="EntityGroupsTest.cs" />
     <Compile Include="Environment\MusicExtensionsLoader.cs" />
-    <Compile Include="GlobalQueryLazyTest.cs" />
+    <Compile Include="CacheLazyTest.cs" />
     <Compile Include="IServerSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

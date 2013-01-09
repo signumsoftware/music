@@ -30,41 +30,5 @@ namespace Music.Test
         {
             Starter.StartAndLoad(UserConnections.Replace(Settings.Default.ConnectionString));
         }
-
-        [TestMethod]
-        public void CacheInvalidationTest()
-        {
-            Starter.Start(UserConnections.Replace(Settings.Default.ConnectionString));
-            Schema.Current.Initialize();
-
-            int invalidations = CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations;
-
-            Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-
-            using(AuthLogic.Disable())
-            using (OperationLogic.AllowSave<LabelDN>())
-            using (Transaction tr = new Transaction())
-            {
-                Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-                var label = Database.Retrieve<LabelDN>(1);
-
-                label.Name += " - ";
-
-                label.Save();
-
-                Assert.AreEqual(invalidations, CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
-                Assert.IsFalse(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-
-                Task.Factory.StartNew(() =>
-                {
-                    Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-                }).Wait();
-
-                tr.Commit();
-            }
-
-            Assert.AreEqual(invalidations + 1, CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
-            Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-        }
     }
 }
