@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
 using System.Threading;
-using Signum.Test.Extensions;
 using Signum.Engine.Operations;
 
 namespace Music.Test.Web
@@ -40,8 +39,6 @@ namespace Music.Test.Web
         {
             Common.MyTestCleanup();
         }
-
-        string constructorsMenuId = "tmConstructors";
 
         [TestMethod]
         public void Operations001_Execute_Navigate()

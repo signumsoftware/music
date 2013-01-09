@@ -31,8 +31,8 @@ namespace Music.Test.Web
 
         public static void Start()
         {
-            Signum.Test.Extensions.Starter.Dirty(); //Force generate database
-            Signum.Test.Extensions.Starter.StartAndLoad(UserConnections.Replace(Settings.Default.ConnectionString));
+            Music.Test.Starter.Dirty(); //Force generate database
+            Music.Test.Starter.StartAndLoad(UserConnections.Replace(Settings.Default.ConnectionString));
 
             using (AuthLogic.Disable())
                 Schema.Current.Initialize();

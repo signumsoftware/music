@@ -73,7 +73,7 @@ namespace Music.Web
 
         protected void Application_Start()
         {   
-            Signum.Test.Extensions.Starter.Start(UserConnections.Replace(Settings.Default.ConnectionString));
+            Music.Test.Starter.Start(UserConnections.Replace(Settings.Default.ConnectionString));
 
             Statics.SessionFactory = new ScopeSessionFactory(new AspNetSessionFactory());
 

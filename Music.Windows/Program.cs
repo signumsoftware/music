@@ -7,8 +7,8 @@ using Signum.Services;
 using Signum.Utilities;
 using Signum.Windows;
 using Signum.Windows.Authorization;
-using Signum.Test.Extensions;
 using Music.Windows.Properties;
+using Music.Test;
 
 namespace Music.Windows
 {

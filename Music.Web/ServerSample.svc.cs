@@ -14,9 +14,9 @@ using Signum.Services;
 using Signum.Utilities;
 using System.Threading;
 using System.Globalization;
-using Signum.Test.Extensions;
 using Signum.Utilities.DataStructures;
 using Signum.Entities.DynamicQuery;
+using Music.Test;
 
 namespace Music.Web
 {

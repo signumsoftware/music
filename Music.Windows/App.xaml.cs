@@ -68,7 +68,7 @@ namespace Music.Windows
 
             Constructor.Start(new ConstructorManager
             {
-                Constructors = new Dictionary<Type, Func<Window, object>>()
+                Constructors = new Dictionary<Type, Func<FrameworkElement, object>>()
                 {
               
                 }
