@@ -139,7 +139,8 @@ namespace Music.Test.Web
             //View warned alert and attend it
             selenium.AlertsViewClick(warned);
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix)));
+            // Use "RowSelector a" => if only RowSelector the initial "No results" row will match
+            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0} a".Formato(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix))));
 
             selenium.EntityClick(1, popupPrefix);
             selenium.WaitForPageToLoad(PageLoadTimeout);
