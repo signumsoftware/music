@@ -113,6 +113,7 @@ namespace Music.Test
                 MusicLogic.Start(sb, dqm);
                 
                 CacheLogic.CacheTable<LabelDN>(sb);
+                CacheLogic.CacheAllGlobalLazyTables(sb);
 
                 TypeConditionLogic.Register<LabelDN>(MusicGroups.JapanEntities, l => l.Country.Name.StartsWith(MusicLoader.Japan) || l.Owner != null && l.Owner.Entity.Country.Name.StartsWith(MusicLoader.Japan));
                 TypeConditionLogic.Register<AlbumDN>(MusicGroups.JapanEntities, a => a.Label.InCondition(MusicGroups.JapanEntities));
