@@ -28,15 +28,7 @@ namespace Music.Test
             Starter.StartAndLoad(UserConnections.Replace(Settings.Default.ConnectionString));
         }
 
-        static ResetLazy<List<string>> albumNames = GlobalLazy.Create(() =>
-            Database.Query<AlbumDN>().Select(a => a.Name).ToList(),
-            new InvalidateWith(typeof(AlbumDN)));
-
-        static ResetLazy<List<Tuple<string, string>>> albumLabelNames = GlobalLazy.Create(() =>
-            (from a in Database.Query<AlbumDN>().Where(a => a.Id > 1)
-             join l in Database.Query<LabelDN>() on a.Label equals l
-             select Tuple.Create(a.Name, l.Name)).ToList(),
-             new InvalidateWith(typeof(LabelDN)));
+       
 
         [TestMethod]
         public void CacheInvalidationTest()
