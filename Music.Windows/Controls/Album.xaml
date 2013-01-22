@@ -4,7 +4,7 @@
     xmlns:s="clr-namespace:Music.Windows.Controls"
     xmlns:m="clr-namespace:Signum.Windows;assembly=Signum.Windows"
     xmlns:d="clr-namespace:Signum.Test;assembly=Signum.Test"
-    m:Common.TypeContext="d:AlbumDN"
+    m:Common.TypeContext="{x:Type d:AlbumDN}"
     MinWidth="300">
     <StackPanel>
         <m:ValueLine m:Common.Route="Name" />
