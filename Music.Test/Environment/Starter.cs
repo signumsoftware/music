@@ -90,13 +90,15 @@ namespace Music.Test
                 UserQueryLogic.Start(sb, dqm);
                 UserQueryLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
                 UserQueryLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
+
+                ChartLogic.Start(sb, dqm);
+                UserChartLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
+                UserChartLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
+
                 ControlPanelLogic.Start(sb, dqm);
                 ControlPanelLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
                 ControlPanelLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
                 
-                ChartLogic.Start(sb, dqm);
-                UserChartLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
-                UserChartLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
 
                 AlertLogic.Start(sb, dqm);
                 NoteLogic.Start(sb, dqm);
