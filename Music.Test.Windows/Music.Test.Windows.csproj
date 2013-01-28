@@ -112,9 +112,9 @@
       <Project>{8BEE9C27-E196-4087-A531-128BBB5D0CBF}</Project>
       <Name>Signum.Windows.Extensions.UIAutomation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Music.Test\Mucis.Test.csproj">
+    <ProjectReference Include="..\Music.Test\Music.Test.csproj">
       <Project>{4D7D1542-2C5B-45D3-BC62-0D7290899EF7}</Project>
-      <Name>Mucis.Test</Name>
+      <Name>Music.Test</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

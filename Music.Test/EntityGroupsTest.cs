@@ -16,8 +16,8 @@ using Signum.Utilities;
 using System.Xml.Linq;
 using Signum.Engine.Exceptions;
 using Signum.Engine.Operations;
-using Music.Extensions.Properties;
 using Signum.Test;
+using Music.Test.Properties;
 
 namespace Music.Test
 {

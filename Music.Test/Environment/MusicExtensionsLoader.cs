@@ -119,7 +119,7 @@ namespace Music.Test
 
                 TypeConditionUsersRoles(internalUserRole.ToLite());
 
-                ChartScriptLogic.ImportAllScripts(@"d:\Signum\Extensions\Signum.Engine.Extensions\Chart\ChartScripts");
+                ChartScriptLogic.ImportAllScripts(@"d:\Signum\Music\Extensions\Signum.Engine.Extensions\Chart\ChartScripts");
             }
         }
 

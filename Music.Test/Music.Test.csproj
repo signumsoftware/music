@@ -8,8 +8,8 @@
     <ProjectGuid>{4D7D1542-2C5B-45D3-BC62-0D7290899EF7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Music.Extensions</RootNamespace>
-    <AssemblyName>Music.Extensions</AssemblyName>
+    <RootNamespace>Music.Test</RootNamespace>
+    <AssemblyName>Music.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

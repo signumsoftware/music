@@ -117,9 +117,9 @@
       <Project>{F7D3F72D-741D-4F67-8CF8-CD41B9035FED}</Project>
       <Name>Signum.Utilities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Music.Test\Mucis.Test.csproj">
+    <ProjectReference Include="..\Music.Test\Music.Test.csproj">
       <Project>{4d7d1542-2c5b-45d3-bc62-0d7290899ef7}</Project>
-      <Name>Mucis.Test</Name>
+      <Name>Music.Test</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

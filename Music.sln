@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Engine.Extensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Entities.Extensions", "Extensions\Signum.Entities.Extensions\Signum.Entities.Extensions.csproj", "{7D851227-5294-4BEB-990E-56B4FBB7A148}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mucis.Test", "Music.Test\Mucis.Test.csproj", "{4D7D1542-2C5B-45D3-BC62-0D7290899EF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.Test", "Music.Test\Music.Test.csproj", "{4D7D1542-2C5B-45D3-BC62-0D7290899EF7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Web.Extensions", "Extensions\Signum.Web.Extensions\Signum.Web.Extensions.csproj", "{86EE7792-96CF-4420-997B-8C811E2B166D}"
 EndProject

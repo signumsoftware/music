@@ -10,12 +10,12 @@ using Signum.Utilities;
 using System.Threading;
 using Signum.Test;
 using Signum.Engine.Cache;
-using Music.Extensions.Properties;
 using Signum.Engine.Authorization;
 using Signum.Engine.Operations;
 using System.Threading.Tasks;
 using Microsoft.SqlServer.Types;
 using Signum.Entities;
+using Music.Test.Properties;
 
 namespace Music.Test
 {

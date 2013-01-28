@@ -17,8 +17,8 @@ using Signum.Engine.Cache;
 using System.Threading;
 using System.Threading.Tasks;
 using Signum.Engine.Operations;
-using Music.Extensions.Properties;
 using Signum.Test;
+using Music.Test.Properties;
 
 namespace Music.Test
 {
