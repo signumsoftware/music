@@ -49,7 +49,7 @@ namespace Music.Test.Web
             string excelMenuId = "tmExcel";
             string administerReportsId = "qbReportAdminister";
 
-            string pathSampleReport = "D:\\Signum\\Music\\Assets\\Albumchulo.xlsx";
+            string pathSampleReport = "D:\\Signum\\Music\\Assets\\Album.xlsx";
             
             //create when there's no query created => direct navigation to create page
             selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
