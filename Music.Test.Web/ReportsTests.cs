@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
 using Signum.Entities.Reports;
+using System.IO;
 
 namespace Music.Test.Web
 {
@@ -49,7 +50,7 @@ namespace Music.Test.Web
             string excelMenuId = "tmExcel";
             string administerReportsId = "qbReportAdminister";
 
-            string pathSampleReport = "D:\\Signum\\Pruebas\\Framework\\Albumchulo.xlsx";
+            string pathSampleReport = Path.Combine(Assert2.SolutionDirectory, "Assets\\Album.xlsx");
             
             //create when there's no query created => direct navigation to create page
             selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
