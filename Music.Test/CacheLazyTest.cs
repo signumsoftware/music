@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.SqlServer.Types;
 using Signum.Entities;
 using Music.Test.Properties;
+using Signum.Test.Environment;
 
 namespace Music.Test
 {

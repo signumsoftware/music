@@ -15,6 +15,7 @@ using Signum.Engine.Authorization;
 using System.Text.RegularExpressions;
 using Signum.Entities;
 using Signum.Utilities;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {

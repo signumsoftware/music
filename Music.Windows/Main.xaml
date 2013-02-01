@@ -10,7 +10,7 @@
     xmlns:sef="clr-namespace:Signum.Entities.Files;assembly=Signum.Entities.Extensions"
     xmlns:ser="clr-namespace:Signum.Entities.Reports;assembly=Signum.Entities.Extensions"
     xmlns:seuq="clr-namespace:Signum.Entities.UserQueries;assembly=Signum.Entities.Extensions"
-    xmlns:st="clr-namespace:Signum.Test;assembly=Signum.Test"
+    xmlns:st="clr-namespace:Signum.Test.Environment;assembly=Signum.Test"
     Title="Music Database" 
     SizeToContent="WidthAndHeight"
     >

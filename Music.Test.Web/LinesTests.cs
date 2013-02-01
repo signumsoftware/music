@@ -13,6 +13,7 @@ using Music.Test.Web.Properties;
 using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {

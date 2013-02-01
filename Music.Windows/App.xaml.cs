@@ -20,6 +20,7 @@ using Music.Windows.Controls;
 using Signum.Entities.DynamicQuery;
 using Signum.Windows.Chart;
 using Signum.Windows.UserQueries;
+using Signum.Test.Environment;
 
 namespace Music.Windows
 {

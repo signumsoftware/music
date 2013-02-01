@@ -28,6 +28,7 @@ using Signum.Engine.Alerts;
 using Signum.Engine.Notes;
 using Signum.Entities.Alerts;
 using Signum.Test;
+using Signum.Test.Environment;
 
 namespace Music.Test
 {

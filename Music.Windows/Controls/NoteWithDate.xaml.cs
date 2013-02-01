@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Signum.Windows;
 using Signum.Entities;
 using Signum.Test;
+using Signum.Test.Environment;
 
 namespace Music.Windows.Controls
 {
@@ -29,7 +30,6 @@ namespace Music.Windows.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

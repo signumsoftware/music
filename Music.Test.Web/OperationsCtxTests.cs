@@ -10,6 +10,7 @@ using Signum.Entities.Processes;
 using Signum.Engine.Authorization;
 using Signum.Engine;
 using Signum.Test;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {

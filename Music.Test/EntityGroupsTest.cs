@@ -18,6 +18,7 @@ using Signum.Engine.Exceptions;
 using Signum.Engine.Operations;
 using Signum.Test;
 using Music.Test.Properties;
+using Signum.Test.Environment;
 
 namespace Music.Test
 {
