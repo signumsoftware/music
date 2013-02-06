@@ -42,26 +42,26 @@ namespace Music.Test
                 sb.Include<DemoPackageDN>();
                 sb.Include<DemoPackageLineDN>();
 
-                dqm[typeof(DemoPackageDN)] =
-                     (from p in Database.Query<DemoPackageDN>()
-                      select new
-                      {
-                          Entity = p,
-                          p.Id,
-                          p.Name,
-                          Lines = (int?)p.Lines().Count()
-                      }).ToDynamic();
-
-                dqm[typeof(DemoPackageLineDN)] =
-                    (from pl in Database.Query<DemoPackageLineDN>()
+                dqm.RegisterQuery(typeof(DemoPackageDN), () =>
+                     from p in Database.Query<DemoPackageDN>()
                      select new
                      {
-                         Entity = pl,
-                         Package = pl.Package,
-                         pl.Id,
-                         pl.FinishTime,
-                         pl.Exception,
-                     }).ToDynamic();
+                         Entity = p,
+                         p.Id,
+                         p.Name,
+                         Lines = (int?)p.Lines().Count()
+                     });
+
+                dqm.RegisterQuery(typeof(DemoPackageLineDN), () =>
+                    from pl in Database.Query<DemoPackageLineDN>()
+                    select new
+                    {
+                        Entity = pl,
+                        Package = pl.Package,
+                        pl.Id,
+                        pl.FinishTime,
+                        pl.Exception,
+                    });
 
                 dqm.RegisterExpression((DemoPackageDN p) => p.Lines());
 
