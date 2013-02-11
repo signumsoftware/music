@@ -63,6 +63,8 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
             selenium.PopupOk(prefix);
             selenium.EntityLineHasValue(prefix, true);
+            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).StartsWith("GrammyAward"));
+            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
 
             //find with implementations
             selenium.LineRemove(prefix);
@@ -95,6 +97,8 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
             selenium.PopupOk(prefix);
             selenium.EntityLineHasValue(prefix, true);
+            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).StartsWith("AmericanMusicAward"));
+            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
 
             //find with implementations
             selenium.LineRemove(prefix);
@@ -147,6 +151,8 @@ namespace Music.Test.Web
             selenium.PopupOk("{0}4_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 4, true);
             Assert.IsTrue(selenium.IsElementPresent("jq=#Members_4_sfEntity"));
+            Assert.IsTrue(selenium.GetValue("jq=#Members_4_sfRuntimeInfo").StartsWith("Artist"));
+            Assert.IsTrue(selenium.GetValue("jq=#Members_4_sfRuntimeInfo").EndsWith(";o")); //Already saved
 
             //Delete
             selenium.LineRemove(prefix);
@@ -158,7 +164,7 @@ namespace Music.Test.Web
             selenium.ListLineElementExists(prefix, 5, true);
 
             prefix = "OtherAwards_";
-
+            
             //Create with implementations
             selenium.LineCreateWithImpl(prefix, true, grammyAward, 0);
             selenium.Type("{0}0_Category".Formato(prefix), "test");
@@ -167,6 +173,8 @@ namespace Music.Test.Web
             selenium.PopupOk("{0}0_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 0, true);
             Assert.IsTrue(selenium.IsElementPresent("jq=#OtherAwards_0_sfEntity"));
+            Assert.IsTrue(selenium.GetValue("jq=#OtherAwards_0_sfRuntimeInfo").StartsWith("GrammyAward"));
+            Assert.IsTrue(selenium.GetValue("jq=#OtherAwards_0_sfRuntimeInfo").EndsWith(";o")); //Already saved
 
             //find with implementations
             selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 }, 1);
@@ -178,6 +186,10 @@ namespace Music.Test.Web
 
             //View
             selenium.ListLineViewElement(prefix, 0, true);
+            selenium.PopupCancel("{0}0_".Formato(prefix));
+
+            selenium.ListLineViewElement(prefix, 0, true);
+            selenium.Type("{0}0_Category".Formato(prefix), "test2");
             selenium.PopupCancelDiscardChanges("{0}0_".Formato(prefix));
         }
 
@@ -198,6 +210,8 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}1_".Formato(prefix)));
             selenium.PopupOk("{0}1_".Formato(prefix));
             selenium.ListLineElementExists(prefix, 1, true);
+            Assert.IsTrue(selenium.GetValue("jq=#{0}1_sfRuntimeInfo".Formato(prefix)).StartsWith("Artist"));
+            Assert.IsTrue(selenium.GetValue("jq=#{0}1_sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
 
             //find multiple
             selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 2);
