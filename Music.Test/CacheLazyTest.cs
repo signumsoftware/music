@@ -17,6 +17,7 @@ using Microsoft.SqlServer.Types;
 using Signum.Entities;
 using Music.Test.Properties;
 using Signum.Test.Environment;
+using Signum.Entities.Reflection;
 
 namespace Music.Test
 {
@@ -60,8 +61,19 @@ namespace Music.Test
                 tr.Commit();
             }
 
-            Assert.AreEqual(invalidations + 1, CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
+            Assert.IsTrue(invalidations < CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
             Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
+        }
+
+        [TestMethod]
+        public void CacheSealed()
+        {
+            using (AuthLogic.Disable())
+            using (new EntityCache(EntityCacheType.ForceNewSealed))
+            {
+                var labels = Database.Query<LabelDN>().ToList();
+                Assert2.AssertAll(GraphExplorer.FromRoots(labels), a => a.Modified == ModifiedState.Sealed);
+            }
         }
 
         [TestMethod]
