@@ -177,36 +177,49 @@ namespace Music.Test
             using (TypeAuthLogic.DisableQueryFilter())
             {
                 //Because of target
+                using (Transaction tr = new Transaction())
                 {
                     var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "MJJ");
                     label.Owner.Retrieve().Country.Name = "Spain";
-                    Assert2.Throws<UnauthorizedAccessException>(() => label.Save());
+                    label.Save();
+
+                    Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
                 }
 
+                using (Transaction tr = new Transaction())
                 {
                     var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "MJJ");
                     label.Owner = Database.Query<LabelDN>().Where(l => l.Name == "Virgin").Select(a => a.ToLite()).SingleEx();
-                    Assert2.Throws<UnauthorizedAccessException>(() => label.Save());
+                    label.Save();
+
+                    //tr.Commit();
                 }
 
 
                 //Because of origin
+                using (Transaction tr = new Transaction())
                 {
                     var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "Virgin");
                     label.Country.Name = "Japan Empire";
-                    Assert2.Throws<UnauthorizedAccessException>(() => label.Save());
+                    label.Save();
+                    Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
                 }
 
+                using (Transaction tr = new Transaction())
                 {
                     var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "WEA International");
                     label.Owner.Retrieve().Name = "Japan Empire";
-                    Assert2.Throws<UnauthorizedAccessException>(() => label.Save());
+                    label.Save();
+                    Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
                 }
 
+                using (Transaction tr = new Transaction())
                 {
                     var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "WEA International");
                     label.Owner = Database.Query<LabelDN>().Where(l => l.Name == "Sony").Select(a => a.ToLite()).SingleEx();
-                    Assert2.Throws<UnauthorizedAccessException>(() => label.Save());
+                    label.Save();
+
+                    Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
                 }
             }
         }
