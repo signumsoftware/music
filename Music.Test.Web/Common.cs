@@ -48,19 +48,17 @@ namespace Music.Test.Web
         public void Login(string username, string pwd)
         {
             selenium.Open("/Music.Web/");
-
-            selenium.WaitAjaxFinished(() => selenium.IsTextPresent("Signum Extensions Sample"));
+            selenium.WaitForPageToLoad(PageLoadTimeout);
 
             //is already logged?
             bool logged = selenium.IsElementPresent("jq=a.sf-logout");
             if (logged)
             {
                 selenium.Click("jq=a.sf-logout");
-                selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=a.sf-login"));
+                selenium.WaitForPageToLoad(PageLoadTimeout);
             }
 
             selenium.Click("jq=a.sf-login");
-
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
             selenium.Type("username", username);
@@ -68,7 +66,6 @@ namespace Music.Test.Web
             selenium.Click("rememberMe");
 
             selenium.Click("jq=input.login");
-
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
             Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));
