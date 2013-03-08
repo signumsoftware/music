@@ -109,7 +109,6 @@ namespace Music.Test.Web
 
             //Top
             selenium.SetElementsPerPageToFinder("5");
-            selenium.Search();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));
             Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')"));
             selenium.SetElementsPerPageToFinder("-1"); 
@@ -185,7 +184,6 @@ namespace Music.Test.Web
 
             //Top
             selenium.SetElementsPerPageToFinder("5", prefix);
-            selenium.Search(prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5, prefix));
             selenium.SetElementsPerPageToFinder("-1", prefix); 
             selenium.Search(prefix);

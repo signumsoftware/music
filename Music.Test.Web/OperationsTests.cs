@@ -118,7 +118,7 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0}:visible".Formato(SeleniumExtensions.PopupSelector(popupPrefix))));
 
             selenium.Type("{0}StringValue".Formato(popupPrefix), "test popup");
-            selenium.PopupOk(popupPrefix);
+            selenium.PopupOk(popupPrefix, true);
 
             selenium.IsTextPresent("test popup");
         }
