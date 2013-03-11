@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
 using Signum.Entities.Reports;
+using Signum.Entities;
 
 namespace Music.Test.Web
 {
@@ -77,9 +78,12 @@ namespace Music.Test.Web
             //delete
             selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
             selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1))); //SearchOnLoad
-            selenium.EntityClick("ExcelReport;1");
+            
+            var newReport = Lite.Create<ExcelReportDN>(1);
+            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.EntityRowSelector(newReport))); //SearchOnLoad
+            selenium.EntityClick(newReport);
             selenium.WaitForPageToLoad(PageLoadTimeout);
+
             selenium.EntityOperationClick(ExcelReportOperation.Delete);
             Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
             selenium.WaitForPageToLoad(PageLoadTimeout);

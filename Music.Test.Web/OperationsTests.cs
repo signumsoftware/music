@@ -18,6 +18,7 @@ using System.Resources;
 using System.Threading;
 using Signum.Engine.Operations;
 using Signum.Test.Environment;
+using Signum.Entities;
 
 namespace Music.Test.Web
 {
@@ -126,16 +127,16 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations006_Delete()
         {
-            int id;
+            Lite<AlbumDN> lite = null;
             using (AuthLogic.UnsafeUserSession("internal"))
             {
                 AlbumDN album = Database.Query<AlbumDN>().First().ConstructFrom<AlbumDN>(AlbumOperation.Clone);
                 album.Name = "test6";
                 album.Year = 2012;
-                id = album.Execute(AlbumOperation.Save).Id; 
+                lite = album.Execute(AlbumOperation.Save).ToLite(); 
             }
 
-            CheckLoginAndOpen(ViewRoute("Album", id));
+            CheckLoginAndOpen(ViewRoute("Album", lite.Id));
 
             selenium.EntityOperationClick(AlbumOperation.Delete);
             Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
@@ -143,7 +144,7 @@ namespace Music.Test.Web
 
             //Delete has redirected to search window => Check deleted album doesn't exist any more
             selenium.Search();
-            Assert.IsFalse(selenium.IsElementPresent(SearchTestExtensions.EntityRowSelector("Album;" + id)));
+            Assert.IsFalse(selenium.IsElementPresent(SearchTestExtensions.EntityRowSelector(lite)));
         }
 
         [TestMethod]
