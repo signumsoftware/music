@@ -76,6 +76,7 @@ namespace Music.Test.Web
             selenium.EntityOperationClick(NoteOperation.Save);
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
 
+            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
             selenium.GetAlert();
             selenium.WaitAjaxFinished(() => selenium.EntityHasNNotes(1));
 
@@ -116,6 +117,7 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, warned));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
 
+            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
             selenium.GetAlert();
 
             //Create past
@@ -134,6 +136,7 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, warned));
             selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
 
+            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
             selenium.GetAlert();
 
             //View warned alert and attend it
