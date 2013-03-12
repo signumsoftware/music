@@ -15,6 +15,8 @@ using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Entities.UserQueries;
 using System.Text.RegularExpressions;
+using Signum.Entities;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {
@@ -52,13 +54,13 @@ namespace Music.Test.Web
             selenium.Type("value_0", "2000");
 
             //add filter of lite
+            string filterPrefix = "value_1_";
             selenium.FilterSelectToken(0, "label=Label", true);
             selenium.AddFilter(0);
-            selenium.LineFind("value_1_");
-            selenium.Sort(3, true, "value_1_");
-            selenium.Search("value_1_");
-            selenium.SelectRowCheckbox(1, "value_1_");
-            selenium.PopupOk("value_1_");
+            selenium.LineFind(filterPrefix);
+            selenium.Search(filterPrefix);
+            selenium.SelectEntityRow(Lite.Create<LabelDN>(1), filterPrefix);
+            selenium.PopupOk(filterPrefix);
 
             //add user column
             selenium.FilterSelectToken(1, "label=Owner", true);

@@ -195,7 +195,7 @@ namespace Music.Test.Web
             selenium.LineFind(prefix);
             selenium.Sort(3, true, prefix);
             selenium.Search(prefix);
-            selenium.SelectRowCheckbox(0, prefix);
+            selenium.SelectRow(0, prefix);
             selenium.PopupOk(prefix);
         }
 

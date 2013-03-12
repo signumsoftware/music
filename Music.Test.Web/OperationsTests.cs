@@ -154,8 +154,8 @@ namespace Music.Test.Web
 
             selenium.Search();
 
-            selenium.SelectRowCheckbox(0);
-            selenium.SelectRowCheckbox(1);
+            selenium.SelectRow(0);
+            selenium.SelectRow(1);
 
             selenium.Click("jq=.sf-tm-selected");
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("AlbumOperation_CreateEmptyGreatestHitsAlbum"));

@@ -120,8 +120,8 @@ namespace Music.Test.Web
 
             selenium.Search();
 
-            selenium.SelectRowCheckbox(0);
-            selenium.SelectRowCheckbox(1);
+            selenium.SelectRow(0);
+            selenium.SelectRow(1);
 
             selenium.EntityContextMenu(2);
             selenium.EntityContextMenuClick(2, "AlbumOperation_CreateGreatestHitsAlbum");
@@ -143,8 +143,8 @@ namespace Music.Test.Web
             selenium.Search();
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
 
-            selenium.SelectRowCheckbox(1);
-            selenium.SelectRowCheckbox(2);
+            selenium.SelectRow(1);
+            selenium.SelectRow(2);
 
             selenium.EntityContextMenu(2);
             selenium.EntityContextMenuClick(2, "ArtistOperation_AssignPersonalAward");
@@ -180,8 +180,8 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos));
 
             string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
-            selenium.SelectRowCheckbox(1);
-            selenium.SelectRowCheckbox(2);
+            selenium.SelectRow(1);
+            selenium.SelectRow(2);
 
             selenium.Click("jq=.sf-tm-selected");
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("AlbumOperation_Delete"));
