@@ -95,7 +95,8 @@ namespace Music.Test.Web
             //Sort
             selenium.Click("jq=a[href='#sfChartData']");
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#sfChartData:visible"));
-            selenium.Sort(1, true);
+            selenium.Click(SearchTestExtensions.TableHeaderSelector(1));
+            selenium.TableHeaderMarkedAsSorted(1, true, true);
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0}:contains('Michael')".Formato(SearchTestExtensions.RowSelector(selenium, 1))));
 
             //Create User Chart
