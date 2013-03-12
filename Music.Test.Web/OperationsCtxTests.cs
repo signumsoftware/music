@@ -187,6 +187,7 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent("AlbumOperation_Delete"));
             selenium.Click("AlbumOperation_Delete");
 
+            selenium.WaitAjaxFinished(() => selenium.IsConfirmationPresent());
             Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
 
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
