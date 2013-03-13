@@ -48,25 +48,25 @@ namespace Music.Test.Web
         public void Login(string username, string pwd)
         {
             selenium.Open("/Music.Web/");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
 
             //is already logged?
             bool logged = selenium.IsElementPresent("jq=a.sf-logout");
             if (logged)
             {
                 selenium.Click("jq=a.sf-logout");
-                selenium.WaitForPageToLoad(PageLoadTimeout);
+                selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
             }
 
             selenium.Click("jq=a.sf-login");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
 
             selenium.Type("username", username);
             selenium.Type("password", pwd);
             selenium.Click("rememberMe");
 
             selenium.Click("jq=input.login");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
 
             Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));
         }
@@ -80,13 +80,13 @@ namespace Music.Test.Web
         public void CheckLoginAndOpen(string url)
         {
             selenium.Open(url);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
             bool logged = selenium.IsElementPresent("jq=a.sf-logout");
             if (!logged)
                 Login();
 
             selenium.Open(url);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
         }
     }
 }
