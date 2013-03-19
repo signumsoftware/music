@@ -99,10 +99,9 @@ namespace Music.Test
                 ControlPanelLogic.Start(sb, dqm);
                 ControlPanelLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
                 ControlPanelLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
-                
 
-                AlertLogic.Start(sb, dqm);
-                NoteLogic.Start(sb, dqm);
+                AlertLogic.Start(sb, dqm, new [] { typeof(LabelDN) });
+                NoteLogic.Start(sb, dqm, new[] { typeof(LabelDN) });
 
                 FilePathLogic.Start(sb, dqm);
                 ReportsLogic.Start(sb, dqm, true);
