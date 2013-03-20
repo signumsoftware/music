@@ -17,6 +17,8 @@ using Signum.Entities.UserQueries;
 using System.Text.RegularExpressions;
 using Signum.Entities;
 using Signum.Test.Environment;
+using Signum.Entities.DynamicQuery;
+using Signum.Engine.UserQueries;
 
 namespace Music.Test.Web
 {
@@ -104,12 +106,15 @@ namespace Music.Test.Web
         [TestMethod]
         public void UserQueries002_Edit()
         {
+            var uqName = "uq" + DateTime.Now.Ticks.ToString().Substring(8);
+            var userQuery = CreateAlbumUserQuery(uqName);
+
             string pathAlbumSearch = FindRoute("Album");
 
             CheckLoginAndOpen(pathAlbumSearch);
 
             string uqMenuId = "tmUserQueries";
-            string uqOptionSelector = "title='Last albums'";
+            string uqOptionSelector = "title='" + uqName + "'";
             string editId = "qbUserQueryEdit";
 
             //load user query
@@ -120,10 +125,10 @@ namespace Music.Test.Web
             selenium.QueryMenuOptionClick(uqMenuId, editId);
             selenium.WaitForPageToLoad(PageLoadTimeout);
             //remove filter
-            selenium.LineRemove("Filters_1_");
+            selenium.LineRemove("Filters_0_");
             //add column
-            selenium.LineCreate("Columns_", false, 1);
-            string prefix = "Columns_1_";
+            selenium.LineCreate("Columns_", false, 0);
+            string prefix = "Columns_0_";
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(prefix + "DisplayName"));
             selenium.Type(prefix + "DisplayName", "Label owner's country");
             selenium.FilterSelectToken(0, "value=Label", true, prefix);
@@ -141,16 +146,10 @@ namespace Music.Test.Web
             //load user query
             selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr(uqMenuId, uqOptionSelector));
             selenium.WaitForPageToLoad(PageLoadTimeout);
-            //Filter present
-            Assert.IsTrue(selenium.IsElementPresent("value_0"));
-            Assert.IsFalse(selenium.IsElementPresent(LinesTestExtensions.EntityLineToStrSelector("value_1_"))); //Filter has been removed
-            //Column present
-            selenium.TableHasColumn("Label.Owner");
+            //Filter deleted
+            Assert.IsFalse(selenium.IsElementPresent("value_0"));
             //New column present
             selenium.TableHasColumn("Label.Owner.Country");
-            //Sort present
-            int yearCol = 6;
-            selenium.TableHeaderMarkedAsSorted(yearCol, false, true);
         }
 
         [TestMethod]
@@ -198,6 +197,19 @@ namespace Music.Test.Web
             Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
             selenium.WaitForPageToLoad(PageLoadTimeout);
             selenium.QueryMenuOptionPresentByAttr(uqMenuId, uqOptionSelector, false);
+        }
+
+        public static UserQueryDN CreateAlbumUserQuery(string userQueryName)
+        {
+            using (AuthLogic.UnsafeUserSession("su"))
+            {
+                return new UserQueryDN(typeof(AlbumDN))
+                {
+                    Related = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
+                    DisplayName = userQueryName,
+                    Filters = { new QueryFilterDN("Id", 3) { Operation = FilterOperation.GreaterThan } },
+                }.ParseAndSave();
+            }
         }
     }
 }

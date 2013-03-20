@@ -30,21 +30,7 @@ namespace Music.Test.Web
     {
         public ControlPanelTests()
         {
-            using (AuthLogic.UnsafeUserSession("su"))
-            {
-                object queryName = typeof(AlbumDN);
-                QueryDescription qd = DynamicQueryManager.Current.QueryDescription(queryName);
-                
-                UserQueryDN userQuery = new UserQueryDN(queryName)
-                {
-                    Related = Database.Query<RoleDN>().Where(r=>r.Name == "InternalUser").Select(a=>a.ToLite<IdentifiableEntity>()).Single(),
-                    DisplayName = "test",
-                    Filters= 
-                    {
-                        new QueryFilterDN("Id", 3) { Operation = FilterOperation.GreaterThan }
-                    },
-                }.ParseAndSave();
-            }
+            UserQueriesTests.CreateAlbumUserQuery("test");
         }
 
         [ClassInitialize]
@@ -77,13 +63,13 @@ namespace Music.Test.Web
 
             string partsPrefix = "Parts_";
 
-            //SearchControlPart with userquery created in UQ_Create test
+            //SearchControlPart
             CreateNewPart("UserQueryPart");
             string part0 = partsPrefix + "0_";
             selenium.Type(part0 + "Title", "Last Albums");
             selenium.LineFindAndSelectElements(part0 + "Content_UserQuery_", new int[]{ 0 });
 
-            //CountSearchControlPart with userquery created in UQ_Create test
+            //CountSearchControlPart
             CreateNewPart("CountSearchControlPart");
             string part1 = partsPrefix + "1_";
             selenium.Type(part1 + "Title", "My Count Controls");
