@@ -79,13 +79,11 @@ namespace Music.Web
                         OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
                             .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk),
 
-                        Contextual = new ContextualOperationSettings(AlbumOperation.CreateAlbumFromBand)
+                        Contextual = 
                         {
                             OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
                                 .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk)
                         },
-
-                        ContextualFromMany = new ContextualOperationSettings(AlbumOperation.CreateAlbumFromBand)
                     },
                     new ContextualOperationSettings(AlbumOperation.CreateGreatestHitsAlbum)
                     {
