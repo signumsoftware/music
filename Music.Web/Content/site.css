@@ -28,11 +28,8 @@ a {
 textarea, select {/* IE will show a border around input radio */
     border:1px solid #ccc;
     color:#333;
-    padding:3px 4px 4px;
-    
+    padding:3px 4px 4px;    
     border-radius:2px;
-    -webkit-border-radius:2px;
-    -moz-border-radius:2px;
 }
 
 select {
@@ -130,8 +127,6 @@ footer
 {
 	background-color:#fff;
 	margin: 0 30px;
-	-moz-box-shadow:0 0 20px #bbb;
-	-webkit-box-shadow:0 0 20px #bbb;
 	box-shadow:0 0 20px #bbb;
 }
 
