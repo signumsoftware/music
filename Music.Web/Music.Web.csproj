@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\site.css" />
+    <Content Include="Content\smoothness\images\animated-overlay.gif" />
     <Content Include="Content\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -118,12 +119,12 @@
     <Content Include="Content\smoothness\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\smoothness\jquery-ui-1.9.2.custom.min.css" />
+    <Content Include="Content\smoothness\jquery-ui-1.10.2.custom.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\calendar.png" />
     <Content Include="Scripts\d3.v2.min.js" />
-    <Content Include="Scripts\jquery-1.8.3.min.js" />
-    <Content Include="Scripts\jquery-ui-1.9.2.custom.min.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.2.custom.min.js" />
     <Content Include="Scripts\newcontent.js" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Music\Album.cshtml" />
@@ -182,8 +183,6 @@
     <Content Include="Scripts\menu.js" />
     <Content Include="ServerSample.svc" />
     <Content Include="Views\Music\NoteWithDate.cshtml" />
-    <Content Include="Views\Music\DemoPackage.cshtml" />
-    <Content Include="Views\Music\DemoPackageLine.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Signum.Engine\Signum.Engine.csproj">

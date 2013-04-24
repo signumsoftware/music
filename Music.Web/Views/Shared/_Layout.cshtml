@@ -11,7 +11,7 @@
 
     @Html.ScriptCss(
         "~/signum/content/reset.css",
-        "~/content/smoothness/jquery-ui-1.9.2.custom.min.css",
+        "~/content/smoothness/jquery-ui-1.10.2.custom.min.css",
         "~/signum/content/SF_Lines.css",
         "~/signum/content/SF_NormalPage.css",
         "~/signum/content/SF_Notify.css",
@@ -20,7 +20,9 @@
         "~/content/site.css"
         )    
     
-    @Html.ScriptsJs("~/scripts/jquery-1.8.3.min.js", "~/scripts/jquery-ui-1.9.2.custom.min.js")    
+    @Html.ScriptsJs(
+        "~/scripts/jquery-1.9.1.min.js", 
+        "~/scripts/jquery-ui-1.10.2.custom.min.js")    
 
     @Html.ScriptsJs("~/signum/resources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/signum/calendarResources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")

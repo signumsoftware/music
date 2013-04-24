@@ -59,7 +59,7 @@ namespace Music.Test.Web
             selenium.Type("DisplayName", "test");
             selenium.Type("File_sfFile", pathSampleReport);
             selenium.FireEvent("File_sfFile", "change");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#File_sfFile:visible"));
+            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("jq=#File_sfFile:visible"));
 
             selenium.EntityOperationClick(ExcelReportOperation.Save);
             selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
@@ -101,7 +101,7 @@ namespace Music.Test.Web
             selenium.Type("DisplayName", "test 3");
             selenium.Type("File_sfFile", pathSampleReport);
             selenium.FireEvent("File_sfFile", "change");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#File_sfFile:visible"));
+            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("jq=#File_sfFile:visible"));
 
             selenium.EntityOperationClick(ExcelReportOperation.Save);
             selenium.WaitForPageToLoad(PageLoadTimeout);
