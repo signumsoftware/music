@@ -93,26 +93,5 @@ namespace Music.Web
                 });
             }
         }
-
-        public static void StartDemoPackage()
-        {
-            if (Navigator.Manager.NotDefined(MethodInfo.GetCurrentMethod()))
-            {
-                Constructor.AddConstructor(() => new DemoPackageDN
-                {
-                    Name = "Demo Package",
-                    RequestedLines = 100,
-                    DelayMilliseconds = 100,
-                    ErrorRate = 0.3,
-                    MainError = false,
-                });
-
-                Navigator.AddSettings(new List<EntitySettings>
-                {
-                    new EntitySettings<DemoPackageDN>(){ PartialViewName = e => ViewPrefix.Formato("DemoPackage"), },
-                    new EntitySettings<DemoPackageLineDN>(){ PartialViewName = e => ViewPrefix.Formato("DemoPackageLine"), },
-                });
-            }
-        }
     }
 }
