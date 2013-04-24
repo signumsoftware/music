@@ -124,7 +124,6 @@
     <Content Include="Images\calendar.png" />
     <Content Include="Scripts\d3.v2.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
-    <Content Include="Scripts\jquery-migrate-1.1.1.js" />
     <Content Include="Scripts\jquery-ui-1.10.2.custom.min.js" />
     <Content Include="Scripts\newcontent.js" />
     <Content Include="Views\Home\Index.cshtml" />
