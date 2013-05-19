@@ -6,6 +6,7 @@
     m:Common.TypeContext="{x:Type d:NoteWithDateDN}"
     MinWidth="300">
     <StackPanel>
+        <m:ValueLine m:Common.Route="[CorruptMixin].Corrupt" />
         <m:ValueLine m:Common.Route="Text" />
         <m:EntityCombo m:Common.Route="Target" />
         <m:ValueLine m:Common.Route="CreationTime" />
