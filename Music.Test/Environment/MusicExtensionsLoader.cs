@@ -49,10 +49,10 @@ namespace Music.Test
                 RoleDN externalUserRole = null;
                 using (OperationLogic.AllowSave<RoleDN>())
                 {
-                    anonymousUserRole = new RoleDN { Name = "Anonymous" }.Save();
-                    superUserRole = new RoleDN { Name = "SuperUser" }.Save();
-                    internalUserRole = new RoleDN { Name = "InternalUser" }.Save();
-                    externalUserRole = new RoleDN { Name = "ExternalUser" }.Save();
+                    anonymousUserRole = new RoleDN { Name = "Anonymous", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    superUserRole = new RoleDN { Name = "SuperUser", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    internalUserRole = new RoleDN { Name = "InternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    externalUserRole = new RoleDN { Name = "ExternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
                 }
 
                 using (OperationLogic.AllowSave<UserDN>())
