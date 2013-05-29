@@ -11,7 +11,7 @@ namespace Music.Test
     [ServiceContract(SessionMode = SessionMode.Required)]
     public interface IServerSample : 
         IBaseServer, IDynamicQueryServer, ILoginServer, IOperationServer, IQueryServer, IChartServer, IUserQueryServer,
-        IQueryAuthServer, IPropertyAuthServer, ITypeAuthServer, IFacadeMethodAuthServer, IPermissionAuthServer, IOperationAuthServer,
+        IQueryAuthServer, IPropertyAuthServer, ITypeAuthServer, IPermissionAuthServer, IOperationAuthServer,
         IExcelReportServer
     {
     }

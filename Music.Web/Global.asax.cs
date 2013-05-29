@@ -108,8 +108,7 @@ namespace Music.Web
                 properties: true, 
                 queries: true, 
                 operations: true, 
-                permissions: true, 
-                facadeMethods: false);
+                permissions: true);
 
             ContextualItemsHelper.Start();
 
@@ -124,7 +123,7 @@ namespace Music.Web
 
             ProcessesClient.Start(packages: true, packageOperations: true);
 
-            QuickLinkWidgetHelper.Start();
+            LinksClient.Start(widget: true, contextualItems: true);
             NoteClient.Start(typeof(LabelDN));
             AlertClient.Start(typeof(LabelDN));
 

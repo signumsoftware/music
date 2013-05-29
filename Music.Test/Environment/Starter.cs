@@ -85,7 +85,7 @@ namespace Music.Test
                 ProcessLogic.CreateDefaultProcessSession = UserProcessSessionDN.CreateCurrent;
              
 
-                AuthLogic.StartAllModules(sb, dqm, typeof(IServerSample));
+                AuthLogic.StartAllModules(sb, dqm);
 
                 QueryLogic.Start(sb);
                 UserQueryLogic.Start(sb, dqm);
@@ -126,7 +126,7 @@ namespace Music.Test
             sb.Settings.OverrideAttributes((UserQueryDN uq) => uq.Related, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
             sb.Settings.OverrideAttributes((UserChartDN uq) => uq.Related, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
 
-            sb.Schema.Settings.OverrideAttributes((ProcessExecutionDN cp) => cp.ProcessData, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
+            sb.Schema.Settings.OverrideAttributes((ProcessDN cp) => cp.Data, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
             sb.Schema.Settings.OverrideAttributes((PackageLineDN cp) => cp.Package, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
             sb.Schema.Settings.OverrideAttributes((ProcessExceptionLineDN cp) => cp.Line, new ImplementedByAttribute(typeof(PackageLineDN)));
 

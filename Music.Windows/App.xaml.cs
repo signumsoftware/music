@@ -88,24 +88,13 @@ namespace Music.Windows
                 queries: true, 
                 permissions: true, 
                 operations: true, 
-                facadeMethods: true, 
                 defaultPasswordExpiresLogic: false);
 
             //ProcessClient.Start();
             //SchedulerClient.Start();
 
-            LinksWidget.Start();
+            LinksClient.Start(widget: true, contextualMenu: true);
             ReportClient.Start(true, false);
-
-            Links.RegisterGlobalLinks((r, c) => new[]{
-                new QuickLinkExplore(new ExploreOptions(typeof(OperationLogDN))
-                {
-                    FilterOptions = { new FilterOption("Target", r) },
-                    OrderOptions = { new OrderOption("Start") },
-                    ColumnOptionsMode = ColumnOptionsMode.Remove,
-                    ColumnOptions = { new ColumnOption("Target") }
-                })
-            });
 
             UserQueryClient.Start();
             ChartClient.Start();
