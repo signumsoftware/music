@@ -40,7 +40,7 @@ namespace Music.Web
                     new EmbeddedEntitySettings<AlbumFromBandModel>(){PartialViewName = e => ViewPrefix.Formato("AlbumFromBandModel")},
                 });
 
-                LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) => new[]
+                LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) =>new []
                 {
                     new QuickLinkFind(typeof(AlbumDN), "Label", entity, true)
                 });
