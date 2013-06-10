@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using Signum.Entities;
 using Signum.Utilities;
 using Signum.Test.Environment;
+using Signum.Entities.DynamicQuery;
 
 namespace Music.Test.Web
 {
@@ -111,7 +112,7 @@ namespace Music.Test.Web
             selenium.SetElementsPerPageToFinder("5");
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));
             Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')"));
-            selenium.SetElementsPerPageToFinder("-1"); 
+            selenium.SetPaginationMode(PaginationMode.All); 
             selenium.Search();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(12));
             Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('12')"));
@@ -185,7 +186,7 @@ namespace Music.Test.Web
             //Top
             selenium.SetElementsPerPageToFinder("5", prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5, prefix));
-            selenium.SetElementsPerPageToFinder("-1", prefix); 
+            selenium.SetPaginationMode(PaginationMode.All, prefix); 
             selenium.Search(prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
         }

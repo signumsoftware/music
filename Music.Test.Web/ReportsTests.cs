@@ -56,6 +56,8 @@ namespace Music.Test.Web
             selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
             selenium.WaitForPageToLoad(PageLoadTimeout);
 
+            selenium.SearchCreate();
+            selenium.WaitForPageToLoad(PageLoadTimeout);
             selenium.Type("DisplayName", "test");
             selenium.Type("File_sfFile", pathSampleReport);
             selenium.FireEvent("File_sfFile", "change");
