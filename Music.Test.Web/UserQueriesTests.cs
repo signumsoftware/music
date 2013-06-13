@@ -207,7 +207,7 @@ namespace Music.Test.Web
                 {
                     Related = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
                     DisplayName = userQueryName,
-                    Filters = { new QueryFilterDN("Id", 3) { Operation = FilterOperation.GreaterThan } },
+                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
                 }.ParseAndSave();
             }
         }
