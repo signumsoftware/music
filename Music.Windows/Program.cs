@@ -40,7 +40,7 @@ namespace Music.Windows
 
             try
             {
-                Server.Execute((ILoginServer ls) => ls.Logout());
+                Server.ExecuteNoRetryOnSessionExpired((ILoginServer ls) => ls.Logout());
             }
             catch
             { }
