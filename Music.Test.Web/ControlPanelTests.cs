@@ -28,15 +28,12 @@ namespace Music.Test.Web
     [TestClass]
     public class ControlPanelTests : Common
     {
-        public ControlPanelTests()
-        {
-            UserQueriesTests.CreateAlbumUserQuery("test");
-        }
-
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
             Common.Start();
+
+            UserQueriesTests.CreateAlbumUserQuery("test");
         }
 
         [ClassCleanup]

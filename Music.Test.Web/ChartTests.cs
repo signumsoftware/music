@@ -67,8 +67,8 @@ namespace Music.Test.Web
             Assert.IsTrue(selenium.IsElementPresent("jq=#value_0[value=1]"));
 
             //set chart tokens
-            selenium.FilterSelectToken(0, "value=Author", true, "Columns_0_");
-            selenium.FilterSelectToken(0, "value=Count", false, "Columns_1_");
+            selenium.FilterSelectToken(0, "value=Author", true, "Columns_0_Token_");
+            selenium.FilterSelectToken(0, "value=Count", false, "Columns_1_Token_");
 
             Draw();
             //3 filas

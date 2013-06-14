@@ -131,9 +131,9 @@ namespace Music.Test.Web
             string prefix = "Columns_0_";
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(prefix + "DisplayName"));
             selenium.Type(prefix + "DisplayName", "Label owner's country");
-            selenium.FilterSelectToken(0, "value=Label", true, prefix);
-            selenium.FilterSelectToken(1, "value=Owner", true, prefix);
-            selenium.FilterSelectToken(2, "value=Country", true, prefix);
+            selenium.FilterSelectToken(0, "value=Label", true, prefix + "Token_");
+            selenium.FilterSelectToken(1, "value=Owner", true, prefix + "Token_");
+            selenium.FilterSelectToken(2, "value=Country", true, prefix + "Token_");
 
             //save it
             selenium.EntityOperationClick(UserQueryOperation.Save);
