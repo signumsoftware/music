@@ -53,7 +53,7 @@ namespace Music.Windows
             e.Handled = true;
         }
 
-        internal static BitmapFrame LoadIcon(string segurosImage)
+        internal static BitmapSource LoadIcon(string segurosImage)
         {
             return ImageLoader.LoadIcon(PackUriHelper.Reference("Imagenes/" + segurosImage, typeof(App)));
         }
