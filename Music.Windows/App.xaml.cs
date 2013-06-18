@@ -35,21 +35,16 @@ namespace Music.Windows
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
-            this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
-            Async.ExceptionHandler = UnhandledAsyncException;
+            this.DispatcherUnhandledException += (sender, args) => Program.HandleException("Error inesperado", args.Exception, App.Current.MainWindow);
+            Async.DispatcherUnhandledException = (ex, win) => Program.HandleException("Error inesperado", ex, win);
+            Async.AsyncUnhandledException = (ex, win) => Program.HandleException("Error inesperado", ex, win);
 
             InitializeComponent();
         }
 
-
-        void UnhandledAsyncException(Exception e)
-        {
-            Program.HandleException("Error en llamada asíncrona", e);
-        }
-
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Program.HandleException("Error inesperado", e.Exception);
+            ;
             e.Handled = true;
         }
 
@@ -60,7 +55,7 @@ namespace Music.Windows
 
         public static void StartApplication()
         {
-            Navigator.Start(new NavigationManager
+            Navigator.Start(new NavigationManager(multithreaded: true)
             {
                 EntitySettings = new Dictionary<Type, EntitySettings>()
                 {

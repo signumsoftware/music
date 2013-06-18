@@ -35,7 +35,7 @@ namespace Music.Windows
             }
             catch (Exception e)
             {
-                HandleException("Start-up error", e);
+                HandleException("Start-up error", e, null);
             }
 
             try
@@ -48,14 +48,14 @@ namespace Music.Windows
 
         public static event Action<string, Exception> OverrideExceptionHandling;
 
-        public static void HandleException(string errorTitle, Exception e)
+        public static void HandleException(string errorTitle, Exception e, Window win)
         {
             if (OverrideExceptionHandling != null)
                 OverrideExceptionHandling(errorTitle, e);
             else
             {
                 var bla = e.FollowC(ex => ex.InnerException);
-                MessageBox.Show(
+                MessageBox.Show(win,
                     bla.ToString(ex => "{0} : {1}".Formato(ex.GetType().Name, ex.Message), "\r\n\r\n"),
                     errorTitle + ":",
                     MessageBoxButton.OK, MessageBoxImage.Error);
