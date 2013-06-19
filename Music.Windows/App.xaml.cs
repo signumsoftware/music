@@ -35,17 +35,15 @@ namespace Music.Windows
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
-            this.DispatcherUnhandledException += (sender, args) => Program.HandleException("Error inesperado", args.Exception, App.Current.MainWindow);
-            Async.DispatcherUnhandledException = (ex, win) => Program.HandleException("Error inesperado", ex, win);
-            Async.AsyncUnhandledException = (ex, win) => Program.HandleException("Error inesperado", ex, win);
+            this.DispatcherUnhandledException += (object sender, DispatcherUnhandledExceptionEventArgs e) =>
+            {
+                Program.HandleException("Error inesperado", e.Exception, App.Current.MainWindow);
+                e.Handled = true;
+            };
+            Async.DispatcherUnhandledException += (ex, win) => Program.HandleException("Error inesperado", ex, win);
+            Async.AsyncUnhandledException += (ex, win) => Program.HandleException("Error inesperado", ex, win);
 
             InitializeComponent();
-        }
-
-        void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            ;
-            e.Handled = true;
         }
 
         internal static BitmapSource LoadIcon(string segurosImage)
