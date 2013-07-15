@@ -82,7 +82,7 @@ namespace Music.Web
             {
                 Schema.Current.Initialize();
                 WebStart();
-                ProcessLogic.StartBackgroundProcess(1000);
+                ProcessRunnerLogic.StartRunningProcesses(1000);
             }
 
             RegisterRoutes(RouteTable.Routes);

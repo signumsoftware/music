@@ -80,7 +80,7 @@ namespace Music.Test
                 AuthLogic.Start(sb, dqm, "System", "Anonymous");
                 UserTicketLogic.Start(sb, dqm);
 
-                ProcessLogic.Start(sb, dqm, 1, userProcessSession: true);
+                ProcessLogic.Start(sb, dqm, userProcessSession: true);
                 PackageLogic.Start(sb, dqm, true, true);
                 ProcessLogic.CreateDefaultProcessSession = UserProcessSessionDN.CreateCurrent;
              
