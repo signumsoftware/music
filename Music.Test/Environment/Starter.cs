@@ -74,16 +74,16 @@ namespace Music.Test
                 OverrideImplementations(sb);
 
                 CacheLogic.Start(sb);
+                TypeLogic.Start(sb, dqm);
 
                 OperationLogic.Start(sb, dqm);
                 ExceptionLogic.Start(sb, dqm);
                 AuthLogic.Start(sb, dqm, "System", "Anonymous");
                 UserTicketLogic.Start(sb, dqm);
 
-                ProcessLogic.Start(sb, dqm, 1, userProcessSession: true);
+                ProcessLogic.Start(sb, dqm, userProcessSession: true);
                 PackageLogic.Start(sb, dqm, true, true);
-                ProcessLogic.CreateDefaultProcessSession = UserProcessSessionDN.CreateCurrent;
-             
+                ProcessLogic.CreateDefaultProcessSession = UserProcessSessionDN.CreateCurrent;             
 
                 AuthLogic.StartAllModules(sb, dqm);
 

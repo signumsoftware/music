@@ -337,8 +337,8 @@ namespace Music.Test.Web
             selenium.Search();
 
             //Results of implementing types
-            Assert.IsTrue(selenium.IsEntityInRow(1, "{0};{1}".Formato(Lite.UniqueTypeName(typeof(ArtistDN)), 1)));
-            Assert.IsTrue(selenium.IsEntityInRow(9, "{0};{1}".Formato(Lite.UniqueTypeName(typeof(BandDN)), 1)));
+            Assert.IsTrue(selenium.IsEntityInRow(1, "{0};{1}".Formato(Lite.GetCleanName(typeof(ArtistDN)), 1)));
+            Assert.IsTrue(selenium.IsEntityInRow(9, "{0};{1}".Formato(Lite.GetCleanName(typeof(BandDN)), 1)));
 
             //Filters
             selenium.FilterSelectToken(0, "label=Id", false);
