@@ -85,6 +85,7 @@ namespace Music.Web
 
                 ProcessLogic.JustMyProcesses = true;
                 ProcessRunnerLogic.MaxDegreeOfParallelism = 1;
+                ProcessRunnerLogic.StartRunningProcesses(1000);
             }
 
             RegisterRoutes(RouteTable.Routes);

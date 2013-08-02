@@ -40,13 +40,19 @@ namespace Music.Test.Web
             Common.MyTestCleanup();
         }
 
+        void OrderById(string prefix = null)
+        {
+            selenium.Click(SearchTestExtensions.TableHeaderSelector(3, prefix));
+            SearchTestExtensions.WaitSearchCompleted(selenium, prefix);
+        }
+
         [TestMethod]
         public void SearchControl001_Filters()
         {
             CheckLoginAndOpen(FindRoute("Album"));
 
             //No filters
-            selenium.Search();
+            OrderById();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(12));
 
             //Quickfilter of a Lite
@@ -57,7 +63,7 @@ namespace Music.Test.Web
             //Filter of a Lite from the combo
             selenium.FilterSelectToken(0, "label=Label", true);
             selenium.AddFilter(1);
-            OpenFinderAndSelectFirstOrderedById(selenium, "value_1_");
+            OpenFinderAndSelectFirstOrderedById(selenium, true, "value_1_");
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector("value_1_"))));
             selenium.Search();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
@@ -83,7 +89,7 @@ namespace Music.Test.Web
 
             //Filter from the combo with subtokens of a MList
             selenium.FilterSelectToken(0, "label=Album", true);
-            selenium.FilterSelectToken(1, "label=Songs", true);
+            selenium.FilterSelectToken(1, "value=Songs", true);
             selenium.FilterSelectToken(2, "value=Count", false);
             selenium.AddFilter(2);
             selenium.FilterSelectOperation(2, "value=GreaterThan");
@@ -102,7 +108,7 @@ namespace Music.Test.Web
             selenium.QuickFilterFromHeader(5, 0); //Label
             selenium.Search();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(0));
-            OpenFinderAndSelectFirstOrderedById(selenium, "value_0_");
+            OpenFinderAndSelectFirstOrderedById(selenium, true, "value_0_");
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector("value_0_"))));
             selenium.Search();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
@@ -128,7 +134,7 @@ namespace Music.Test.Web
 
             string prefix = "Members_0_"; //prefix for all the popup
 
-            selenium.Search(prefix);
+            OrderById(prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
 
             //Quickfilter of a bool
@@ -153,7 +159,7 @@ namespace Music.Test.Web
             //Filter of a Lite from the combo
             selenium.FilterSelectToken(0, "label=Artist", true, prefix);
             selenium.AddFilter(2, prefix);
-            OpenFinderAndSelectFirstOrderedById(selenium, prefix + "value_2_");
+            OpenFinderAndSelectFirstOrderedById(selenium, false, prefix + "value_2_");
             selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector(prefix + "value_2_"))));
             selenium.Search(prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(1, prefix));
@@ -191,11 +197,21 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
         }
 
-        private void OpenFinderAndSelectFirstOrderedById(ISelenium selenium, string prefix)
+        private void OpenFinderAndSelectFirstOrderedById(ISelenium selenium, bool masterData, string prefix)
+        {
+            OpenFinderAndSelectOrderedById(selenium, masterData, prefix, 0);
+        }
+
+        private void OpenFinderAndSelectOrderedById(ISelenium selenium, bool masterData, string prefix, int rowIndexBase0)
         {
             selenium.LineFind(prefix);
-            selenium.Sort(3, true, prefix);
-            selenium.SelectRow(0, prefix);
+            
+            if (masterData)
+                selenium.Search(prefix);
+            else 
+                OrderById(prefix);
+            
+            selenium.SelectRow(rowIndexBase0, prefix);
             selenium.PopupOk(prefix);
         }
 
@@ -286,7 +302,7 @@ namespace Music.Test.Web
             selenium.EditColumnName(8, "Label Id");
 
             //Search with userColumns
-            selenium.Search();
+            OrderById();
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 8)));
 
             //Move columns
@@ -333,12 +349,12 @@ namespace Music.Test.Web
         public void SearchControl007_ImplementedByFinder()
         {
             CheckLoginAndOpen(FindRoute("IAuthorDN"));
-            
-            selenium.Search();
+
+            OrderById();
 
             //Results of implementing types
             Assert.IsTrue(selenium.IsEntityInRow(1, "{0};{1}".Formato(Lite.GetCleanName(typeof(ArtistDN)), 1)));
-            Assert.IsTrue(selenium.IsEntityInRow(9, "{0};{1}".Formato(Lite.GetCleanName(typeof(BandDN)), 1)));
+            Assert.IsTrue(selenium.IsEntityInRow(2, "{0};{1}".Formato(Lite.GetCleanName(typeof(BandDN)), 1)));
 
             //Filters
             selenium.FilterSelectToken(0, "label=Id", false);
@@ -368,7 +384,7 @@ namespace Music.Test.Web
             selenium.CheckAddFilterEnabled(false);
             selenium.CheckAddColumnEnabled(false);
 
-            selenium.Search();
+            OrderById();
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(8));
 
             //[Num]
@@ -377,7 +393,7 @@ namespace Music.Test.Web
             selenium.CheckAddColumnEnabled(true);
             selenium.CheckAddFilterEnabled(true);
             selenium.CheckAddColumnEnabled(true);
-            selenium.FilterSelectToken(1, "label=Friends", true);
+            selenium.FilterSelectToken(1, "value=Friends", true);
             selenium.CheckAddFilterEnabled(false);
             selenium.CheckAddColumnEnabled(false);
             selenium.FilterSelectToken(2, "value=Count", false);
@@ -413,7 +429,7 @@ namespace Music.Test.Web
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(10));
 
             selenium.AddFilter(0);
-            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
+            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
             selenium.Search();
             selenium.AssertMultiplyMessage(true);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
@@ -427,7 +443,7 @@ namespace Music.Test.Web
             selenium.CheckAddColumnEnabled(false);
 
             selenium.AddFilter(0);
-            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
+            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
             selenium.Search();
             selenium.AssertMultiplyMessage(false);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
@@ -453,7 +469,7 @@ namespace Music.Test.Web
 
             selenium.AddFilter(0);
             selenium.FilterSelectOperation(0, "value=DistinctTo");
-            selenium.LineFindAndSelectElements("value_0_", new int[] { 2 });
+            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
             selenium.Search();
             selenium.AssertMultiplyMessage(false);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));

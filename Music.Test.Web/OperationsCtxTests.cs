@@ -34,12 +34,18 @@ namespace Music.Test.Web
             Common.MyTestCleanup();
         }
 
+        void OrderById()
+        {
+            selenium.Click(SearchTestExtensions.TableHeaderSelector(3));
+            SearchTestExtensions.WaitSearchCompleted(selenium);
+        }
+
         [TestMethod]
         public void OperationCtx001_Execute()
         {
             CheckLoginAndOpen(FindRoute("Artist"));
 
-            selenium.Search();
+            OrderById();
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
 
             string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
@@ -140,7 +146,7 @@ namespace Music.Test.Web
         {
             CheckLoginAndOpen(FindRoute("Artist"));
 
-            selenium.Search();
+            OrderById();
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
 
             selenium.SelectRow(1);
@@ -172,9 +178,7 @@ namespace Music.Test.Web
             }
 
             //Order by Id descending so we delete the last cloned album
-            int idCol = 3;
-            selenium.Sort(idCol, true);
-            selenium.Sort(idCol, false);
+            selenium.Search();
             selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
 
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos));

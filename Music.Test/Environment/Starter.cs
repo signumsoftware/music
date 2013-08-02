@@ -44,7 +44,7 @@ namespace Music.Test
                 Administrator.TotalGeneration();
 
                 using (AuthLogic.Disable())
-                {
+                {      
                     Schema.Current.InitializeUntil(InitLevel.Level0SyncEntities);
 
                     MusicExtensionsLoader.Load();
