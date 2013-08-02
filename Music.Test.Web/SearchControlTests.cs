@@ -117,11 +117,7 @@ namespace Music.Test.Web
             //Top
             selenium.SetElementsPerPageToFinder("5");
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));
-            Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')"));
-            selenium.SetPaginationMode(PaginationMode.All); 
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(12));
-            Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('12')"));
+            Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')"));;
         }
 
         [TestMethod]
@@ -192,9 +188,6 @@ namespace Music.Test.Web
             //Top
             selenium.SetElementsPerPageToFinder("5", prefix);
             selenium.WaitAjaxFinished(selenium.ThereAreNRows(5, prefix));
-            selenium.SetPaginationMode(PaginationMode.All, prefix); 
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
         }
 
         private void OpenFinderAndSelectFirstOrderedById(ISelenium selenium, bool masterData, string prefix)
