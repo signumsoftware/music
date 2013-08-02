@@ -11,6 +11,7 @@ using Signum.Engine.Authorization;
 using Signum.Engine;
 using Signum.Test;
 using Signum.Test.Environment;
+using Signum.Engine.Processes;
 
 namespace Music.Test.Web
 {
@@ -26,6 +27,8 @@ namespace Music.Test.Web
         public static void ClassInitialize(TestContext testContext)
         {
             Common.Start();
+
+            ProcessRunnerLogic.StartRunningProcesses(1000);
         }
 
         [ClassCleanup]
