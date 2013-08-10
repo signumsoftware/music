@@ -1,6 +1,6 @@
 [submodule "Framework"]
 	path = Framework
-	url = http://gitserveriis/WebGit.NET/git/Framework
+	url = http://gitserveriis/WebGit.NET/git/Framework_Local
 [submodule "Extensions"]
 	path = Extensions
-	url = http://gitserveriis/WebGit.NET/git/Extensions
+	url = http://gitserveriis/WebGit.NET/git/Extensions_Local
