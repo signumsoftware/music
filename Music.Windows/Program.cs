@@ -30,20 +30,17 @@ namespace Music.Windows
                 App.StartApplication();
 
                 App app = new App() { ShutdownMode = ShutdownMode.OnMainWindowClose };
-                
+
                 app.Run(new Main());
             }
             catch (Exception e)
             {
                 HandleException("Start-up error", e, null);
             }
-
-            try
+            finally
             {
                 Server.Disconnect();
             }
-            catch
-            { }
         }
 
         public static event Action<string, Exception> OverrideExceptionHandling;
