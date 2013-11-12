@@ -34,6 +34,7 @@ using Signum.Web.Alerts;
 using Signum.Web;
 using Signum.Web.Exceptions;
 using Signum.Test.Environment;
+using System.IO;
 
 namespace Music.Web
 {
@@ -121,7 +122,7 @@ namespace Music.Web
 
             FilesClient.Start(true, true, true);
             ChartClient.Start();
-            ReportsClient.Start(true, true);
+            ReportSpreadsheetClient.Start(true, true);
             ExceptionClient.Start();
 
             ProcessesClient.Start(packages: true, packageOperations: true);

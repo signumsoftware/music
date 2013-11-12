@@ -17,6 +17,7 @@ using Signum.Utilities;
 using System.Resources;
 using Signum.Entities.Reports;
 using Signum.Entities;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {
@@ -43,75 +44,54 @@ namespace Music.Test.Web
         [TestMethod]
         public void ExcelReport()
         {
-            string pathAlbumSearch = FindRoute("Album");
-            
-            CheckLoginAndOpen(pathAlbumSearch);
-
-            string excelMenuId = "tmExcel";
-            string administerReportsId = "qbReportAdminister";
-
             string pathSampleReport = "D:\\Signum\\Music\\Assets\\Album.xlsx";
-            
-            //create when there's no query created => direct navigation to create page
-            selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
 
-            selenium.SearchCreate();
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.Type("DisplayName", "test");
-            selenium.Type("File_sfFile", pathSampleReport);
-            selenium.FireEvent("File_sfFile", "change");
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("jq=#File_sfFile:visible"));
+            SearchPage(typeof(AlbumDN), CheckLogin)
+            .Using(albums => albums.SearchControl.AdministerExcelReports())
+            .Using(reports => reports.Create<ExcelReportDN>())
+            .Using(report =>
+            {
+                report.ValueLineValue(a => a.DisplayName, "test");
+                report.FileLine(a => a.File).SetPath(pathSampleReport);
+                report.ExecuteSubmit(ExcelReportOperation.Save);
+                Assert.IsTrue(report.HasId());
 
-            selenium.EntityOperationClick(ExcelReportOperation.Save);
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
-            selenium.MainEntityHasId();
+                report.ValueLineValue(a => a.DisplayName, "test 2");
+                report.ExecuteAjax(ExcelReportOperation.Save);
+                selenium.WaitElementPresent("jq=.sf-entity-title:contains('test 2')");
 
-            //modify
-            selenium.Type("DisplayName", "test 2");
-            selenium.EntityOperationClick(ExcelReportOperation.Save);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=.sf-entity-title:contains('test 2')"));
+                return SearchPage(typeof(AlbumDN));
+            })
+            .Using(albums =>
+            {
+                albums.Selenium.AssertElementPresent(albums.SearchControl.ExcelReportLocator("test 2"));
 
-            //created appears modified in menu
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(excelMenuId, "title='test 2'", true);
-
-            //delete
-            selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            
-            var newReport = Lite.Create<ExcelReportDN>(1);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.EntityRowSelector(newReport))); //SearchOnLoad
-            selenium.EntityClick(newReport);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            selenium.EntityOperationClick(ExcelReportOperation.Delete);
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //deleted does not appear in menu
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(excelMenuId, "title='test 2'", false);
-
-            //create when there are already others
-            selenium.QueryMenuOptionClick(excelMenuId, administerReportsId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.SearchCreate();
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.Type("DisplayName", "test 3");
-            selenium.Type("File_sfFile", pathSampleReport);
-            selenium.FireEvent("File_sfFile", "change");
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("jq=#File_sfFile:visible"));
-
-            selenium.EntityOperationClick(ExcelReportOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //created appears in menu
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(excelMenuId, "title='test 3'", true);
+                return albums.SearchControl.AdministerExcelReports();
+            })
+            .Using(reports =>
+            {
+                reports.SearchControl.WaitSearchCompleted();
+                return reports.SearchControl.Results.EntityClick(Lite.Create<ExcelReportDN>(1));
+            })
+            .Using(report => report.DeleteSubmit(ExcelReportOperation.Delete))
+            .Using(reports => SearchPage(typeof(AlbumDN)))
+            .Using(albums =>
+            {
+                albums.Selenium.AssertElementNotPresent(albums.SearchControl.ExcelReportLocator("title 2"));
+                return albums.SearchControl.AdministerExcelReports();
+            })
+            .Using(reports => reports.Create<ExcelReportDN>())
+            .Using(report =>
+            {
+                report.ValueLineValue(a => a.DisplayName, "test 3");
+                report.FileLine(a => a.File).SetPath(pathSampleReport);
+                report.ExecuteSubmit(ExcelReportOperation.Save);
+                return SearchPage(typeof(AlbumDN));
+            })
+            .EndUsing(albums =>
+            {
+                albums.Selenium.AssertElementPresent(albums.SearchControl.ExcelReportLocator("test 3"));
+            });
         }
     }
 }

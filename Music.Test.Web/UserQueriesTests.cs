@@ -45,171 +45,98 @@ namespace Music.Test.Web
         [TestMethod]
         public void UserQueries001_Create()
         {
-            string pathAlbumSearch = FindRoute("Album");
+            SearchPage(typeof(AlbumDN), CheckLogin).Using(album =>
+            {
+                album.Filters.AddFilter("Year", FilterOperation.GreaterThan, 2000);
+                album.Filters.AddFilter("Label", FilterOperation.EqualTo, Lite.Create<LabelDN>(1));
+                album.SearchControl.AddColumn("Label.Owner");
 
-            CheckLoginAndOpen(pathAlbumSearch);
+                album.Results.OrderBy(6);
+                album.Results.OrderByDescending(6);
 
-            //add filter of simple value
-            selenium.FilterSelectToken(0, "label=Year", false);
-            selenium.AddFilter(0);
-            selenium.FilterSelectOperation(0, "value=GreaterThan");
-            selenium.Type("value_0", "2000");
+                return album.SearchControl.NewUserQuery();
+            })
+            .Using(uq =>
+            {
+                uq.ValueLineValue(a => a.DisplayName, "Last albums");
+                uq.ExecuteAjax(UserQueryOperation.Save);
 
-            //add filter of lite
-            string filterPrefix = "value_1_";
-            selenium.FilterSelectToken(0, "label=Label", true);
-            selenium.AddFilter(0);
-            selenium.LineFind(filterPrefix);
-            selenium.Search(filterPrefix);
-            selenium.SelectEntityRow(Lite.Create<LabelDN>(1), filterPrefix);
-            selenium.PopupOk(filterPrefix);
-
-            //add user column
-            selenium.FilterSelectToken(1, "label=Owner", true);
-            selenium.AddColumn("Label.Owner");
-
-            int yearCol = 6;
-
-            //add order
-            selenium.Sort(yearCol, true);
-            selenium.Sort(yearCol, false);
-            
-            string uqMenuId = "tmUserQueries";
-            string uqCreateId = "qbUserQueryNew";
-
-            //create user query
-            selenium.QueryMenuOptionClick(uqMenuId, uqCreateId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.Type("DisplayName", "Last albums");
-
-            selenium.EntityOperationClick(UserQueryOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //check new user query is in the dropdownlist
-            string uqOptionSelector = "title='Last albums'";
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(uqMenuId, uqOptionSelector, true);
-
-            //load user query
-            selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr(uqMenuId, uqOptionSelector));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            //Filter present
-            Assert.IsTrue(selenium.IsElementPresent("value_0"));
-            Assert.IsTrue(selenium.IsElementPresent(LinesTestExtensions.EntityLineToStrSelector("value_1_")));
-            //Column present
-            selenium.TableHasColumn("Label.Owner");
-            //Sort present
-            selenium.TableHeaderMarkedAsSorted(yearCol, false, true);
+                return SearchPage(typeof(AlbumDN));
+            })
+            .EndUsing(albums =>
+            {
+                albums.SearchControl.UserQueryLocatorClick("Last albums");
+                albums.Selenium.WaitElementPresent(albums.Filters.GetFilter(0).ValueLine().Prefix);
+                Assert.IsTrue(albums.Results.HasColumn("Label.Owner"));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(6, OrderType.Descending));
+            }); 
         }
 
         [TestMethod]
         public void UserQueries002_Edit()
         {
             var uqName = "uq" + DateTime.Now.Ticks.ToString().Substring(8);
-            var userQuery = CreateAlbumUserQuery(uqName);
+            var userQuery = AuthLogic.UnsafeUserSession("su").Using(_ => 
+                new UserQueryDN(typeof(AlbumDN))
+                {
+                    Related = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
+                    DisplayName = uqName,
+                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
+                }.ParseAndSave());
 
-            string pathAlbumSearch = FindRoute("Album");
+            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
+            {
+                albums.SearchControl.UserQueryLocatorClick(uqName);
+                return albums.SearchControl.EditUserQuery();
+            }).Using(uq =>
+            {
+                uq.EntityRepeater(a => a.Filters).Remove(0);
+                uq.EntityRepeater(a => a.Columns).Create();
+                uq.EntityRepeater(a => a.Columns).Details<QueryColumnDN>(0).Do(qc =>
+                {
+                    qc.ValueLineValue(a => a.DisplayName, "Label owner's country");
+                    qc.QueryTokenBuilder(a => a.Token).SelectToken("Label.Owner.Country");
+                });
+                uq.ExecuteAjax(UserQueryOperation.Save);
 
-            CheckLoginAndOpen(pathAlbumSearch);
+                return SearchPage(typeof(AlbumDN));
+            })
+            .EndUsing(albums =>
+            {
+                albums.SearchControl.UserQueryLocatorClick(uqName);
+                selenium.AssertElementNotPresent(albums.Filters.GetFilter(0).OperationLocator);
+                Assert.IsTrue(albums.Results.HasColumn("Label.Owner.Country"));
+            });
 
-            string uqMenuId = "tmUserQueries";
-            string uqOptionSelector = "title='" + uqName + "'";
-            string editId = "qbUserQueryEdit";
-
-            //load user query
-            selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr(uqMenuId, uqOptionSelector));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //edit it
-            selenium.QueryMenuOptionClick(uqMenuId, editId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            //remove filter
-            selenium.LineRemove("Filters_0_");
-            //add column
-            selenium.LineCreate("Columns_", false, 0);
-            string prefix = "Columns_0_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(prefix + "DisplayName"));
-            selenium.Type(prefix + "DisplayName", "Label owner's country");
-            selenium.FilterSelectToken(0, "value=Label", true, prefix + "Token_");
-            selenium.FilterSelectToken(1, "value=Owner", true, prefix + "Token_");
-            selenium.FilterSelectToken(2, "value=Country", true, prefix + "Token_");
-
-            //save it
-            selenium.EntityOperationClick(UserQueryOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //check new user query is in the dropdownlist
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            
-            //load user query
-            selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr(uqMenuId, uqOptionSelector));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            //Filter deleted
-            Assert.IsFalse(selenium.IsElementPresent("value_0"));
-            //New column present
-            selenium.TableHasColumn("Label.Owner.Country");
         }
 
         [TestMethod]
         public void UserQueries003_Delete()
         {
-            string pathAlbumSearch = FindRoute("Album");
-
-            string uqMenuId = "tmUserQueries";
-            string uqCreateId = "qbUserQueryNew";
-            string editId = "qbUserQueryEdit";
-
-            CheckLoginAndOpen(pathAlbumSearch);
-
-            int yearCol = 6;
-
-            //add order
-            selenium.Sort(yearCol, true);
-            
-            //create user query
-            selenium.QueryMenuOptionClick(uqMenuId, uqCreateId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.Type("DisplayName", "test");
-
-            selenium.EntityOperationClick(UserQueryOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //check new user query is in the dropdownlist
-            string uqOptionSelector = "title='test'";
-            selenium.Open(pathAlbumSearch);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(uqMenuId, uqOptionSelector, true);
-
-            //load user query
-            selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr(uqMenuId, uqOptionSelector));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            //Sort present
-            selenium.TableHeaderMarkedAsSorted(yearCol, true, true);
-
-            //edit it
-            selenium.QueryMenuOptionClick(uqMenuId, editId);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //remove it
-            selenium.EntityOperationClick(UserQueryOperation.Delete);
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.QueryMenuOptionPresentByAttr(uqMenuId, uqOptionSelector, false);
-        }
-
-        public static UserQueryDN CreateAlbumUserQuery(string userQueryName)
-        {
-            using (AuthLogic.UnsafeUserSession("su"))
+            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
             {
-                return new UserQueryDN(typeof(AlbumDN))
-                {
-                    Related = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
-                    DisplayName = userQueryName,
-                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
-                }.ParseAndSave();
-            }
+                albums.Results.OrderBy(5);
+                return albums.SearchControl.NewUserQuery();
+            })
+            .Using(uq =>
+            {
+                uq.ValueLineValue(a => a.DisplayName, "test");
+                uq.ExecuteSubmit(UserQueryOperation.Save);
+
+                return SearchPage(typeof(AlbumDN));
+            }).Using(albums =>
+            {
+                albums.SearchControl.UserQueryLocatorClick("test");
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(5, OrderType.Ascending));
+                return albums.SearchControl.EditUserQuery();
+            }).Using(uq =>
+            {
+                return uq.DeleteSubmit(UserQueryOperation.Delete);
+            }).EndUsing(albums =>
+            {
+                selenium.AssertElementNotPresent(albums.SearchControl.UserQueryLocator("test"));
+            }); 
         }
+
     }
 }

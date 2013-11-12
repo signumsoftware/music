@@ -224,6 +224,102 @@ namespace Music.Test
             }
         }
 
+        [TestMethod]
+        public void TypeConditionSaveTwice()
+        {
+            using (AuthLogic.UnsafeUserSession("external"))
+            using (OperationLogic.AllowSave<LabelDN>())
+            using (TypeAuthLogic.DisableQueryFilter())
+            {
+                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
+
+                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+
+                LabelDN label;
+
+                using (Transaction tr = new Transaction())
+                {   
+                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+
+                    label.Name = "Nintendo Sound Systems";
+                    label.Save();
+
+                    tr.Commit();
+                }
+
+                Database.Delete(label);
+            }
+        }
+
+        [TestMethod]
+        public void TypeConditionSaveTwiceNamedRollback()
+        {
+            using (AuthLogic.UnsafeUserSession("external"))
+            using (OperationLogic.AllowSave<LabelDN>())
+            using (TypeAuthLogic.DisableQueryFilter())
+            {
+                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
+                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+
+                LabelDN label;
+
+                using (Transaction tr = new Transaction())
+                {
+                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+
+                    using (Transaction tr2 = Transaction.NamedSavePoint("bla"))
+                    {
+                        label.Name = "Nintendo Sound Systems";
+                        label.Save();
+                        //tr2.Commit();
+                    }
+
+                    tr.Commit();
+                }
+
+                label = label.ToLite().Retrieve();
+
+                Assert.AreEqual("Nintendo sound", label.Name);
+
+                Database.Delete(label);
+            }
+        }
+
+
+        [TestMethod]
+        public void TypeConditionSaveTwiceNamed()
+        {
+            using (AuthLogic.UnsafeUserSession("external"))
+            using (OperationLogic.AllowSave<LabelDN>())
+            using (TypeAuthLogic.DisableQueryFilter())
+            {
+                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
+                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+
+                LabelDN label;
+
+                using (Transaction tr = new Transaction())
+                {
+                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+
+                    using (Transaction tr2 = Transaction.NamedSavePoint("bla"))
+                    {
+                        label.Name = "Nintendo Sound Systems";
+                        label.Save();
+                        tr2.Commit();
+                    }
+
+                    tr.Commit();
+                }
+
+                label = label.ToLite().Retrieve();
+
+                Assert.AreEqual("Nintendo Sound Systems", label.Name);
+
+                Database.Delete(label);
+            }
+        }
+
         //[TestMethod]
         //public void ImportAuthRules()
         //{

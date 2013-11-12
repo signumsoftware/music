@@ -12,6 +12,7 @@ using Signum.Engine;
 using Signum.Test;
 using Signum.Test.Environment;
 using Signum.Engine.Processes;
+using System.IO;
 
 namespace Music.Test.Web
 {
@@ -37,179 +38,130 @@ namespace Music.Test.Web
             Common.MyTestCleanup();
         }
 
-        void OrderById()
-        {
-            selenium.Click(SearchTestExtensions.TableHeaderSelector(3));
-            SearchTestExtensions.WaitSearchCompleted(selenium);
-        }
-
         [TestMethod]
         public void OperationCtx001_Execute()
         {
-            CheckLoginAndOpen(FindRoute("Artist"));
+            using (var artists = SearchPage(typeof(ArtistDN), CheckLogin))
+            {
+                artists.Results.OrderBy("Id");
 
-            OrderById();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
+                selenium.Wait(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
 
-            string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
+                artists.SearchControl.Results.EntityContextMenu(0).ExecuteClick(ArtistOperation.AssignPersonalAward);
 
-            selenium.EntityContextMenu(1);
-            selenium.EntityContextMenuClick(1, "ArtistOperation_AssignPersonalAward");
-
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0} > a.sf-entity-ctxmenu-success".Formato(row1col1)));
-            Assert.IsFalse(selenium.IsElementPresent("{0} .sf-search-ctxmenu .sf-search-ctxmenu-overlay".Formato(row1col1)));
-
-            //For Michael Jackson there are no operations enabled
-            selenium.EntityContextMenu(5);
-            //There's not a menu with hrefs => only some text saying there are no operations
-            Assert.IsTrue(selenium.IsElementPresent("{0} a.sf-disabled".Formato(SearchTestExtensions.EntityContextMenuSelector(selenium, 5))));
+                Assert.IsTrue(artists.SearchControl.Results.EntityContextMenu(0).IsDisabled(ArtistOperation.AssignPersonalAward)); 
+            }
         }
 
         [TestMethod]
         public void OperationCtx002_ConstructFrom_OpenPopup()
         {
-            CheckLoginAndOpen(FindRoute("Band"));
+            SearchPage(typeof(BandDN), CheckLogin).Using(bands =>
+            {
+                bands.SearchControl.Search();
 
-            selenium.Search();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
-
-            string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
-
-            selenium.EntityContextMenu(1);
-            selenium.EntityContextMenuClick(1, "AlbumOperation_CreateAlbumFromBand");
-
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
-
-            selenium.Type("New_Name", "ctxtest");
-            selenium.Type("New_Year", DateTime.Now.Year.ToString());
-
-            selenium.LineFindAndSelectElements("New_Label_", new int[] { 0 });
-
-            selenium.Click("New_btnOk");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.MainEntityHasId();
+                return bands.SearchControl.Results.EntityContextMenu(0).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
+                {
+                    album.ValueLineValue(a => a.Name, "ctxtest");
+                    album.ValueLineValue(a => a.Year, DateTime.Now.Year);
+                    album.EntityLine(a => a.Label).Find().SelectByPosition(0);
+                    return album.OkWaitNormalPage<AlbumDN>();
+                });
+            }).EndUsing(album =>
+            {
+                Assert.IsTrue(album.HasId());
+            }); 
         }
 
         [TestMethod]
         public void OperationCtx003_Delete()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
-
-            int cuantos = 0;
-            using (AuthLogic.Disable())
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
             {
-                cuantos = Database.Query<AlbumDN>().Count();
+                int count = AuthLogic.Disable().Using(d => Database.Query<AlbumDN>().Count());
+
+                albums.Results.OrderByDescending("Id");
+
+                Assert.AreEqual(count, albums.Results.RowsCount());
+
+                albums.Results.EntityContextMenu(0).ExecuteClick(AlbumOperation.Delete);
+
+                albums.Selenium.ConsumeConfirmation();
+
+                albums.Search();
+                albums.Search();
+
+                Assert.AreEqual(count - 1, albums.Results.RowsCount());
             }
-
-            //Order by Id descending so we delete the last cloned album
-            int idCol = 3;
-            selenium.Sort(idCol, true);
-            selenium.Sort(idCol, false);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
-
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos));
-
-            string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
-
-            selenium.EntityContextMenu(1);
-            selenium.EntityContextMenuClick(1, "AlbumOperation_Delete");
-
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            selenium.Search();
-
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos - 1));
         }
 
         [TestMethod]
         public void OperationCtx004_ConstructFromMany()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
+            {
+                albums.Search();
+                albums.Results.SelectRow(0, 1);
 
-            selenium.Search();
-
-            selenium.SelectRow(0);
-            selenium.SelectRow(1);
-
-            selenium.EntityContextMenu(2);
-            selenium.EntityContextMenuClick(2, "AlbumOperation_CreateGreatestHitsAlbum");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            selenium.Type("Name", "test greatest hits");
-            selenium.Select("Label_sfCombo", "label=Virgin");
-
-            selenium.EntityOperationClick(AlbumOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.MainEntityHasId();
+                return albums.Results.EntityContextMenu(1).ConstructFromNormalPage<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum);
+            }).EndUsing(album =>
+            {
+                album.ValueLineValue(a => a.Name, "test greatest hits");
+                album.EntityCombo(a => a.Label).SelectLabel("Virgin");
+                album.ExecuteSubmit(AlbumOperation.Save);
+                Assert.IsTrue(album.HasId());
+            });
         }
 
         [TestMethod]
         public void OperationCtx010_FromMany_Execute()
         {
-            CheckLoginAndOpen(FindRoute("Artist"));
+            using (var artist = SearchPage(typeof(ArtistDN), CheckLogin))
+            {
+                artist.Results.OrderBy("Id");
 
-            OrderById();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
+                artist.Results.SelectRow(0, 1);
 
-            selenium.SelectRow(1);
-            selenium.SelectRow(2);
+                using (var process = artist.Results.EntityContextMenu(1).ConstructFromPopup<ProcessDN>(ArtistOperation.AssignPersonalAward))
+                {
+                    process.ExecuteAjax(ProcessOperation.Execute);
 
-            selenium.EntityContextMenu(2);
-            selenium.EntityContextMenuClick(2, "ArtistOperation_AssignPersonalAward");
-
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
-            selenium.EntityOperationClick(ProcessOperation.Execute);
-
-            selenium.WaitAjaxFinished(() => 
-                selenium.EntityOperationDisabled(ProcessOperation.Execute) &&
-                selenium.EntityOperationDisabled(ProcessOperation.Cancel) &&
-                selenium.EntityOperationDisabled(ProcessOperation.Suspend));
-
-            selenium.PopupCancel("New_");
+                    selenium.Wait(() => selenium.IsElementPresent(process.PopupVisibleLocator) &&
+                        !process.OperationEnabled(ProcessOperation.Execute) &&
+                        !process.OperationEnabled(ProcessOperation.Cancel) &&
+                        !process.OperationEnabled(ProcessOperation.Suspend));
+                } 
+            }
         }
 
         [TestMethod]
         public void OperationCtx011_FromMany_Delete()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
-
-            int cuantos = 0;
-            using (AuthLogic.Disable())
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
             {
-                cuantos = Database.Query<AlbumDN>().Count();
+                int count = AuthLogic.Disable().Using(d => Database.Query<AlbumDN>().Count());
+
+                //Order by Id descending so we delete the last cloned album
+                albums.Search();
+
+                Assert.AreEqual(count, albums.Results.RowsCount());
+
+                albums.Results.SelectRow(0, 1);
+
+                using (var process = albums.Results.SelectedClick().DeleteProcessClick(AlbumOperation.Delete))
+                {
+                    process.ExecuteAjax(ProcessOperation.Execute);
+
+                    selenium.Wait(() => selenium.IsElementPresent(process.PopupVisibleLocator) &&
+                        !process.OperationEnabled(ProcessOperation.Execute) &&
+                        !process.OperationEnabled(ProcessOperation.Cancel) &&
+                        !process.OperationEnabled(ProcessOperation.Suspend));
+                }
+
+                selenium.Search();
+
+                Assert.AreEqual(count - 2, albums.Results.RowsCount());
             }
-
-            //Order by Id descending so we delete the last cloned album
-            selenium.Search();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
-
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos));
-
-            string row1col1 = SearchTestExtensions.CellSelector(selenium, 1, 1);
-            selenium.SelectRow(1);
-            selenium.SelectRow(2);
-
-            selenium.Click("jq=.sf-tm-selected");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("AlbumOperation_Delete"));
-            selenium.Click("AlbumOperation_Delete");
-
-            selenium.WaitAjaxFinished(() => selenium.IsConfirmationPresent());
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
-            selenium.EntityOperationClick(ProcessOperation.Execute);
-
-            selenium.WaitAjaxFinished(() =>
-                selenium.EntityOperationDisabled(ProcessOperation.Execute) &&
-                selenium.EntityOperationDisabled(ProcessOperation.Cancel) &&
-                selenium.EntityOperationDisabled(ProcessOperation.Suspend));
-
-            selenium.PopupCancel("New_");
-
-            selenium.Search();
-
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(cuantos - 2));
         }
     }
 }

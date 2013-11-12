@@ -42,294 +42,311 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines001_EntityLine()
         {
-            CheckLoginAndOpen(ViewRoute("Band", 1));
+            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            {
+                var el = band.EntityLine(b => b.LastAward);
 
-            string prefix = "LastAward_";
+                //view cancel 
+                el.View<AmericanMusicAwardDN>().EndUsing(la => la.Close());
 
-            //view
-            selenium.LineView(prefix);
+                //remove
+                el.Remove();
+                Assert.IsFalse(el.HasEntity());
 
-            //cancel 
-            selenium.PopupCancel(prefix);
+                //create with implementations
+                el.CreatePopup<GrammyAwardDN>().EndUsing(award =>
+                {
+                    award.ValueLineValue(a => a.Category, "test");
+                    award.ExecuteAjax(AwardOperation.Save);
+                    award.OkWaitClosed();
+                });
 
-            //delete
-            selenium.LineRemove(prefix);
-            selenium.EntityLineHasValue(prefix, false);
+                Assert.IsTrue(el.HasEntity());
+                Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
+                Assert.IsFalse(el.RuntimeInfo().IsNew); //Already saved
 
-            //create with implementations
-            selenium.LineCreateWithImpl(prefix, true, grammyAward);
-            selenium.Type("{0}Category".Formato(prefix), "test");
-            selenium.EntityOperationClick(AwardOperation.Save);
-            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
-            selenium.PopupOk(prefix);
-            selenium.EntityLineHasValue(prefix, true);
-            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).StartsWith("GrammyAward"));
-            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
-
-            //find with implementations
-            selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 });
-            selenium.EntityLineHasValue(prefix, true);
+                //find with implementations
+                el.Remove();
+                el.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                Assert.IsTrue(el.HasEntity());
+            }
         }
 
         [TestMethod]
         public void Lines002_EntityLineInPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Album", 1));
+            using (var album = NormalPage<AlbumDN>(1, CheckLogin))
+            {
+                //open popup
+                using (var artist = album.EntityLine(a => a.Author).View<ArtistDN>())
+                {
+                    var el = artist.EntityLine(b => b.LastAward);
 
-            //open popup
-            selenium.LineView("Author_");
+                    //view cancel 
+                    el.View<AmericanMusicAwardDN>().EndUsing(la => la.Close());
 
-            string prefix = "Author_LastAward_";
+                    //remove
+                    el.Remove();
+                    Assert.IsFalse(el.HasEntity());
 
-            //view
-            selenium.LineView(prefix);
-            selenium.PopupOk(prefix);
+                    //create with implementations
+                    el.CreatePopup<AmericanMusicAwardDN>().EndUsing(award =>
+                    {
+                        award.ValueLineValue(a => a.Category, "test");
+                        award.ExecuteAjax(AwardOperation.Save);
+                        award.OkWaitClosed();
+                    });
 
-            //delete
-            selenium.LineRemove(prefix);
-            selenium.EntityLineHasValue(prefix, false);
 
-            //create with implementations
-            selenium.LineCreateWithImpl(prefix, true, "AmericanMusicAward");
-            selenium.Type("{0}Category".Formato(prefix), "test");
-            selenium.EntityOperationClick(AwardOperation.Save);
-            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges(prefix));
-            selenium.PopupOk(prefix);
-            selenium.EntityLineHasValue(prefix, true);
-            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).StartsWith("AmericanMusicAward"));
-            Assert.IsTrue(selenium.GetValue("jq=#{0}sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
+                    Assert.IsTrue(el.HasEntity());
+                    Assert.AreEqual(typeof(AmericanMusicAwardDN), el.RuntimeInfo().EntityType);
+                    Assert.IsFalse(el.RuntimeInfo().IsNew); //Already saved
 
-            //find with implementations
-            selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", new int[] { 0 });
-            selenium.EntityLineHasValue(prefix, true);
+                    //find with implementations
+                    el.Remove();
+                    el.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
+                    Assert.IsTrue(el.HasEntity());
+
+                    artist.Close();
+                }
+            }
         }
 
         [TestMethod]
         public void Lines003_EntityLineDetail()
         {
-            CheckLoginAndOpen("/Music.Web/Music/BandDetail");
+            using (var bandDetail = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
+            {
+                var ed = bandDetail.EntityLineDetail(a => a.LastAward);
+                Assert.IsTrue(ed.HasEntity());
 
-            string prefix = "LastAward_";
+                ed.Remove();
+                Assert.IsFalse(ed.HasEntity());
 
-            //Value is opened by default
-            selenium.EntityLineDetailHasValue(prefix, true);
+                //create with implementations
+                ed.CreateImplementations(typeof(AmericanMusicAwardDN));
+                selenium.Wait(() => ed.HasEntity());
+                ed.Details<AmericanMusicAwardDN>().Do(award =>
+                {
+                    award.ValueLineValue(a => a.Category, "test");
+                });
 
-            //Delete
-            selenium.LineRemove(prefix);
-            selenium.EntityLineDetailHasValue(prefix, false);
-
-            //create with implementations
-            selenium.LineCreateWithImpl(prefix, false, "AmericanMusicAward");
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
-            selenium.Type("{0}Category".Formato(prefix), "test");
-
-            //find with implementations
-            selenium.LineRemove(prefix);
-            selenium.LineFindWithImplAndSelectElements(prefix, "AmericanMusicAward", new int[]{0});
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
+                ed.Remove();
+                ed.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
+                selenium.Wait(() => ed.HasEntity());
+            }
         }
 
         [TestMethod]
         public void Lines004_EntityList()
         {
-            CheckLoginAndOpen(ViewRoute("Band", 1));
+            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            {
+                var el = band.EntityList(b => b.Members);
 
-            string prefix = "Members_";
+                //Create and cancel
+                el.CreatePopup<ArtistDN>().EndUsing(artist => artist.CloseDiscardChanges());
+                Assert.IsFalse(el.HasEntity(4));
 
-            //Create and cancel
-            selenium.LineCreate(prefix, true, 4);
-            selenium.PopupCancelDiscardChanges("{0}4_".Formato(prefix));
-            selenium.ListLineElementExists(prefix, 4, false);
+                //Create and ok
+                el.CreatePopup<ArtistDN>().EndUsing(artist =>
+                {
+                    artist.ValueLineValue(a => a.Name, "test");
+                    artist.ExecuteAjax(ArtistOperation.Save);
+                    artist.OkWaitClosed();
+                });
 
-            //Create and ok
-            selenium.LineCreate(prefix, true, 4);
-            selenium.Type("{0}4_Name".Formato(prefix), "test");
-            selenium.EntityOperationClick(ArtistOperation.Save);
-            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}4_".Formato(prefix)));
-            selenium.PopupOk("{0}4_".Formato(prefix));
-            selenium.ListLineElementExists(prefix, 4, true);
-            Assert.IsTrue(selenium.IsElementPresent("jq=#Members_4_sfEntity"));
-            Assert.IsTrue(selenium.GetValue("jq=#Members_4_sfRuntimeInfo").StartsWith("Artist"));
-            Assert.IsTrue(selenium.GetValue("jq=#Members_4_sfRuntimeInfo").EndsWith(";o")); //Already saved
+                Assert.IsTrue(el.HasEntity(4));
+                Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(4).EntityType);
+                Assert.IsFalse(el.RuntimeInfo(4).IsNew);
 
-            //Delete
-            selenium.LineRemove(prefix);
-            selenium.ListLineElementExists(prefix, 4, false);
+                //Delete
+                el.Remove();
+                Assert.IsFalse(el.HasEntity(4));
 
-            //Find multiple
-            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 4);
-            selenium.ListLineElementExists(prefix, 4, true);
-            selenium.ListLineElementExists(prefix, 5, true);
+                //Find multiple
+                el.Find().SelectByPosition(1, 2);
+                Assert.IsTrue(el.HasEntity(4));
+                Assert.IsTrue(el.HasEntity(5));
 
-            prefix = "OtherAwards_";
-            
-            //Create with implementations
-            selenium.LineCreateWithImpl(prefix, true, grammyAward, 0);
-            selenium.Type("{0}0_Category".Formato(prefix), "test");
-            selenium.EntityOperationClick(AwardOperation.Save);
-            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}0_".Formato(prefix)));
-            selenium.PopupOk("{0}0_".Formato(prefix));
-            selenium.ListLineElementExists(prefix, 0, true);
-            Assert.IsTrue(selenium.IsElementPresent("jq=#OtherAwards_0_sfEntity"));
-            Assert.IsTrue(selenium.GetValue("jq=#OtherAwards_0_sfRuntimeInfo").StartsWith("GrammyAward"));
-            Assert.IsTrue(selenium.GetValue("jq=#OtherAwards_0_sfRuntimeInfo").EndsWith(";o")); //Already saved
 
-            //find with implementations
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 }, 1);
-            selenium.ListLineElementExists(prefix, 1, true);
+                var el2 = band.EntityList(a => a.OtherAwards);
 
-            //Delete
-            selenium.LineRemove(prefix);
-            selenium.ListLineElementExists(prefix, 1, false);
+                el2.CreatePopup<GrammyAwardDN>().EndUsing(grammy =>
+                {
+                    grammy.ValueLineValue(a => a.Category, "test");
+                    grammy.ExecuteAjax(AwardOperation.Save);
+                    grammy.OkWaitClosed();
+                });
 
-            //View
-            selenium.ListLineViewElement(prefix, 0, true);
-            selenium.PopupCancel("{0}0_".Formato(prefix));
+                Assert.IsTrue(el2.HasEntity(0));
+                Assert.AreEqual(typeof(GrammyAwardDN), el2.RuntimeInfo(0).EntityType);
+                Assert.IsFalse(el2.RuntimeInfo(0).IsNew);
 
-            selenium.ListLineViewElement(prefix, 0, true);
-            selenium.Type("{0}0_Category".Formato(prefix), "test2");
-            selenium.PopupCancelDiscardChanges("{0}0_".Formato(prefix));
+                //find with implementations
+                el2.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                Assert.IsTrue(el2.HasEntity(1));
+
+                //Delete
+                el2.Remove();
+                Assert.IsFalse(el2.HasEntity(1));
+
+                //View
+                el2.View<GrammyAwardDN>(0).EndUsing(grammy => grammy.Close());
+                el2.View<GrammyAwardDN>(0).EndUsing(grammy =>
+                {
+                    grammy.ValueLineValue(a => a.Category, "test2");
+                    grammy.Close();
+                });
+            }
         }
 
         [TestMethod]
         public void Lines005_EntityListInPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Band", 1));
+            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            {
+                //open popup
+                using (var artist = band.EntityList(a => a.Members).View<ArtistDN>(0))
+                {
+                    var el = artist.EntityList(a => a.Friends);
 
-            //open popup
-            selenium.ListLineViewElement("Members_", 0, true);
+                    //create
+                    el.CreatePopup<ArtistDN>().EndUsing(friend =>
+                    {
+                        friend.ValueLineValue(a => a.Name, "test");
+                        friend.ExecuteAjax(ArtistOperation.Save);
+                        friend.OkWaitClosed();
+                    });
 
-            string prefix = "Members_0_Friends_";
+                    Assert.IsTrue(el.HasEntity(1));
+                    Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(1).EntityType);
+                    Assert.IsFalse(el.RuntimeInfo(1).IsNew);
 
-            //create
-            selenium.LineCreate(prefix, true, 1);
-            selenium.Type("{0}1_Name".Formato(prefix), "test");
-            selenium.Click("jq=#{0}1_panelPopup #ArtistOperation_Save".Formato(prefix));
-            selenium.WaitAjaxFinished(() => !selenium.PopupEntityHasUnsavedChanges("{0}1_".Formato(prefix)));
-            selenium.PopupOk("{0}1_".Formato(prefix));
-            selenium.ListLineElementExists(prefix, 1, true);
-            Assert.IsTrue(selenium.GetValue("jq=#{0}1_sfRuntimeInfo".Formato(prefix)).StartsWith("Artist"));
-            Assert.IsTrue(selenium.GetValue("jq=#{0}1_sfRuntimeInfo".Formato(prefix)).EndsWith(";o")); //Already saved
+                    //find multiple
+                    el.Find().SelectByPosition(4, 5);
+                    Assert.IsTrue(el.HasEntity(2));
+                    Assert.IsTrue(el.HasEntity(3));
 
-            //find multiple
-            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 2);
-            selenium.ListLineElementExists(prefix, 2, true);
-            selenium.ListLineElementExists(prefix, 3, true);
-
-            //delete multiple
-            selenium.ListLineSelectElement(prefix, 1, false);
-            selenium.ListLineSelectElement(prefix, 2, true);
-            selenium.LineRemove(prefix);
-            selenium.LineRemove(prefix);
-            selenium.ListLineElementExists(prefix, 1, false);
-            selenium.ListLineElementExists(prefix, 2, false);
-            selenium.ListLineElementExists(prefix, 3, true);
+                    //delete multiple
+                    el.Select(1);
+                    el.AddSelection(2);
+                    el.Remove();
+                    el.Remove();
+                    Assert.IsFalse(el.HasEntity(1));
+                    Assert.IsFalse(el.HasEntity(2));
+                    Assert.IsTrue(el.HasEntity(3));
+                }
+            }
         }
 
         [TestMethod]
         public void Lines006_EntityListDetail()
         {
-            CheckLoginAndOpen("/Music.Web/Music/BandDetail");
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
+            {
+                var el = band.EntityList(a => a.Members);
 
-            string prefix = "Members_";
+                //1st element is shown by default
+                el.HasDetailEntity();
 
-            //1st element is shown by default
-            selenium.EntityListDetailHasValue(prefix, true);
+                //create
+                el.Create();
+                selenium.Wait(() => el.HasDetailEntity());
+                el.Details<ArtistDN>(4).Do(artist =>
+                {
+                    artist.ValueLineValue(a => a.Name, "test");
+                });
 
-            //create
-            selenium.LineCreate(prefix, false, 4);
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
-            selenium.Type("{0}4_Name".Formato(prefix), "test");
-            selenium.ListLineElementExists(prefix, 4, true);
 
-            //delete
-            selenium.LineRemove(prefix);
-            selenium.ListLineElementExists(prefix, 4, false);
-            selenium.EntityListDetailHasValue(prefix, false);
+                //delete
+                el.Remove();
+                Assert.IsFalse(el.HasEntity(4));
+                Assert.IsFalse(el.HasDetailEntity());
 
-            //find multiple
-            selenium.LineFindAndSelectElements(prefix, new int[] { 4, 5 }, 4);
-            selenium.ListLineElementExists(prefix, 4, true);
-            selenium.ListLineElementExists(prefix, 5, true);
-            selenium.EntityListDetailHasValue(prefix, true);
+                //find multiple
+                el.Find().SelectByPosition(4, 5);
+                Assert.IsTrue(el.HasEntity(4));
+                Assert.IsTrue(el.HasEntity(5));
+                Assert.IsTrue(el.HasDetailEntity());
 
-            prefix = "OtherAwards_";
+                var el2 = band.EntityList(a => a.OtherAwards);
+                el2.CreateImplementations(typeof(GrammyAwardDN));
+                selenium.Wait(() => el2.HasDetailEntity());
+                Assert.IsTrue(el2.HasEntity(0));
+                el2.Details<GrammyAwardDN>(0).Do(grammy => grammy.ValueLineValue(a => a.Category, "text"));
 
-            //create with implementations
-            selenium.LineCreateWithImpl(prefix, false, grammyAward, 0);
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
-            selenium.ListLineElementExists(prefix, 0, true);
-            selenium.Type("{0}0_Category".Formato(prefix), "test");
+                //find with implementations
+                el2.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                Assert.IsTrue(el2.HasEntity(1));
+                selenium.Wait(() => el2.HasDetailEntity());
 
-            //find with implementations
-            selenium.LineFindWithImplAndSelectElements(prefix, grammyAward, new int[] { 0 }, 1);
-            selenium.ListLineElementExists(prefix, 1, true);
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
+                //Delete
+                el2.Remove();
+                el2.HasEntity(1);
 
-            //Delete
-            selenium.LineRemove(prefix);
-            selenium.ListLineElementExists(prefix, 1, false);
-
-            //View detail
-            selenium.ListLineViewElement(prefix, 0, false);
-            selenium.WaitAjaxFinished(() => selenium.CheckEntityListDetailHasValue(prefix, true));
+                //View detail
+                el2.DoubleClick(0);
+                selenium.Wait(() => el2.HasDetailEntity());
+            }
         }
 
         [TestMethod]
         public void Lines007_EntityRepeater()
         {
-            CheckLoginAndOpen("/Music.Web/Music/BandRepeater");
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandRepeater"), CheckLogin))
+            {
+                var er = band.EntityRepeater(a => a.Members);
 
-            string prefix = "Members_";
+                //All elements are shown
+                Assert.IsTrue(er.HasEntity(0));
+                Assert.IsTrue(er.HasEntity(1));
+                Assert.IsTrue(er.HasEntity(2));
+                Assert.IsTrue(er.HasEntity(3));
 
-            //All elements are shown
-            selenium.RepeaterItemExists(prefix, 0, true);
-            selenium.RepeaterItemExists(prefix, 1, true);
-            selenium.RepeaterItemExists(prefix, 2, true);
-            selenium.RepeaterItemExists(prefix, 3, true);
-            
-            //Create
-            selenium.LineCreate(prefix, false, 4);
-            selenium.RepeaterWaitUntilItemLoaded(prefix, 4);
-            selenium.Type("{0}4_Name".Formato(prefix), "test");
-            selenium.RepeaterItemExists(prefix, 4, true);
+                //Create
+                er.Create();
+                er.WaitItemLoaded(4);
+                er.Details<ArtistDN>(4).Do(artist => artist.ValueLineValue(a => a.Name, "test"));
+                Assert.IsTrue(er.HasEntity(4));
 
-            //delete new element (created in client)
-            selenium.LineRemove("{0}4_".Formato(prefix));
-            selenium.RepeaterItemExists(prefix, 4, false);
+                //delete new element (created in client)
+                er.Remove(4);
+                Assert.IsFalse(er.HasEntity(4));
 
-            //delete old element (created in server)
-            selenium.LineRemove("{0}0_".Formato(prefix));
-            selenium.RepeaterItemExists(prefix, 0, false);
+                //delete old element (created in server)
+                er.Remove(0);
+                Assert.IsFalse(er.HasEntity(0));
 
-            //find multiple: it exists because Find is overriden to true in this EntityRepeater
-            selenium.LineFindAndSelectElements(prefix, new int[]{4,5}, 4);
-            selenium.RepeaterItemExists(prefix, 4, true);
-            selenium.RepeaterItemExists(prefix, 5, true);
+                //find multiple: it exists because Find is overriden to true in this EntityRepeater
+                er.Find().SelectByPosition(4, 5);
+                Assert.IsTrue(er.HasEntity(4));
+                Assert.IsTrue(er.HasEntity(5));
 
-            //move up
-            string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
-            string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
-            Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
-            selenium.RepeaterItemMove(true, prefix, 4);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(thirdItemMichael));
-            //move down
-            selenium.RepeaterItemMove(false, prefix, 2);
-            selenium.WaitAjaxFinished(() => 
-                selenium.IsElementPresent(secondItemMichael) && 
-                !selenium.IsElementPresent(thirdItemMichael));
+                //move up
+                string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
+                string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
+                Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
+                er.ItemMove(4, true);
+                selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
+                //move down
+                er.ItemMove(2, false); 
+                selenium.Wait(() =>
+                    selenium.IsElementPresent(secondItemMichael) &&
+                    !selenium.IsElementPresent(thirdItemMichael));
 
-            prefix = "OtherAwards_";
 
-            //create with implementations
-            selenium.LineCreateWithImpl(prefix, false, grammyAward, 0);
-            selenium.RepeaterItemExists(prefix, 0, true);
-            selenium.Type("{0}0_Category".Formato(prefix), "test");
+                var er2 = band.EntityRepeater(b => b.OtherAwards); 
 
-            //find does not exist by default
-            Assert.IsFalse(selenium.IsElementPresent(LinesTestExtensions.LineFindSelector(prefix)));
+                //create with implementations
+                er2.CreateImplementations(typeof(GrammyAwardDN));
+                Assert.IsTrue(er2.HasEntity(0));
+                er2.Details<GrammyAwardDN>(0).Do(g => g.ValueLineValue(a => a.Category, "test"));
+
+                //find does not exist by default
+                Assert.IsFalse(selenium.IsElementPresent(er2.FindLocator));
+            }
         }
     }
+
 }

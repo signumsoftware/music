@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlbumFromBandModel.cs" />
     <Compile Include="CreateMusicEnvironmentTest.cs" />
     <Compile Include="EntityGroupsTest.cs" />
     <Compile Include="Environment\MusicExtensionsLoader.cs" />

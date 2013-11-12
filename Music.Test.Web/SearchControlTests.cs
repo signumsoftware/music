@@ -49,430 +49,334 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl001_Filters()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            {
+                albums.Results.OrderBy("Id");
+                Assert.AreEqual(12, albums.Results.RowsCount());
 
-            //No filters
-            OrderById();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(12));
+                albums.SearchControl.AddQuickFilter(0, 3);
+                albums.Search();
+                Assert.AreEqual(4, albums.Results.RowsCount());
 
-            //Quickfilter of a Lite
-            selenium.QuickFilter(1, 4, 0);
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(4));
+                albums.Filters.QueryTokenBuilder.SelectToken("Label");
+                albums.Filters.AddFilter().EntityLine().Find().SelectByPosition(0);
+                albums.Search();
+                Assert.AreEqual(2, albums.Results.RowsCount());
 
-            //Filter of a Lite from the combo
-            selenium.FilterSelectToken(0, "label=Label", true);
-            selenium.AddFilter(1);
-            OpenFinderAndSelectFirstOrderedById(selenium, true, "value_1_");
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector("value_1_"))));
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
-            selenium.DeleteFilter(1);
+                albums.Filters.GetFilter(1).Delete();
+                albums.Filters.AddFilter("Label.Name", FilterOperation.EqualTo, "virgin");
+                albums.Search();
+                Assert.AreEqual(2, albums.Results.RowsCount());
 
-            //Filter from the combo with Subtokens
-            selenium.FilterSelectToken(0, "label=Label", true);
-            selenium.FilterSelectToken(1, "label=Name", false);
-            selenium.AddFilter(1);
-            selenium.Type("value_1", "virgin");
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
+                albums.SearchControl.AddQuickFilter(0, 5);
+                selenium.Search();
+                Assert.AreEqual(1, albums.Results.RowsCount());
 
-            //Quickfilter of a string
-            selenium.QuickFilter(1, 6, 2);
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(1));
+                albums.Filters.GetFilter(2).Delete();
+                albums.Search();
+                Assert.AreEqual(2, albums.Results.RowsCount());
 
-            //Delete filter
-            selenium.DeleteFilter(2);
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
+                albums.Filters.AddFilter("Songs.Count", FilterOperation.GreaterThan, 1);
+                albums.Search();
+                Assert.AreEqual(1, albums.Results.RowsCount());
 
-            //Filter from the combo with subtokens of a MList
-            selenium.FilterSelectToken(0, "label=Album", true);
-            selenium.FilterSelectToken(1, "value=Songs", true);
-            selenium.FilterSelectToken(2, "value=Count", false);
-            selenium.AddFilter(2);
-            selenium.FilterSelectOperation(2, "value=GreaterThan");
-            selenium.Type("value_2", "1");
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(1));
+                albums.Filters.GetFilter(0).Delete();
+                albums.Filters.GetFilter(1).Delete();
+                albums.Filters.GetFilter(2).Delete();
+                albums.Search();
+                Assert.AreEqual(12, albums.Results.RowsCount());
 
-            //Delete all filters
-            selenium.DeleteFilter(2);
-            selenium.DeleteFilter(1);
-            selenium.DeleteFilter(0);
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(12));
+                albums.SearchControl.AddQuickFilter(4);
+                albums.Search();
+                Assert.AreEqual(0, albums.Results.RowsCount());
 
-            //QuickFilter from header of a Lite
-            selenium.QuickFilterFromHeader(5, 0); //Label
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(0));
-            OpenFinderAndSelectFirstOrderedById(selenium, true, "value_0_");
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector("value_0_"))));
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2));
-            selenium.DeleteFilter(0);
+                albums.Filters.GetFilter(0).EntityLine().Find().SelectByPosition(0);
+                albums.Search();
+                Assert.AreEqual(2, albums.Results.RowsCount());
 
-            //Top
-            selenium.SetElementsPerPageToFinder("5");
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));
-            Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')"));;
+                albums.Filters.GetFilter(0).Delete();
+                albums.Pagination.SetElementsPerPage(5);
+                Assert.AreEqual(5, albums.Results.RowsCount());
+                Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')")); ;
+            }
         }
 
         [TestMethod]
         public void SearchControl002_FiltersInPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Band", null));
+            using (var band = NormalPage<BandDN>(CheckLogin))
+            {
+                using (var artists = band.EntityList(a => a.Members).Find())
+                {
+                    artists.Results.OrderBy("Id");
+                    Assert.AreEqual(8, artists.Results.RowsCount());
 
-            //open search popup
-            selenium.LineFind("Members_", 0);
+                    artists.SearchControl.AddQuickFilter(0, 4);
+                    artists.SearchControl.AddQuickFilter(0, 5);
+                    artists.Search();
+                    Assert.AreEqual(7, artists.Results.RowsCount());
 
-            string prefix = "Members_0_"; //prefix for all the popup
+                    artists.SearchControl.AddQuickFilter(3, 2);
+                    artists.Filters.GetFilter(2).Operation = FilterOperation.GreaterThan;
+                    artists.Search();
+                    Assert.AreEqual(3, artists.Results.RowsCount());
 
-            OrderById(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
+                    artists.Filters.GetFilter(2).Delete();
+                    artists.Search();
+                    Assert.AreEqual(7, artists.Results.RowsCount());
 
-            //Quickfilter of a bool
-            selenium.QuickFilter(1, 5, 0, prefix);
+                    artists.Filters.QueryTokenBuilder.SelectToken("Entity");
+                    artists.Filters.AddFilter().EntityLine().Find().SelectByPosition(0);
+                    artists.Search();
+                    Assert.AreEqual(1, artists.Results.RowsCount());
 
-            //Quickfilter of an enum
-            selenium.QuickFilter(1, 6, 1, prefix);
+                    artists.Filters.GetFilter(2).Delete();
+                    artists.Filters.AddFilter("Entity.Name", FilterOperation.EndsWith, "a");
+                    artists.Search();
+                    Assert.AreEqual(1, artists.Results.RowsCount());
 
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(7, prefix));
+                    artists.Filters.GetFilter(0).Delete();
+                    artists.Filters.GetFilter(1).Delete();
+                    artists.Filters.GetFilter(2).Delete();
+                    artists.Search();
+                    Assert.AreEqual(8, artists.Results.RowsCount());
 
-            //Quickfilter of an int
-            selenium.QuickFilter(4, 3, 2, prefix);
-            selenium.FilterSelectOperation(2, "value=GreaterThan", prefix);
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3, prefix));
+                    artists.SearchControl.AddQuickFilter(2).Do(f =>
+                    {
+                        f.Operation = FilterOperation.LessThanOrEqual;
+                        f.ValueLine().StringValue = "2";
+                    });
+                    artists.Search();
+                    Assert.AreEqual(2, artists.Results.RowsCount());
 
-            selenium.DeleteFilter(2, prefix);
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(7, prefix));
+                    artists.Filters.GetFilter(0).Delete();
 
-            //Filter of a Lite from the combo
-            selenium.FilterSelectToken(0, "label=Artist", true, prefix);
-            selenium.AddFilter(2, prefix);
-            OpenFinderAndSelectFirstOrderedById(selenium, false, prefix + "value_2_");
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent("{0}:visible".Formato(LinesTestExtensions.LineFindSelector(prefix + "value_2_"))));
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(1, prefix));
-            selenium.DeleteFilter(2, prefix);
-
-            //Filter from the combo with Subtokens
-            selenium.FilterSelectToken(0, "label=Artist", true, prefix);
-            selenium.FilterSelectToken(1, "label=Name", false, prefix);
-            selenium.AddFilter(2, prefix);
-            selenium.FilterSelectOperation(2, "value=EndsWith", prefix);
-            selenium.Type(prefix + "value_2", "a");
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(1, prefix));
-
-            //Delete all filters
-            selenium.DeleteFilter(2, prefix);
-            selenium.DeleteFilter(1, prefix);
-            selenium.DeleteFilter(0, prefix);
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(8, prefix));
-
-            //QuickFilter from header of an int
-            selenium.QuickFilterFromHeader(3, 0, prefix);
-            selenium.FilterSelectOperation(0, "value=LessThanOrEqual", prefix);
-            selenium.Type(prefix + "value_0", "2");
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2, prefix));
-            selenium.DeleteFilter(0, prefix);
-
-            //Top
-            selenium.SetElementsPerPageToFinder("5", prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(5, prefix));
-        }
-
-        private void OpenFinderAndSelectFirstOrderedById(ISelenium selenium, bool masterData, string prefix)
-        {
-            OpenFinderAndSelectOrderedById(selenium, masterData, prefix, 0);
-        }
-
-        private void OpenFinderAndSelectOrderedById(ISelenium selenium, bool masterData, string prefix, int rowIndexBase0)
-        {
-            selenium.LineFind(prefix);
-            
-            if (masterData)
-                selenium.Search(prefix);
-            else 
-                OrderById(prefix);
-            
-            selenium.SelectRow(rowIndexBase0, prefix);
-            selenium.PopupOk(prefix);
+                    artists.Pagination.SetElementsPerPage(5);
+                    Assert.AreEqual(5, artists.Results.RowsCount());
+                }
+            }
         }
 
         [TestMethod]
         public void SearchControl003_Orders()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            {
+                int authorCol = 3;
 
-            int authorCol = 4;
+                albums.Results.OrderBy(authorCol);
+                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(5, 0));
 
-            //Ascending
-            selenium.Sort(authorCol, true);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Album;5"));
-            
-            int labelCol = 5;
-            
-            //Multiple orders
-            selenium.SortMultiple(labelCol, true);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Album;7"));
-            selenium.TableHeaderMarkedAsSorted(authorCol, true, true);
-            
-            //Multiple orders: change column order type to descending
-            selenium.SortMultiple(labelCol, false);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Album;5"));
-            selenium.TableHeaderMarkedAsSorted(authorCol, true, true);
+                int labelCol = 4;
 
-            //Cancel multiple clicking a new order without Shift
-            selenium.Sort(labelCol, true);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Album;12"));
-            selenium.TableHeaderMarkedAsSorted(authorCol, true, false);
+                albums.Results.ThenBy(labelCol);
+                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(7, 0));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+
+                albums.Results.ThenByDescending(labelCol);
+                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(5, 0));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+
+                albums.Results.OrderBy(labelCol);
+                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(12, 0));
+                Assert.IsFalse(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+            }
         }
 
         [TestMethod]
         public void SearchControl004_OrdersInPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Band", null));
+            using (var band = NormalPage<BandDN>(CheckLogin))
+            {
+                using (var artists = band.EntityList(b => b.Members).Find())
+                {
+                    int isMaleColumn = 4;
+                    artists.Results.OrderBy(isMaleColumn);
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, isMaleColumn, "input:checkbox[value=false]"));
 
-            //open search popup
-            selenium.LineFind("Members_", 0);
-            
-            string prefix = "Members_0_"; //prefix for all the popup
+                    artists.Results.OrderByDescending(isMaleColumn);
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, isMaleColumn, "input:checkbox[value=true]"));
 
-            int isMaleCol = 5;
+                    int nameCol = 3;
+                    artists.Results.ThenBy(nameCol);
+                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(1, 0));
+                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
 
-            //Ascending
-            selenium.Sort(isMaleCol, true, prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsElementInCell(1, isMaleCol, "input:checkbox[value=false]", prefix));
-            
-            //Descending
-            selenium.Sort(isMaleCol, false, prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsElementInCell(1, isMaleCol, "input:checkbox[value=true]", prefix));
+                    artists.Results.ThenByDescending(nameCol);
+                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(8, 0));
+                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
 
-            int nameCol = 4;
-
-            //Multiple orders
-            selenium.SortMultiple(nameCol, true, prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Artist;1", prefix));
-            selenium.TableHeaderMarkedAsSorted(isMaleCol, false, true, prefix);
-
-            //Multiple orders: change column order type to descending
-            selenium.SortMultiple(nameCol, false, prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Artist;8", prefix));
-            selenium.TableHeaderMarkedAsSorted(isMaleCol, false, true, prefix);
-
-            int idCol = 3;
-
-            //Cancel multiple clicking a new order without Shift
-            selenium.Sort(idCol, true, prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsEntityInRow(1, "Artist;1", prefix));
-            selenium.TableHeaderMarkedAsSorted(isMaleCol, false, false, prefix);
-            selenium.TableHeaderMarkedAsSorted(nameCol, false, false, prefix);
+                    artists.Results.OrderBy(2);
+                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(1, 0));
+                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(isMaleColumn));
+                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(nameCol));
+                }
+            }
         }
 
         [TestMethod]
         public void SearchControl005_UserColumns()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            {
+                albums.SearchControl.AddColumn("Label.Id");
+                albums.SearchControl.AddColumn("Label.Name");
 
-            //Add 2 user columns
-            selenium.FilterSelectToken(0, "label=Label", true);
-            selenium.FilterSelectToken(1, "label=Id", false);
-            selenium.AddColumn("Label.Id");
+                albums.Results.EditColumnName(7, "Label Id");
 
-            selenium.FilterSelectToken(1, "label=Name", false);
-            selenium.AddColumn("Label.Name");
+                albums.Results.OrderBy("Id");
 
-            //Edit names
-            selenium.EditColumnName(8, "Label Id");
+                albums.Results.MoveLeft(7);
+                albums.Results.MoveRight(6);
 
-            //Search with userColumns
-            OrderById();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 8)));
+                albums.Results.RemoveColumn(7);
+                selenium.Wait(() => albums.Results.RowsCount() == 0);
+                albums.Search();
 
-            //Move columns
-            selenium.MoveColumn(8, "Label Id", true);
-            selenium.MoveColumn(7, "Label Id", false);
-
-            //Delete one of the usercolumns
-            selenium.RemoveColumn(8, 9);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(0));
-            selenium.Search();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 8)));
-            Assert.IsTrue(!selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 9)));
+                selenium.AssertElementNotPresent(albums.Results.HeaderCellLocator(8));
+            }
         }
 
         [TestMethod]
         public void SearchControl006_UserColumnsInPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Band", null));
+            using (var band = NormalPage<BandDN>(CheckLogin))
+            {
+                using (var artists = band.EntityList(b=> b.Members).Find())
+                {
+                    artists.Results.EditColumnName(5, "Male");
+                    artists.Results.MoveRight(2);
+                    artists.Results.MoveLeft(3);
 
-            //open search popup
-            selenium.LineFind("Members_", 0);
+                    artists.Results.RemoveColumn(3);
+                    selenium.Wait(() => artists.Results.RowsCount() == 0);
+                    artists.Search();
 
-            string prefix = "Members_0_"; //prefix for all the popup
-
-            //User columns are not present in popup
-            Assert.IsFalse(selenium.IsElementPresent("jq=#{0}sfSearchControl .sf-add-column".Formato(prefix)));
-
-            //Edit names
-            selenium.EditColumnName(5, "Male", prefix);
-
-            //Move columns
-            selenium.MoveColumn(3, "Id", false, prefix);
-            selenium.MoveColumn(4, "Id", true, prefix);
-
-            //Delete column
-            selenium.RemoveColumn(4, 8, prefix);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(0, prefix));
-            selenium.Search(prefix);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 7, prefix)));
-            Assert.IsTrue(!selenium.IsElementPresent(SearchTestExtensions.CellSelector(selenium, 1, 8, prefix)));
+                    selenium.AssertElementNotPresent(artists.Results.HeaderCellLocator(7));
+                }
+            }
         }
 
         [TestMethod]
         public void SearchControl007_ImplementedByFinder()
         {
-            CheckLoginAndOpen(FindRoute("IAuthorDN"));
+            using (var authors = SearchPage(typeof(IAuthorDN), CheckLogin))
+            {
+                authors.Results.OrderBy("Id");
+                Assert.IsTrue(authors.Results.IsEntityInRow<ArtistDN>(1, 0));
+                Assert.IsTrue(authors.Results.IsEntityInRow<BandDN>(1, 1));
 
-            OrderById();
+                authors.Filters.AddFilter("Id", FilterOperation.EqualTo, 1);
+                authors.Search();
+                Assert.IsTrue(authors.Results.RowsCount() == 2);
 
-            //Results of implementing types
-            Assert.IsTrue(selenium.IsEntityInRow(1, "{0};{1}".Formato(Lite.GetCleanName(typeof(ArtistDN)), 1)));
-            Assert.IsTrue(selenium.IsEntityInRow(2, "{0};{1}".Formato(Lite.GetCleanName(typeof(BandDN)), 1)));
+                authors.Filters.GetFilter(0).Delete();
+                authors.Filters.AddFilter("Entity.(Artist).Id", FilterOperation.EqualTo, 1);
+                authors.Search();
+                Assert.IsTrue(authors.Results.RowsCount() == 1);
 
-            //Filters
-            selenium.FilterSelectToken(0, "label=Id", false);
-            selenium.AddFilter(0);
-            selenium.Type("value_0", "1");
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(2)); //Entity with id 1 of each type
-
-            selenium.DeleteFilter(0);
-            selenium.FilterSelectToken(0, "value=Entity", true);
-            selenium.FilterSelectToken(1, "value=(Artist)", true);
-            selenium.FilterSelectToken(2, "Id", false);
-            selenium.AddFilter(0);
-            selenium.Type("value_0", "1"); 
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(1)); //only ArtistDN;1
-
-            //Create implemented type
-            selenium.SearchCreateWithImpl("Artist");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#Dead")); //there's an artist valueline
+                using (var artist = authors.CreateChoose<ArtistDN>())
+                {
+                    selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Prefix);
+                }
+            }
         }
 
         [TestMethod]
         public void SearchControl008_MultiplyFinder()
         {
-            CheckLoginAndOpen(FindRoute("Artist"));
-            selenium.CheckAddFilterEnabled(false);
-            selenium.CheckAddColumnEnabled(false);
+            using(var artists = SearchPage(typeof(ArtistDN), CheckLogin))
+            {
+                Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
+                Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
-            OrderById();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(8));
+                artists.Results.OrderBy("Id");
+                Assert.AreEqual(8, artists.Results.RowsCount());
 
-            //[Num]
-            selenium.FilterSelectToken(0, "label=Artist", true);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(true);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(true);
-            selenium.FilterSelectToken(1, "value=Friends", true);
-            selenium.CheckAddFilterEnabled(false);
-            selenium.CheckAddColumnEnabled(false);
-            selenium.FilterSelectToken(2, "value=Count", false);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(true);
-                        
-            selenium.AddFilter(0);
-            selenium.Type("value_0", "1");
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
-            
-            selenium.AddColumn("Entity.Friends.Count");
-            selenium.Search();
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
-            selenium.AssertMultiplyMessage(false);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity", waitForLast: true);
+                Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
+                Assert.IsTrue(artists.SearchControl.IsAddColumnEnabled);
 
-            selenium.FilterSelectToken(2, "value=", false);
-            selenium.CheckAddFilterEnabled(false);
-            selenium.CheckAddColumnEnabled(false);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends", waitForLast: true);
+                Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
+                Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
-            selenium.DeleteFilter(0);
-            selenium.RemoveColumn(9, 9);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.Count");
+                Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
+                Assert.IsTrue(artists.SearchControl.IsAddColumnEnabled);
 
-            //Element
-            selenium.FilterSelectToken(2, "value=Element", true);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(true);
-            
-            selenium.AddColumn("Entity.Friends.Element");
-            selenium.Search();
-            selenium.AssertMultiplyMessage(true);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(10));
+                artists.Filters.AddFilter("Entity.Friends.Count", FilterOperation.EqualTo, 1);
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(3, artists.Results.RowsCount());
 
-            selenium.AddFilter(0);
-            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
-            selenium.Search();
-            selenium.AssertMultiplyMessage(true);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
+                artists.SearchControl.AddColumn("Entity.Friends.Count");
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(3, artists.Results.RowsCount());
 
-            selenium.DeleteFilter(0);
-            selenium.RemoveColumn(9, 9);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends");
+                Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
+                Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
-            //Any
-            selenium.FilterSelectToken(2, "value=Any", true);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(false);
+                artists.Filters.GetFilter(0).Delete();
+                artists.Results.RemoveColumn(8);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.Element");
+                Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
+                Assert.IsTrue(artists.SearchControl.IsAddColumnEnabled);
 
-            selenium.AddFilter(0);
-            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
+                artists.SearchControl.AddColumn("Entity.Friends.Element");
+                artists.Search();
+                Assert.IsTrue(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(10, artists.Results.RowsCount());
 
-            selenium.FilterSelectToken(3, "value=Name", false);
-            selenium.AddFilter(1);
-            selenium.Type("value_1", "i");
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(0));
-            selenium.Type("value_1", "arcy");
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(3));
+                artists.Filters.AddFilter().EntityLine().Find().SelectByPositionOrderById(2);
+                artists.Search();
+                Assert.IsTrue(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(3, artists.Results.RowsCount());
 
-            selenium.DeleteFilter(1);
-            selenium.DeleteFilter(0);
+                artists.Filters.GetFilter(0).Delete();
+                artists.Results.RemoveColumn(8);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.Any");
+                Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
+                Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
-            //All
-            selenium.FilterSelectToken(2, "value=All", true);
-            selenium.CheckAddFilterEnabled(true);
-            selenium.CheckAddColumnEnabled(false);
+                artists.Filters.AddFilter().EntityLine().Find().SelectByPositionOrderById(2);
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(3, artists.Results.RowsCount());
 
-            selenium.AddFilter(0);
-            selenium.FilterSelectOperation(0, "value=DistinctTo");
-            OpenFinderAndSelectOrderedById(selenium, false, "value_0_", 2);
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(5));
+                artists.Filters.AddFilter("Entity.Friends.Any.Name", FilterOperation.Contains, "i");
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(0, artists.Results.RowsCount());
 
-            selenium.FilterSelectToken(3, "value=Name", false);
-            selenium.AddFilter(1);
-            selenium.Type("value_1", "Corgan");
-            selenium.Search();
-            selenium.AssertMultiplyMessage(false);
-            selenium.WaitAjaxFinished(selenium.ThereAreNRows(4));
+                artists.Filters.GetFilter(1).ValueLine().StringValue = "arcy";
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(3, artists.Results.RowsCount());
+
+                artists.Filters.GetFilter(0).Delete();
+                artists.Filters.GetFilter(1).Delete();
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.All");
+                Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
+                Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
+
+                artists.Filters.AddFilter().Do(a =>
+                {
+                    a.Operation = FilterOperation.DistinctTo;
+                    a.EntityLine().Find().SelectByPositionOrderById(2);
+                });
+                artists.Search();
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(5, artists.Results.RowsCount());
+
+                artists.Filters.AddFilter("Entity.Friends.All.Name", FilterOperation.Contains, "Corgan");
+                artists.Search();
+
+                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.AreEqual(4, artists.Results.RowsCount());
+            }
         }
     }
 }

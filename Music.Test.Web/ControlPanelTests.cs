@@ -33,7 +33,13 @@ namespace Music.Test.Web
         {
             Common.Start();
 
-            UserQueriesTests.CreateAlbumUserQuery("test");
+            AuthLogic.UnsafeUserSession("su").Using(_ =>
+                new UserQueryDN(typeof(AlbumDN))
+                {
+                    Related = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
+                    DisplayName = "test",
+                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
+                }.ParseAndSave());
         }
 
         [ClassCleanup]
@@ -45,73 +51,57 @@ namespace Music.Test.Web
         [TestMethod]
         public void ControlPanel001_Create()
         {
-            CheckLoginAndOpen(FindRoute("ControlPanel"));
+            this.SearchPage(typeof(ControlPanelDN), CheckLogin)
+                .Using(cps => cps.Create<ControlPanelDN>())
+                .EndUsing(controlPanel =>
+                {
+                    controlPanel.ValueLineValue(cp => cp.DisplayName, "Control Panel Home Page");
+                    controlPanel.ValueLineValue(a => a.NumberOfColumns, 2);
+                    controlPanel.ExecuteSubmit(ControlPanelOperation.Save);
 
-            selenium.SearchCreate();
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+                    var parts = controlPanel.EntityRepeater(a => a.Parts);
 
-            //Related is RoleDN.Current, and when available UserDN.Current
-            selenium.Type("DisplayName", "Control Panel Home Page");
-            selenium.Click("HomePagePriority");
-            selenium.Type("NumberOfColumns", "2");
+                    controlPanel.CreateNewPart<UserQueryPartDN>(0).Do(d =>
+                    {
+                        d.ValueLineValue(a => a.Title, "Last Albums");
+                        d.EntityLineDetail(a => a.Content).Details<UserQueryPartDN>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                    });
 
-            selenium.EntityOperationClick(ControlPanelOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+                    controlPanel.CreateNewPart<CountSearchControlPartDN>(1).Do(d =>
+                    {
+                        d.ValueLineValue(a => a.Title, "My count controls");
+                        d.EntityLineDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
+                        {
+                            uq.Create();
+                            uq.Details<CountUserQueryElement>(0).EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                        });
+                    });
 
-            string partsPrefix = "Parts_";
+                    controlPanel.CreateNewPart<LinkListPartDN>(2).Do(d =>
+                    {
+                        d.ValueLineValue(a => a.Title, "My Links");
+                        d.EntityLineDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
+                        {
+                            le.Create();
+                            le.Details<LinkElement>(0).ValueLineValue(a => a.Label, "Best Band");
+                            le.Details<LinkElement>(0).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
 
-            //SearchControlPart
-            CreateNewPart("UserQueryPart");
-            string part0 = partsPrefix + "0_";
-            selenium.Type(part0 + "Title", "Last Albums");
-            selenium.LineFindAndSelectElements(part0 + "Content_UserQuery_", new int[]{ 0 });
 
-            //CountSearchControlPart
-            CreateNewPart("CountSearchControlPart");
-            string part1 = partsPrefix + "1_";
-            selenium.Type(part1 + "Title", "My Count Controls");
-            string part1ContentUQsPrefix = part1 + "Content_UserQueries_";
-            selenium.LineCreate(part1ContentUQsPrefix, false, 0);
-            selenium.RepeaterWaitUntilItemLoaded(part1ContentUQsPrefix, 0);
-            selenium.LineFindAndSelectElements(part1ContentUQsPrefix + "0_UserQuery_", new int[] { 0 });
-            
-            //LinkListPart - drag to second column
-            CreateNewPart("LinkListPart");
-            string part2 = partsPrefix + "2_";
-            selenium.Type(part2 + "Title", "My Links");
-            CreateLinkListPartItem(selenium, part2, 0, "Best Band", "http://localhost/Music.Web/View/Band/1");
-            CreateLinkListPartItem(selenium, part2, 1, "Best Artist", "http://localhost/Music.Web/View/Artist/1");
-            
-            selenium.DragAndDropToObject("jq=#sfCpAdminContainer td[data-column=0] .sf-ftbl-part:eq(1)",
-                "jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-droppable");
+                            le.Create();
+                            le.Details<LinkElement>(1).ValueLineValue(a => a.Label, "Best Artist");
+                            le.Details<LinkElement>(1).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
+                        }); 
+                    });
 
-            selenium.EntityOperationClick(ControlPanelOperation.Save);
-            selenium.MainEntityHasId();
-        }
+                    controlPanel.Selenium.DragAndDropToObject(
+                        "jq=#sfCpAdminContainer td[data-column=0] .sf-ftbl-part:eq(1)",
+                        "jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-droppable");
 
-        void CreateNewPart(string partType)
-        {
-            selenium.EntityButtonClick("CreatePart");
+                    controlPanel.ExecuteAjax(ControlPanelOperation.Save);
 
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector("New_")));
-            selenium.Click(partType);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-        }
+                    Assert.IsTrue(controlPanel.HasId());
 
-        string PartFrontEndSelector(int rowIndexBase1, int colIndexBase1)
-        {
-            return "jq=table > tbody > tr:nth-child({0}) > td:nth-child({1})".Formato(rowIndexBase1, colIndexBase1);
-        }
-
-        void CreateLinkListPartItem(ISelenium selenium, string partPrefix, int linkIndexBase0, string label, string link)
-        {
-            string partContentLinksPrefix = partPrefix + "Content_Links_";
-
-            selenium.LineCreate(partContentLinksPrefix, false, 0);
-            selenium.RepeaterWaitUntilItemLoaded(partContentLinksPrefix, 0);
-            string partContentLinksItemPrefix = partContentLinksPrefix + linkIndexBase0 + "_";
-            selenium.Type(partContentLinksItemPrefix + "Label", label);
-            selenium.Type(partContentLinksItemPrefix + "Link", link);
+                }); 
         }
     }
 }

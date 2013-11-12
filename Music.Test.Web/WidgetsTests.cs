@@ -15,6 +15,7 @@ using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Entities.Notes;
 using Signum.Entities.Alerts;
+using Signum.Test.Environment;
 
 namespace Music.Test.Web
 {
@@ -41,122 +42,99 @@ namespace Music.Test.Web
         [TestMethod]
         public void Widgets001_QuickLinkFind()
         {
-            CheckLoginAndOpen(ViewRoute("Label", 1));
+            using (var label = NormalPage<LabelDN>(1, CheckLogin))
+            {
+                using (var albums = label.QuickLinkClickSearch(0))
+                    Assert.IsTrue(albums.Results.RowsCount() > 0);
+            }
 
-            selenium.QuickLinkClick(1);
-            
-            string popupPrefix = "New_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix)));
-
-            selenium.Open(FindRoute("Label"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.Search();
-
-            selenium.EntityContextMenu(1);
-            selenium.EntityContextQuickLinkClick(1, 1);
-
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix)));
+            using (var label = SearchPage(typeof(LabelDN)))
+            {
+                label.Search();
+                using (var albums = label.Results.EntityContextMenu(0).QuickLinkClickSearch(0))
+                    Assert.IsTrue(albums.Results.RowsCount() > 0);
+            }
         }
 
         [TestMethod]
         public void Widgets010_Notes()
         {
-            CheckLoginAndOpen(ViewRoute("Label", 1));
-            Assert.IsTrue(selenium.EntityHasNNotes(0));
+            using (var label = NormalPage<LabelDN>(1, CheckLogin))
+            {
+                Assert.AreEqual(0, label.NotesCount());
 
-            //Create note
-            selenium.NotesCreateClick();
+                using (var note = label.NotesCreateClick())
+                {
+                    note.ValueLineValue(a => a.Text, "note test");
+                    note.ExecuteAjax(NoteOperation.Save);
+                }
 
-            string popupPrefix = "New_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
+                selenium.Wait(() => selenium.IsAlertPresent());
+                selenium.GetAlert();
 
-            selenium.Type(popupPrefix + "Text", "note test");
-            selenium.EntityOperationClick(NoteOperation.Save);
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
+                Assert.AreEqual(1, label.NotesCount());
 
-            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
-            selenium.GetAlert();
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNNotes(1));
-
-            //View notes
-            selenium.NotesViewClick();
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix)));
+                using (var notes = label.NotesViewClick())
+                {
+                    Assert.AreEqual(1, notes.Results.RowsCount());
+                }
+            }
         }
 
         [TestMethod]
         public void Widgets020_Alerts()
         {
-            string viewRoute = ViewRoute("Label", 1);
-            CheckLoginAndOpen(viewRoute);
-            
-            string warned = WidgetsTestExtensions.AlertWarnedClass;
-            string future = WidgetsTestExtensions.AlertFutureClass;
-            string attended = WidgetsTestExtensions.AlertAttendedClass;
+            NormalPage<LabelDN>(1, CheckLogin).Using(label =>
+            {
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Future));
 
-            Assert.IsTrue(selenium.EntityHasNAlerts(0, warned));
-            Assert.IsTrue(selenium.EntityHasNAlerts(0, future));
-            Assert.IsTrue(selenium.EntityHasNAlerts(0, attended));
+                using (var alert = label.AlertCreateClick())
+                {
+                    alert.ValueLineValue(a => a.Text, "alert test");
+                    alert.EntityCombo(a => a.AlertType).SelectIndex(0);
+                    alert.ValueLineValue(a => a.AlertDate, DateTime.Today.AddDays(1));
+                    alert.ExecuteAjax(AlertOperation.SaveNew);
+                }
 
-            //Create future
-            selenium.AlertsCreateClick();
+                selenium.Wait(() => selenium.IsAlertPresent());
+                selenium.GetAlert();
 
-            string popupPrefix = "New_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
+                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
 
-            selenium.Type(popupPrefix + "Text", "alert test");
-            selenium.Type(popupPrefix + "AlertDate", DateTime.Today.AddDays(1).ToString("dd/MM/yyyy hh:mm"));
-            selenium.Select("{0}AlertType_sfCombo".Formato(popupPrefix), "index=1");
-            
-            selenium.EntityOperationClick(AlertOperation.SaveNew);
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, future));
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, warned));
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
+                using (var alert = label.AlertCreateClick())
+                {
+                    alert.ValueLineValue(a => a.Text, "warned alert test");
+                    alert.EntityCombo(a => a.AlertType).SelectIndex(0);
+                    alert.ValueLineValue(a => a.AlertDate, DateTime.Today.AddDays(-1));
+                    alert.ExecuteAjax(AlertOperation.SaveNew);
+                }
 
-            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
-            selenium.GetAlert();
+                selenium.Wait(() => selenium.IsAlertPresent());
+                selenium.GetAlert();
 
-            //Create past
-            selenium.AlertsCreateClick();
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
+                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Alerted));
+                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
 
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-
-            selenium.Type(popupPrefix + "Text", "warned alert test");
-            selenium.Select("{0}AlertType_sfCombo".Formato(popupPrefix), "index=1");
-            selenium.Type(popupPrefix + "AlertDate", DateTime.Today.AddDays(-1).ToString("dd/MM/yyyy hh:mm"));
-            
-            selenium.EntityOperationClick(AlertOperation.SaveNew);
-            selenium.WaitAjaxFinished(() => !selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, future));
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(1, warned));
-            selenium.WaitAjaxFinished(() => selenium.EntityHasNAlerts(0, attended));
-
-            selenium.WaitAjaxFinished(() => selenium.IsAlertPresent());
-            selenium.GetAlert();
-
-            //View warned alert and attend it
-            selenium.AlertsViewClick(warned);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-            // Use "RowSelector a" => if only RowSelector the initial "No results" row will match
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0} a".Formato(SearchTestExtensions.RowSelector(selenium, 1, popupPrefix))));
-
-            selenium.EntityClick(1, popupPrefix);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            selenium.EntityOperationClick(AlertOperation.Attend);
-            selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlertOperation.Unattend));
-            
-            selenium.Open(viewRoute);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            Assert.IsTrue(selenium.EntityHasNAlerts(0, warned));
-            Assert.IsTrue(selenium.EntityHasNAlerts(1, future));
-            Assert.IsTrue(selenium.EntityHasNAlerts(1, attended));
+                using (var alerts = label.AlertsViewClick(AlertCurrentState.Alerted))
+                {
+                    return alerts.Results.EntityClick<AlertDN>(0);
+                }
+            })
+            .Using(alert =>
+            {
+                alert.ExecuteAjax(AlertOperation.Attend);
+                return NormalPage<LabelDN>(1);
+            }).EndUsing(label =>
+            {
+                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Attended));
+                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
+                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
+            });
         }
     }
 }

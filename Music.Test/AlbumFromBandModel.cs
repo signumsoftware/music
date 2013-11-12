@@ -6,7 +6,7 @@ using Signum.Test;
 using Signum.Entities;
 using Signum.Test.Environment;
 
-namespace Music.Web
+namespace Music.Test
 {
     public class AlbumFromBandModel : ModelEntity
     {

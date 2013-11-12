@@ -13,20 +13,16 @@ using Music.Test.Web.Properties;
 using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
+using Signum.Entities;
 
 namespace Music.Test.Web
 {
     [TestClass]
     public class Common : SeleniumTestClass
     {
-        protected string FindRoute(string webQueryName)
+        protected override string Url(string url)
         {
-            return "/Music.Web/Find/{0}".Formato(webQueryName);
-        }
-
-        protected string ViewRoute(string webTypeName, int? id)
-        {
-            return "/Music.Web/View/{0}/{1}".Formato(webTypeName, id.HasValue ? id.Value.ToString() : "");
+            return "http://localhost/Music.Web/" + url;
         }
 
         public static void Start()
@@ -40,12 +36,12 @@ namespace Music.Test.Web
             SeleniumTestClass.LaunchSelenium();
         }
 
-        public void Login()
+        protected void Login()
         {
             Login("internal", "internal");
         }
 
-        public void Login(string username, string pwd)
+        protected void Login(string username, string pwd)
         {
             selenium.Open("/Music.Web/");
             selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
@@ -71,18 +67,15 @@ namespace Music.Test.Web
             Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));
         }
 
-        public void LogOut()
+        protected void LogOut()
         {
             selenium.Click("jq=a.sf-logout");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=a.sf-login"));
+            selenium.Wait(() => selenium.IsElementPresent("jq=a.sf-login"));
         }
 
-        public void CheckLoginAndOpen(string url)
+        protected void CheckLogin(string url)
         {
-            selenium.Open(url);
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
-            bool logged = selenium.IsElementPresent("jq=a.sf-logout");
-            if (!logged)
+            if (!selenium.IsElementPresent("jq=a.sf-logout"))
                 Login();
 
             selenium.Open(url);

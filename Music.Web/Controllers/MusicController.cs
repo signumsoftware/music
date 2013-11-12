@@ -16,6 +16,7 @@ using Signum.Engine.Basics;
 using Signum.Utilities;
 using Signum.Web;
 using Signum.Test.Environment;
+using Music.Test;
 
 namespace Music.Web
 {

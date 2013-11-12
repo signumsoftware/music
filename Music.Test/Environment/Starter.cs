@@ -29,6 +29,7 @@ using Signum.Engine.Notes;
 using Signum.Test;
 using Signum.Utilities;
 using Signum.Test.Environment;
+using Signum.Engine.Translation;
 
 namespace Music.Test
 {
@@ -77,6 +78,7 @@ namespace Music.Test
                 TypeLogic.Start(sb, dqm);
 
                 OperationLogic.Start(sb, dqm);
+                CultureInfoLogic.Start(sb, dqm); 
                 ExceptionLogic.Start(sb, dqm);
                 AuthLogic.Start(sb, dqm, "System", "Anonymous");
                 UserTicketLogic.Start(sb, dqm);
@@ -104,7 +106,7 @@ namespace Music.Test
                 NoteLogic.Start(sb, dqm, new[] { typeof(LabelDN) });
 
                 FilePathLogic.Start(sb, dqm);
-                ReportsLogic.Start(sb, dqm, true);
+                ReportSpreadsheetsLogic.Start(sb, dqm, true);
 
                 MusicLogic.Start(sb, dqm);
 
@@ -112,6 +114,7 @@ namespace Music.Test
                 TypeConditionLogic.Register<AlbumDN>(MusicGroups.JapanEntities, a => a.Label.InCondition(MusicGroups.JapanEntities));
 
                 CacheLogic.CacheTable<LabelDN>(sb);
+
 
                 started = true;
 

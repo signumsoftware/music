@@ -15,6 +15,8 @@ using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Entities.Chart;
 using System.Text.RegularExpressions;
+using Signum.Test.Environment;
+using Signum.Entities.DynamicQuery;
 
 namespace Music.Test.Web
 {
@@ -38,103 +40,64 @@ namespace Music.Test.Web
             Common.MyTestCleanup();
         }
 
-        void OpenChart()
-        {
-            selenium.Click("jq=#qbChartNew");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-        }
-
-        void Draw()
-        {
-            selenium.Click("jq=#qbDraw");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#tblResults"));
-        }
-
         [TestMethod]
         public void Chart001_Open_Filter_Draw_CreateUC()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
-
-            //add filter of simple value
-            selenium.FilterSelectToken(0, "label=Id", false);
-            selenium.AddFilter(0);
-            selenium.FilterSelectOperation(0, "value=GreaterThan");
-            selenium.Type("value_0", "1");
-
-            OpenChart();
-
-            //filter is maintained
-            Assert.IsTrue(selenium.IsElementPresent("jq=#value_0[value=1]"));
-
-            //set chart tokens
-            selenium.FilterSelectToken(0, "value=Author", true, "Columns_0_Token_");
-            selenium.FilterSelectToken(0, "value=Count", false, "Columns_1_Token_");
-
-            Draw();
-            //3 filas
-            selenium.WaitAjaxFinished(() => 
-                selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 3)) && 
-                !selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 4)));                
-
-            //add aggregate filter
-            selenium.FilterSelectToken(0, "value=Count", false);
-            selenium.AddFilter(1);
-            selenium.FilterSelectOperation(1, "value=GreaterThan");
-            selenium.Type("value_1", "2");
-
-            //check aggregate filter present with dot dot, but do not add
-            selenium.FilterSelectToken(0, "value=Id", true);
-            selenium.FilterSelectToken(1, "value=Average", false);
-
-            Draw();
-            //2 filas
-            selenium.WaitAjaxFinished(() =>
-                selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 2)) &&
-                !selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 3)));       
-
-            //Sort
-            selenium.Click("jq=a[href='#sfChartData']");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("jq=#sfChartData:visible"));
-            selenium.Click(SearchTestExtensions.TableHeaderSelector(1));
-            selenium.TableHeaderMarkedAsSorted(1, true, true);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0}:contains('Michael')".Formato(SearchTestExtensions.RowSelector(selenium, 1))));
-
-            //Create User Chart
-            selenium.QueryMenuOptionClick("tmUserCharts", "qbUserChartNew");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
             string userChartName = "uctest" + DateTime.Now.Ticks.ToString();
-            selenium.Type("DisplayName", userChartName);
 
-            Assert.IsTrue(selenium.IsElementPresent("jq=#Filters_1_sfRuntimeInfo"));
-            Assert.IsTrue(selenium.IsElementPresent("jq=#Orders_0_sfRuntimeInfo"));
+            SearchPage(typeof(AlbumDN), CheckLogin)
+            .Using(a =>
+            {
+                a.SearchControl.Filters.AddFilter("Id", FilterOperation.GreaterThan, 1);
 
-            selenium.EntityOperationClick(UserChartOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+                return a.SearchControl.OpenChart();
+            })
+            .Using(chart =>
+            {
+                //filter is maintained
+                Assert.AreEqual("1", chart.Filters.GetFilter(0).ValueLine().StringValue);
 
-            //Load user chart
-            selenium.Open(FindRoute("Album"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            OpenChart();
+                chart.GetColumnTokenBuilder(0).SelectToken("Author", waitForLast: true);
+                chart.GetColumnTokenBuilder(1).SelectToken("Count");
+                chart.Draw();
 
-            selenium.Click(SearchTestExtensions.QueryMenuOptionLocatorByAttr("tmUserCharts", "title=" + userChartName));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+                selenium.Wait(() => chart.Results.RowsCount() == 3);
+                chart.Filters.AddFilter("Count", FilterOperation.GreaterThan, 2);
+                chart.Filters.QueryTokenBuilder.SelectToken("Id.Average");
+                chart.Draw();
 
-            Draw();
-            //2 filas
-            selenium.WaitAjaxFinished(() =>
-                selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 2)) &&
-                !selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 3)));
-            //check order was set
-            Assert.IsTrue(selenium.IsElementPresent("{0}:contains('Michael')".Formato(SearchTestExtensions.RowSelector(selenium, 1))));
+                selenium.Wait(() => chart.Results.RowsCount() == 2);
+                chart.DataTab();
+                chart.Results.OrderBy(0);
+                selenium.WaitElementPresent(chart.Results.RowLocator(0) + ":contains('Michael')");
 
-            selenium.QueryMenuOptionClick("tmUserCharts", "qbUserChartEdit");
-            selenium.WaitForPageToLoad(PageLoadTimeout);
+                return chart.NewUserChart();
+            })
+            .Using(uc =>
+            {
+                uc.ValueLineValue(a => a.DisplayName, userChartName);
 
-            selenium.EntityOperationClick(UserChartOperation.Delete);
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            Assert.IsTrue(selenium.IsElementPresent(SearchTestExtensions.SearchSelector("")));
+                selenium.AssertElementPresent(uc.EntityRepeater(a => a.Filters).RuntimeInfoLocator(0));
+                selenium.AssertElementPresent(uc.EntityRepeater(a => a.Orders).RuntimeInfoLocator(0));
+
+                uc.ExecuteSubmit(UserChartOperation.Save);
+
+                return SearchPage(typeof(AlbumDN));
+            })
+            .Using(albums => albums.SearchControl.OpenChart())
+            .Using(chart =>
+            {
+                chart.SelectUserChart(userChartName);
+
+                chart.Draw();
+
+                selenium.Wait(() => chart.Results.RowsCount() == 2);
+                selenium.AssertElementPresent(chart.Results.RowLocator(0) + ":contains('Michael')");
+
+                return chart.EditUserChart();
+            })
+            .Using(uc => uc.DeleteSubmit(UserChartOperation.Delete))
+            .EndUsing(userCharts => userCharts.Selenium.AssertElementPresent(userCharts.SearchControl.SearchButtonLocator)); 
         }
     }
 }

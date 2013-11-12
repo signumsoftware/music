@@ -16,9 +16,9 @@ using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
 using System.Threading;
-using Signum.Engine.Operations;
 using Signum.Test.Environment;
 using Signum.Entities;
+using Signum.Engine.Operations;
 
 namespace Music.Test.Web
 {
@@ -45,83 +45,85 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations001_Execute_Navigate()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            SearchPage(typeof(AlbumDN), CheckLogin)
+                .Using(albums => albums.Create<AlbumDN>())
+                .EndUsing(album =>
+            {
+                album.ValueLineValue(a => a.Name, "test");
+                album.ValueLineValue(a => a.Year, 2010);
+                album.EntityLine(a => a.Author).Find(typeof(BandDN)).SelectByPosition(0);
+                album.EntityCombo(a => a.Label).SelectLabel("Virgin");
+                album.ExecuteSubmit(AlbumOperation.Save);
 
-            selenium.SearchCreate();
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            selenium.Type("Name", "test");
-            selenium.Type("Year", "2010");
-            selenium.LineFindWithImplAndSelectElements("Author_", "Band", new int[]{0});
-            selenium.Select("Label_sfCombo", "label=Virgin");
-
-            selenium.EntityOperationClick(AlbumOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.MainEntityHasId();
+                Assert.IsTrue(album.HasId());
+            });
         }
 
         [TestMethod]
         public void Operations002_Execute_ReloadContent()
         {
-            CheckLoginAndOpen(ViewRoute("Album", 1));
-
-            string name = "Siamese Dreamm";
-
-            selenium.Type("Name", name);
-            selenium.EntityOperationClick(AlbumOperation.Modify);
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("//span[contains(@class,'sf-entity-title') and text()='{0}']".Formato(name)));
+            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
+            {
+                string name = "Siamese Dreamm";
+                album.ValueLineValue(a => a.Name, name);
+                album.ExecuteAjax(AlbumOperation.Modify);
+                selenium.Wait(() => album.Title() == name);
+            });
         }
 
         [TestMethod]
         public void Operations003_ConstructFrom()
         {
-            CheckLoginAndOpen(ViewRoute("Album", 1));
+            NormalPage<AlbumDN>(1, CheckLogin).Using(album =>
+            {
+                Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
-            Assert.IsTrue(selenium.EntityOperationDisabled(AlbumOperation.Save));
-
-            selenium.EntityMenuConstructFromClick(AlbumOperation.Clone);
-            selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlbumOperation.Save));
-
-            selenium.Type("Name", "test3");
-            selenium.Type("Year", "2010");
-
-            selenium.EntityOperationClick(AlbumOperation.Save);
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.MainEntityHasId();
+                return album.ConstructFromNormalWindow<AlbumDN>(AlbumOperation.Clone);
+            }).EndUsing(album =>
+            {
+                album.Selenium.Wait(() => string.IsNullOrEmpty(album.ValueLineValue(a => a.Name)));
+                album.ValueLineValue(a => a.Name, "test3");
+                album.ValueLineValue(a => a.Year, 2010);
+                album.ExecuteSubmit(AlbumOperation.Save);
+                Assert.IsTrue(album.HasId());
+            });
         }
 
         [TestMethod]
         public void Operations004_ConstructFrom_OpenPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Band", 1));
-
-            selenium.EntityMenuConstructFromClick(AlbumOperation.CreateAlbumFromBand);
-            string popupPrefix = "New_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent(SeleniumExtensions.PopupSelector(popupPrefix)));
-
-            selenium.Type("{0}Name".Formato(popupPrefix), "test2");
-            selenium.Type("{0}Year".Formato(popupPrefix), "2010");
-            selenium.LineFindAndSelectElements("{0}Label_".Formato(popupPrefix), new int[] { 0 });
-
-            selenium.Click("{0}btnOk".Formato(popupPrefix));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-            selenium.MainEntityHasId();
+            NormalPage<BandDN>(1, CheckLogin).Using(band =>
+            {
+                using (var model = band.ConstructFromPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand))
+                {
+                    model.ValueLineValue(m => m.Name, "test2");
+                    model.ValueLineValue(m => m.Year, 2010);
+                    model.EntityLine(a => a.Label).Find().SelectByPosition(0);
+                    return model.OkWaitNormalPage<AlbumDN>();
+                }
+            }).EndUsing(album =>
+            {
+                Assert.IsTrue(album.HasId());
+            });
         }
 
         [TestMethod]
         public void Operations005_ConstructFrom_OpenPopupAndSubmitFormAndPopup()
         {
-            CheckLoginAndOpen(ViewRoute("Album", 1));
+            NormalPage<AlbumDN>(1, CheckLogin).Using(album =>
+            {
+                album.ButtonClick("CloneWithData");
 
-            selenium.EntityButtonClick("CloneWithData");
+                using (ValueLinePopup popup = new ValueLinePopup(album.Selenium))
+                {
+                    selenium.WaitElementPresent(popup.PopupVisibleLocator);
 
-            string popupPrefix = "New_";
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("{0}:visible".Formato(SeleniumExtensions.PopupSelector(popupPrefix))));
+                    popup.StringValueLine.StringValue = "test popup";
 
-            selenium.Type("{0}StringValue".Formato(popupPrefix), "test popup");
-            selenium.PopupOk(popupPrefix, true);
-
-            selenium.IsTextPresent("test popup");
+                    return popup.OkWaitNormalPage<AlbumDN>();
+                }
+            })
+            .EndUsing(album2 => Assert.IsTrue(album2.Selenium.IsTextPresent("test popup")));
         }
 
         [TestMethod]
@@ -136,38 +138,33 @@ namespace Music.Test.Web
                 lite = album.Execute(AlbumOperation.Save).ToLite(); 
             }
 
-            CheckLoginAndOpen(ViewRoute("Album", lite.Id));
-
-            selenium.EntityOperationClick(AlbumOperation.Delete);
-            Assert.IsTrue(Regex.IsMatch(selenium.GetConfirmation(), ".*"));
-            selenium.WaitForPageToLoad(PageLoadTimeout);
-
-            //Delete has redirected to search window => Check deleted album doesn't exist any more
-            selenium.Search();
-            Assert.IsFalse(selenium.IsElementPresent(SearchTestExtensions.EntityRowSelector(lite)));
+            NormalPage<AlbumDN>(lite, CheckLogin).Using(album =>
+            {
+                return album.DeleteSubmit(AlbumOperation.Delete);
+            }).EndUsing(albums =>
+            {
+                albums.Search();
+                Assert.IsFalse(selenium.IsElementPresent(albums.SearchControl.Results.RowLocator(lite)));
+            });
         }
 
         [TestMethod]
         public void Operations007_ConstructFromMany()
         {
-            CheckLoginAndOpen(FindRoute("Album"));
+            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            {
+                albums.Search();
 
-            selenium.Search();
+                albums.SearchControl.Results.SelectRow(0, 1);
 
-            selenium.SelectRow(0);
-            selenium.SelectRow(1);
-
-            selenium.Click("jq=.sf-tm-selected");
-            selenium.WaitAjaxFinished(() => selenium.IsElementPresent("AlbumOperation_CreateEmptyGreatestHitsAlbum"));
-            selenium.Click("AlbumOperation_CreateEmptyGreatestHitsAlbum");
-
-            selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlbumOperation.Save));
-
-            selenium.Type("New_Name", "test greatest empty");
-            selenium.Select("New_Label_sfCombo", "label=Virgin");
-
-            selenium.EntityOperationClick(AlbumOperation.Save);
-            selenium.WaitAjaxFinished(() => selenium.EntityOperationEnabled(AlbumOperation.Modify));
+                using (var alb = albums.SearchControl.Results.SelectedClick().ConstructFromPopup<AlbumDN>(AlbumOperation.CreateEmptyGreatestHitsAlbum))
+                {
+                    alb.ValueLineValue(a => a.Name, "test greatest empty");
+                    alb.EntityCombo(a => a.Label).SelectLabel("Virgin");
+                    alb.ExecuteAjax(AlbumOperation.Save);
+                    Assert.IsTrue(alb.OperationEnabled(AlbumOperation.Modify));
+                }
+            }
         }
     }
 }
