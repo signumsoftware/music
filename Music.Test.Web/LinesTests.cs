@@ -245,7 +245,7 @@ namespace Music.Test.Web
         {
             using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
             {
-                var el = band.EntityList(a => a.Members);
+                var el = band.EntityListDetail(a => a.Members);
 
                 //1st element is shown by default
                 el.HasDetailEntity();
@@ -270,7 +270,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(el.HasEntity(5));
                 Assert.IsTrue(el.HasDetailEntity());
 
-                var el2 = band.EntityList(a => a.OtherAwards);
+                var el2 = band.EntityListDetail(a => a.OtherAwards);
                 el2.CreateImplementations(typeof(GrammyAwardDN));
                 selenium.Wait(() => el2.HasDetailEntity());
                 Assert.IsTrue(el2.HasEntity(0));
