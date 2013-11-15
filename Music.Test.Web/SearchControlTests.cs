@@ -165,20 +165,21 @@ namespace Music.Test.Web
                 int authorCol = 3;
 
                 albums.Results.OrderBy(authorCol);
-                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(5, 0));
+                Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
 
                 int labelCol = 4;
 
                 albums.Results.ThenBy(labelCol);
-                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(7, 0));
+                Assert.AreEqual(Lite.Create<AlbumDN>(7), albums.Results.EntityInIndex(0));
                 Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
 
                 albums.Results.ThenByDescending(labelCol);
-                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(5, 0));
+                Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
                 Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
 
                 albums.Results.OrderBy(labelCol);
-                Assert.IsTrue(albums.Results.IsEntityInRow<AlbumDN>(12, 0));
+                var first = Database.Query<AlbumDN>().OrderBy(a => a.Label.Name).Select(a => a.ToLite()).First();
+                Assert.AreEqual(first /* Lite.Create<AlbumDN>(12)*/, albums.Results.EntityInIndex(0));
                 Assert.IsFalse(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
             }
         }
@@ -199,15 +200,15 @@ namespace Music.Test.Web
 
                     int nameCol = 3;
                     artists.Results.ThenBy(nameCol);
-                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(1, 0));
+                    Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
                     Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
 
                     artists.Results.ThenByDescending(nameCol);
-                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(8, 0));
+                    Assert.AreEqual(Lite.Create<ArtistDN>(8), artists.Results.EntityInIndex(0));
                     Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
 
                     artists.Results.OrderBy(2);
-                    Assert.IsTrue(artists.Results.IsEntityInRow<ArtistDN>(1, 0));
+                    Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
                     Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(isMaleColumn));
                     Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(nameCol));
                 }
@@ -263,8 +264,8 @@ namespace Music.Test.Web
             using (var authors = SearchPage(typeof(IAuthorDN), CheckLogin))
             {
                 authors.Results.OrderBy("Id");
-                Assert.IsTrue(authors.Results.IsEntityInRow<ArtistDN>(1, 0));
-                Assert.IsTrue(authors.Results.IsEntityInRow<BandDN>(1, 1));
+                Assert.AreEqual(Lite.Create<ArtistDN>(1), authors.Results.EntityInIndex(0));
+                Assert.AreEqual(Lite.Create<BandDN>(1), authors.Results.EntityInIndex(1));
 
                 authors.Filters.AddFilter("Id", FilterOperation.EqualTo, 1);
                 authors.Search();

@@ -13,6 +13,7 @@ using Signum.Test;
 using Signum.Test.Environment;
 using Signum.Engine.Processes;
 using System.IO;
+using Signum.Engine.Operations;
 
 namespace Music.Test.Web
 {
@@ -70,6 +71,7 @@ namespace Music.Test.Web
             }).EndUsing(album =>
             {
                 Assert.IsTrue(album.HasId());
+                album.RuntimeInfo().ToLite().Delete();
             }); 
         }
 
@@ -78,7 +80,9 @@ namespace Music.Test.Web
         {
             using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
             {
-                int count = AuthLogic.Disable().Using(d => Database.Query<AlbumDN>().Count());
+                CreateAlbum("blasco");
+
+                int count = Database.Query<AlbumDN>().Count();
 
                 albums.Results.OrderByDescending("Id");
 
@@ -93,6 +97,18 @@ namespace Music.Test.Web
 
                 Assert.AreEqual(count - 1, albums.Results.RowsCount());
             }
+        }
+
+        private static void CreateAlbum(string name)
+        {
+            using (OperationLogic.AllowSave<AlbumDN>())
+                new AlbumDN
+                {
+                    Year = 2000,
+                    Name = name,
+                    Author = Database.Query<ArtistDN>().First(),
+                    State = AlbumState.Saved
+                }.Save();
         }
 
         [TestMethod]
@@ -110,12 +126,15 @@ namespace Music.Test.Web
                 album.EntityCombo(a => a.Label).SelectLabel("Virgin");
                 album.ExecuteSubmit(AlbumOperation.Save);
                 Assert.IsTrue(album.HasId());
+                album.RuntimeInfo().ToLite().Delete();
             });
         }
 
         [TestMethod]
         public void OperationCtx010_FromMany_Execute()
         {
+            ProcessViewStart();
+
             using (var artist = SearchPage(typeof(ArtistDN), CheckLogin))
             {
                 artist.Results.OrderBy("Id");
@@ -137,12 +156,16 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx011_FromMany_Delete()
         {
+            ProcessViewStart();
+
             using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
             {
-                int count = AuthLogic.Disable().Using(d => Database.Query<AlbumDN>().Count());
+                CreateAlbum("alb1");
+                CreateAlbum("alb2");
 
-                //Order by Id descending so we delete the last cloned album
-                albums.Search();
+                int count = Database.Query<AlbumDN>().Count();
+
+                albums.Results.OrderByDescending("Id");
 
                 Assert.AreEqual(count, albums.Results.RowsCount());
 
@@ -161,6 +184,30 @@ namespace Music.Test.Web
                 selenium.Search();
 
                 Assert.AreEqual(count - 2, albums.Results.RowsCount());
+            }
+        }
+
+
+        private void ProcessViewStart()
+        {
+            string url = Url("Process/View");
+
+            selenium.Open(url);
+            selenium.WaitForPageToLoad();
+
+            CheckLogin(url);
+
+            if (selenium.IsElementPresent("jq=#processMainDiv span:contains('STOPPED')"))
+            {
+                selenium.Click("jq=#processMainDiv a:contains('Start')");
+
+                selenium.Wait(() =>
+                {
+                    selenium.Open(url);
+                    selenium.WaitForPageToLoad();
+
+                    return !selenium.IsElementPresent("jq=#processMainDiv span:contains('STOPPED')");
+                });
             }
         }
     }

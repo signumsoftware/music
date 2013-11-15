@@ -14,6 +14,7 @@ using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Test.Environment;
+using Signum.Entities;
 
 namespace Music.Test.Web
 {
@@ -62,6 +63,7 @@ namespace Music.Test.Web
                 });
 
                 Assert.IsTrue(el.HasEntity());
+                var lite = el.RuntimeInfo().ToLite();
                 Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
                 Assert.IsFalse(el.RuntimeInfo().IsNew); //Already saved
 
@@ -69,6 +71,12 @@ namespace Music.Test.Web
                 el.Remove();
                 el.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
                 Assert.IsTrue(el.HasEntity());
+
+                el.Remove();
+                el.AutoComplete(Lite.Create<GrammyAwardDN>(1));
+                Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
+
+                lite.Delete();
             }
         }
 
@@ -97,6 +105,8 @@ namespace Music.Test.Web
                         award.OkWaitClosed();
                     });
 
+                    var lite = el.RuntimeInfo().ToLite();
+
 
                     Assert.IsTrue(el.HasEntity());
                     Assert.AreEqual(typeof(AmericanMusicAwardDN), el.RuntimeInfo().EntityType);
@@ -108,6 +118,8 @@ namespace Music.Test.Web
                     Assert.IsTrue(el.HasEntity());
 
                     artist.Close();
+
+                    lite.Delete();
                 }
             }
         }
@@ -157,6 +169,7 @@ namespace Music.Test.Web
                 });
 
                 Assert.IsTrue(el.HasEntity(4));
+                var lite = el.RuntimeInfo(4).ToLite();
                 Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(4).EntityType);
                 Assert.IsFalse(el.RuntimeInfo(4).IsNew);
 
@@ -179,6 +192,8 @@ namespace Music.Test.Web
                     grammy.OkWaitClosed();
                 });
 
+
+                var lite2 = el2.RuntimeInfo(0).ToLite();
                 Assert.IsTrue(el2.HasEntity(0));
                 Assert.AreEqual(typeof(GrammyAwardDN), el2.RuntimeInfo(0).EntityType);
                 Assert.IsFalse(el2.RuntimeInfo(0).IsNew);
@@ -198,6 +213,9 @@ namespace Music.Test.Web
                     grammy.ValueLineValue(a => a.Category, "test2");
                     grammy.Close();
                 });
+
+                lite.Delete();
+                lite2.Delete();
             }
         }
 
@@ -220,6 +238,7 @@ namespace Music.Test.Web
                     });
 
                     Assert.IsTrue(el.HasEntity(1));
+                    var lite = el.RuntimeInfo(1).ToLite();
                     Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(1).EntityType);
                     Assert.IsFalse(el.RuntimeInfo(1).IsNew);
 
@@ -236,6 +255,8 @@ namespace Music.Test.Web
                     Assert.IsFalse(el.HasEntity(1));
                     Assert.IsFalse(el.HasEntity(2));
                     Assert.IsTrue(el.HasEntity(3));
+
+                    lite.Delete();
                 }
             }
         }
@@ -327,10 +348,10 @@ namespace Music.Test.Web
                 string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
                 string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
-                er.ItemMove(4, true);
+                er.MoveUp(4);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
                 //move down
-                er.ItemMove(2, false); 
+                er.MoveDown(2); 
                 selenium.Wait(() =>
                     selenium.IsElementPresent(secondItemMichael) &&
                     !selenium.IsElementPresent(thirdItemMichael));
@@ -345,6 +366,81 @@ namespace Music.Test.Web
 
                 //find does not exist by default
                 Assert.IsFalse(selenium.IsElementPresent(er2.FindLocator));
+            }
+        }
+
+        [TestMethod]
+        public void Lines007_EntityStrip()
+        {
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandStrip"), CheckLogin))
+            {
+                var er = band.EntityStrip(a => a.Members);
+
+                //All elements are shown
+                Assert.IsTrue(er.HasEntity(0));
+                Assert.IsTrue(er.HasEntity(1));
+                Assert.IsTrue(er.HasEntity(2));
+                Assert.IsTrue(er.HasEntity(3));
+
+                //Create
+                er.CreatePopup<ArtistDN>().EndUsing(artist => 
+                {
+                    artist.ValueLineValue(a => a.Name, "test");
+                    artist.ExecuteAjax(ArtistOperation.Save);
+                    artist.OkWaitClosed();
+                });
+                Assert.IsTrue(er.HasEntity(4));
+                var lite = er.RuntimeInfo(4).ToLite();
+                //delete new element (created in client)
+                er.Remove(4);
+                Assert.IsFalse(er.HasEntity(4));
+
+                //delete old element (created in server)
+                er.Remove(0);
+                Assert.IsFalse(er.HasEntity(0));
+
+                //find multiple: it exists because Find is overriden to true in this EntityStrip
+                er.Find().SelectByPosition(4, 5);
+                Assert.IsTrue(er.HasEntity(4));
+                Assert.IsTrue(er.HasEntity(5));
+
+                //move up
+                string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
+                string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
+                Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
+                er.MoveUp(4);
+                selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
+                //move down
+                er.MoveDown(2);
+                selenium.Wait(() =>
+                    selenium.IsElementPresent(secondItemMichael) &&
+                    !selenium.IsElementPresent(thirdItemMichael));
+
+
+                var er2 = band.EntityStrip(b => b.OtherAwards);
+
+                //create with implementations
+                er2.CreatePopup<GrammyAwardDN>().EndUsing(award =>
+                {
+                    award.ValueLineValue(a => a.Category, "test");
+                    award.ExecuteAjax(AwardOperation.Save);
+                    award.OkWaitClosed();
+                });
+
+                var lite2 = er2.RuntimeInfo(0).ToLite();
+                Assert.IsTrue(er2.HasEntity(0));
+
+                er2.AutoComplete(Lite.Create<GrammyAwardDN>(1));
+                Assert.AreEqual(typeof(GrammyAwardDN), er2.RuntimeInfo(1).EntityType);
+
+                er2.AutoComplete(Lite.Create<AmericanMusicAwardDN>(1));
+                Assert.AreEqual(typeof(AmericanMusicAwardDN), er2.RuntimeInfo(2).EntityType);
+
+                //find does not exist by default
+                Assert.IsFalse(selenium.IsElementPresent(er2.FindLocator));
+
+                lite.Delete();
+                lite2.Delete();
             }
         }
     }

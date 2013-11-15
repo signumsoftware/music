@@ -104,7 +104,7 @@ namespace Music.Test.Web
             .EndUsing(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick(uqName);
-                selenium.AssertElementNotPresent(albums.Filters.GetFilter(0).OperationLocator);
+                selenium.AssertElementPresent(albums.Filters.GetFilter(0).OperationLocator);
                 Assert.IsTrue(albums.Results.HasColumn("Label.Owner.Country"));
             });
 

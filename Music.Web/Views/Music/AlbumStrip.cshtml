@@ -1,0 +1,11 @@
+﻿@using Signum.Test.Environment
+
+@using (var e = Html.TypeContext<AlbumDN>()) 
+{
+	@Html.ValueLine(e, f => f.Name)
+	@Html.ValueLine(e, f => f.Year)
+	@Html.EntityLine(e, f => f.Author)
+	@Html.EntityStrip(e, f => f.Songs, s=>s.Vertical = true)
+    @Html.EntityLine(e, f => f.BonusTrack)
+    @Html.EntityCombo(e, f => f.Label)
+}

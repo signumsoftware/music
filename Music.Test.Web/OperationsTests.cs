@@ -56,6 +56,7 @@ namespace Music.Test.Web
                 album.ExecuteSubmit(AlbumOperation.Save);
 
                 Assert.IsTrue(album.HasId());
+                album.RuntimeInfo().ToLite().Delete();
             });
         }
 
@@ -86,6 +87,7 @@ namespace Music.Test.Web
                 album.ValueLineValue(a => a.Year, 2010);
                 album.ExecuteSubmit(AlbumOperation.Save);
                 Assert.IsTrue(album.HasId());
+                album.RuntimeInfo().ToLite().Delete();
             });
         }
 
@@ -104,6 +106,8 @@ namespace Music.Test.Web
             }).EndUsing(album =>
             {
                 Assert.IsTrue(album.HasId());
+
+                album.RuntimeInfo().ToLite().Delete();
             });
         }
 
@@ -123,7 +127,10 @@ namespace Music.Test.Web
                     return popup.OkWaitNormalPage<AlbumDN>();
                 }
             })
-            .EndUsing(album2 => Assert.IsTrue(album2.Selenium.IsTextPresent("test popup")));
+            .EndUsing(album2 =>
+            {
+                Assert.IsTrue(album2.Selenium.IsTextPresent("test popup"));
+            });
         }
 
         [TestMethod]
@@ -144,7 +151,7 @@ namespace Music.Test.Web
             }).EndUsing(albums =>
             {
                 albums.Search();
-                Assert.IsFalse(selenium.IsElementPresent(albums.SearchControl.Results.RowLocator(lite)));
+                selenium.AssertElementNotPresent(albums.SearchControl.Results.RowLocator(lite));
             });
         }
 
@@ -163,6 +170,7 @@ namespace Music.Test.Web
                     alb.EntityCombo(a => a.Label).SelectLabel("Virgin");
                     alb.ExecuteAjax(AlbumOperation.Save);
                     Assert.IsTrue(alb.OperationEnabled(AlbumOperation.Modify));
+                    alb.RuntimeInfo().ToLite().Delete();
                 }
             }
         }

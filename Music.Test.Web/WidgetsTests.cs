@@ -52,7 +52,10 @@ namespace Music.Test.Web
             {
                 label.Search();
                 using (var albums = label.Results.EntityContextMenu(0).QuickLinkClickSearch(0))
-                    Assert.IsTrue(albums.Results.RowsCount() > 0);
+                {
+                    selenium.Wait(() => albums.Results.RowsCount() > 0);
+                }
+                    
             }
         }
 

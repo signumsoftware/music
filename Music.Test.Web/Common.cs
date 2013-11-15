@@ -27,11 +27,10 @@ namespace Music.Test.Web
 
         public static void Start()
         {
-            Music.Test.Starter.Dirty(); //Force generate database
             Music.Test.Starter.StartAndLoad(UserConnections.Replace(Settings.Default.ConnectionString));
 
-            using (AuthLogic.Disable())
-                Schema.Current.Initialize();
+            AuthLogic.GloballyEnabled = false;
+            Schema.Current.Initialize();
 
             SeleniumTestClass.LaunchSelenium();
         }
@@ -44,25 +43,25 @@ namespace Music.Test.Web
         protected void Login(string username, string pwd)
         {
             selenium.Open("/Music.Web/");
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
+            selenium.WaitForPageToLoad();
 
             //is already logged?
             bool logged = selenium.IsElementPresent("jq=a.sf-logout");
             if (logged)
             {
                 selenium.Click("jq=a.sf-logout");
-                selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
+                selenium.WaitForPageToLoad();
             }
 
             selenium.Click("jq=a.sf-login");
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
+            selenium.WaitForPageToLoad();
 
             selenium.Type("username", username);
             selenium.Type("password", pwd);
             selenium.Click("rememberMe");
 
             selenium.Click("jq=input.login");
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
+            selenium.WaitForPageToLoad();
 
             Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));
         }
@@ -79,7 +78,7 @@ namespace Music.Test.Web
                 Login();
 
             selenium.Open(url);
-            selenium.WaitForPageToLoad(SeleniumExtensions.PageLoadLongTimeout);
+            selenium.WaitForPageToLoad();
         }
     }
 }

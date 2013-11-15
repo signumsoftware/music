@@ -1,0 +1,9 @@
+﻿@using Signum.Test.Environment
+
+@using (var e = Html.TypeContext<BandDN>()) 
+{
+	@Html.ValueLine(e, f => f.Name);
+	@Html.EntityStrip(e, f => f.Members, es => { es.Find = true; es.Reorder = true; es.Vertical = true; es.Create = true; es.Navigate = true; es.View = true; });
+    @Html.EntityLine(e, f => f.LastAward);
+    @Html.EntityStrip(e, f => f.OtherAwards, es => { es.Create = true; });
+}

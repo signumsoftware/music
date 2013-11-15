@@ -22,6 +22,16 @@ namespace Music.Web
 {
     public class MusicController : Controller
     {
+        public ViewResult AlbumStrip()
+        {
+            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<AlbumDN>(1)) { PartialViewName = "AlbumStrip" });
+        }
+
+        public ViewResult BandStrip()
+        {
+            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandStrip" });
+        }
+
         public ViewResult BandDetail()
         {
             return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandDetail" });
