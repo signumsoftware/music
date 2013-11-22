@@ -41,7 +41,7 @@ namespace Music.Test.Windows
             if (win != null)
                 return win;
 
-            Process p = Process.Start(@"D:\Signum\Extensions\Music.Windows\bin\Debug\Music.Windows.exe");
+            Process p = Process.Start(@"D:\Signum\Music\Music.Windows\bin\Debug\Music.Windows.exe");
 
             p.WaitForInputIdle();
 
