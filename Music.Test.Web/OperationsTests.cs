@@ -85,6 +85,9 @@ namespace Music.Test.Web
                 album.Selenium.Wait(() => string.IsNullOrEmpty(album.ValueLineValue(a => a.Name)));
                 album.ValueLineValue(a => a.Name, "test3");
                 album.ValueLineValue(a => a.Year, 2010);
+
+                album.EntityLine(a => a.BonusTrack).View<SongDN>().EndUsing(s => Assert.IsNull(s.EntityState()));
+
                 album.ExecuteSubmit(AlbumOperation.Save);
                 Assert.IsTrue(album.HasId());
                 album.RuntimeInfo().ToLite().Delete();

@@ -94,7 +94,7 @@ namespace Music.Web
 
         private void WebStart()
         {
-            Navigator.Start(new NavigationManager());
+            Navigator.Start(new NavigationManager("myLittleSecret"));
             Constructor.Start(new ConstructorManager());
             OperationsClient.Start(new OperationManager(), true);
 

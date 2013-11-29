@@ -30,6 +30,8 @@ using Signum.Test;
 using Signum.Utilities;
 using Signum.Test.Environment;
 using Signum.Engine.Translation;
+using System.Threading;
+using System.Globalization;
 
 namespace Music.Test
 {
@@ -39,6 +41,8 @@ namespace Music.Test
         public static void StartAndLoad(string connectionString)
         {
             Start(connectionString);
+
+            Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-GB");
 
             if (!hasData)
             {
@@ -71,6 +75,7 @@ namespace Music.Test
                 DynamicQueryManager dqm = new DynamicQueryManager();
                 Connector.Default = new SqlConnector(connectionString, sb.Schema, dqm);
                 sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
+                sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
                 OverrideImplementations(sb);
 
