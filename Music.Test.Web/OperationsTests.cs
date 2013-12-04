@@ -79,7 +79,7 @@ namespace Music.Test.Web
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
-                return album.ConstructFromNormalWindow<AlbumDN>(AlbumOperation.Clone);
+                return album.ConstructFromNormalPage<AlbumDN>(AlbumOperation.Clone);
             }).EndUsing(album =>
             {
                 album.Selenium.Wait(() => string.IsNullOrEmpty(album.ValueLineValue(a => a.Name)));
