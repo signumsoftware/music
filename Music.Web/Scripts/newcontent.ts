@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../Framework/Signum.Web/Signum/Headers/jquery/jquery.d.ts"/>
 /// <reference path="../../Framework/Signum.Web/Signum/Scripts/references.ts"/>
+
 $(function () {
     $("body").bind("sf-new-content", function (e) {
         var $newContent = $(e.target);
@@ -13,4 +14,3 @@ $(function () {
 
     $("body").trigger("sf-new-content");
 });
-//# sourceMappingURL=newcontent.js.map
