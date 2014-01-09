@@ -102,7 +102,7 @@ namespace Music.Web
                 types: true, 
                 property: true, 
                 queries: true, 
-                resetPassword: true,
+                resetPassword: false,
                 passwordExpiration: false);
 
             AuthClient.CookieName = "sfUserMusicSample";
