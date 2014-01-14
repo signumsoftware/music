@@ -11,13 +11,13 @@ namespace Music.Test.Windows
 {
     public class MainWindowProxy: WindowProxy
     {
-        public OmniBoxProxy OmniBox { get; private set; }
+        //public OmniBoxProxy OmniBox { get; private set; }
         public AutomationElement MenuBar { get; private set; }
 
         public MainWindowProxy(AutomationElement element)
             : base(element)
         {
-            OmniBox = new OmniBoxProxy(element.Descendant(e => e.Current.AutomationId == "autoCompleteTb"));
+            //OmniBox = new OmniBoxProxy(element.Descendant(e => e.Current.AutomationId == "autoCompleteTb"));
             MenuBar = element.Child(c => c.Current.ControlType == ControlType.Menu);
         }
 
@@ -26,25 +26,25 @@ namespace Music.Test.Windows
             return MenuItemExtensions.MenuItemOpenWindow(MenuBar, menuNames);
         }
 
-        public SearchWindowProxy SelectQuery(object queryName)
-        {
-            return OmniBox.SelectQuery(queryName);
-        }
+        //public SearchWindowProxy SelectQuery(object queryName)
+        //{
+        //    return OmniBox.SelectQuery(queryName);
+        //}
 
-        public NormalWindowProxy<T> SelectEntity<T>(Lite<T> lite) where T : IdentifiableEntity
-        {
-            return OmniBox.SelectEntity<T>(lite);
-        }
+        //public NormalWindowProxy<T> SelectEntity<T>(Lite<T> lite) where T : IdentifiableEntity
+        //{
+        //    return OmniBox.SelectEntity<T>(lite);
+        //}
 
-        public SearchWindowProxy SelectUserQuery(Lite<UserQueryDN> userQuery)
-        {
-            return OmniBox.SelectUserQuery(userQuery);
-        }
+        //public SearchWindowProxy SelectUserQuery(Lite<UserQueryDN> userQuery)
+        //{
+        //    return OmniBox.SelectUserQuery(userQuery);
+        //}
 
-        public AutomationElement SelectCapture(string autoCompleteText, string itemsStatus, int? timeOut = null)
-        {
-            return OmniBox.SelectCapture(autoCompleteText, itemsStatus, timeOut);
-        }
+        //public AutomationElement SelectCapture(string autoCompleteText, string itemsStatus, int? timeOut = null)
+        //{
+        //    return OmniBox.SelectCapture(autoCompleteText, itemsStatus, timeOut);
+        //}
 
     }
 }

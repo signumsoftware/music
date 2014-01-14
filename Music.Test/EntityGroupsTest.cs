@@ -136,8 +136,8 @@ namespace Music.Test
             using (AuthLogic.UnsafeUserSession("external"))
             using (Transaction tr = new Transaction())
             {
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().UnsafeUpdate(r => new LabelDN { Name = r.Name + r.Name }));
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().UnsafeUpdate(r => new AlbumDN { Name = r.Name + r.Name }));
+                Assert.AreEqual(JapLab, Database.Query<LabelDN>().UnsafeUpdate().Set(r => r.Name, r=> r.Name + r.Name ).Execute());
+                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().UnsafeUpdate().Set(r => r.Name, r => r.Name + r.Name).Execute());
 
                 //tr.Commit();
             }
