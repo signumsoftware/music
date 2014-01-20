@@ -127,7 +127,7 @@ namespace Music.Test.Web
             }).Using(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick("test");
-                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(5, OrderType.Ascending));
+                selenium.Wait(() => albums.Results.IsHeaderMarkedSorted(5, OrderType.Ascending));
                 return albums.SearchControl.EditUserQuery();
             }).Using(uq =>
             {
