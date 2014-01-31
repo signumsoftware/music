@@ -22,12 +22,14 @@
     
     @Html.ScriptsJs(
         "~/scripts/jquery-1.9.1.min.js", 
-        "~/scripts/jquery-ui-1.10.2.custom.min.js")    
+        "~/scripts/jquery-ui-1.10.2.custom.min.js",
+        "~/scripts/require.js",
+        "~/scripts/require.config.js")    
 
     @Html.ScriptsJs("~/signum/resources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/signum/calendarResources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     
-    @Html.ScriptsJs("~/signum/scripts/SF_Utils.js", "~/signum/scripts/SF_jquery-ui-datepicker-extension.js", "~/scripts/newcontent.js")    
+    @Html.ScriptsJs("~/signum/scripts/SF.js", "~/signum/scripts/SF.UI.js", "~/scripts/newcontent.js")    
 
     @if (IsSectionDefined("head")) {
         @RenderSection("head")

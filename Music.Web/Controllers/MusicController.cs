@@ -60,7 +60,7 @@ namespace Music.Web
         }
 
         [HttpPost]
-        public JsonResult CreateAlbumFromBandExecute(string prefix)
+        public RedirectResult CreateAlbumFromBandExecute(string prefix)
         {
             var modelo = Navigator.ExtractEntity<AlbumFromBandModel>(this, prefix)
                 .ApplyChanges(this.ControllerContext, prefix, true).Value;
@@ -68,7 +68,7 @@ namespace Music.Web
             AlbumDN newAlbum = modelo.Band.ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand, 
                 new object[] { modelo.Name, modelo.Year, modelo.Label });
 
-            return JsonAction.Redirect(Navigator.NavigateRoute(newAlbum));
+            return new RedirectResult(Navigator.NavigateRoute(newAlbum));
         }
 
         [HttpPost]
