@@ -47,71 +47,56 @@ namespace Music.Web
         {
             BandDN band = Navigator.ExtractEntity<BandDN>(this);
 
-            AlbumFromBandModel model = new AlbumFromBandModel(band.ToLite());
-
-            ViewData[ViewDataKeys.OnOk] = new JsOperationExecutor(new JsOperationOptions 
-            { 
-                Prefix = prefix,
-                ControllerUrl = Url.Action<MusicController>(mc => mc.CreateAlbumFromBandExecute(prefix))
-            }).validateAndAjax().ToJS();
+            AlbumFromBandModel model = new AlbumFromBandModel();
 
             TypeContext tc = TypeContextUtilities.UntypedNew(model, prefix);
             return this.PopupOpen(new PopupViewOptions(tc));
         }
 
         [HttpPost]
-        public RedirectResult CreateAlbumFromBandExecute(string prefix)
+        public ActionResult CreateAlbumFromBandExecute(string prefix, string modelPrefix, string newPrefix)
         {
-            var modelo = Navigator.ExtractEntity<AlbumFromBandModel>(this, prefix)
+            var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
                 .ApplyChanges(this.ControllerContext, prefix, true).Value;
 
-            AlbumDN newAlbum = modelo.Band.ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand, 
-                new object[] { modelo.Name, modelo.Year, modelo.Label });
+            AlbumDN newAlbum = this.ExtractLite<AlbumDN>(prefix).ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand, 
+                new object[] { model.Name, model.Year, model.Label });
 
-            return new RedirectResult(Navigator.NavigateRoute(newAlbum));
+            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix);
         }
 
         [HttpPost]
-        public ActionResult CreateGreatestHitsAlbum()
+        public ActionResult CreateGreatestHitsAlbum(string newPrefix)
         {
             var sourceAlbums = Navigator.ParseLiteKeys<AlbumDN>(Request["keys"]);
             
             var newAlbum = OperationLogic.ConstructFromMany<AlbumDN, AlbumDN>(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
 
-            return Navigator.NormalPage(this, newAlbum);
+            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix);
         }
 
-        /// <summary>
-        /// Button that tests opening a popup and on Ok => submit form + popup
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
         [HttpPost]
-        public ActionResult CloneWithData(string prefix)
+        public ActionResult CloneValueLine(string prefix)
         {
-            ViewData[ViewDataKeys.OnOk] = JsValidator.EntityIsValid(prefix,
-                                    Js.Submit(Url.Action<MusicController>(mc => mc.Clone(prefix)),
-                                        Js.SerializePopupFunction(prefix))
-                                    ).ToJS();
-
-            ViewData[ViewDataKeys.Title] = "Introduzca el nombre del álbum";
+            ViewData[ViewDataKeys.Title] = "Write new album's name";
 
             var model = new ValueLineBoxModel(this.ExtractEntity<AlbumDN>(), ValueLineBoxType.String, "Name", "Write new album's name");
             return this.PopupOpen(new PopupViewOptions(new TypeContext<ValueLineBoxModel>(model, prefix)));
         }
+       
 
         [HttpPost]
-        public ActionResult Clone(string prefix)
+        public ActionResult Clone(string prefix, string modelPrefix, string newPrefix)
         {
-            var modelo = this.ExtractEntity<ValueLineBoxModel>(prefix)
-                               .ApplyChanges(this.ControllerContext, prefix, false).Value;
+            var modelo = this.ExtractEntity<ValueLineBoxModel>(modelPrefix)
+                               .ApplyChanges(this.ControllerContext, modelPrefix, false).Value;
 
-            var album = this.ExtractLite<AlbumDN>(null);
+            var album = this.ExtractLite<AlbumDN>(prefix);
 
             AlbumDN newAlbum = album.ConstructFromLite<AlbumDN>(AlbumOperation.Clone);
             newAlbum.Name = modelo.StringValue;
 
-            return Navigator.NormalPage(this, newAlbum);
+            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix); 
         }
     }
 }

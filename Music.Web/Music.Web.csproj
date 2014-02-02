@@ -109,6 +109,7 @@
     <Content Include="Content\smoothness\jquery-ui-1.10.2.custom.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\calendar.png" />
+    <TypeScriptCompile Include="Scripts\Album.ts" />
     <Content Include="Scripts\require.config.js" />
     <Content Include="Scripts\d3.v2.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
