@@ -1,5 +1,5 @@
 /// <reference path="../../Framework/Signum.Web/Signum/Scripts/globals.ts"/>
-define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "Framework/Signum.Web/Signum/Scripts/Navigator", "Framework/Signum.Web/Signum/Scripts/Operations"], function(require, exports, Entities, Navigator, Operations) {
+define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "Framework/Signum.Web/Signum/Scripts/Navigator", "Framework/Signum.Web/Signum/Scripts/Operations", "Framework/Signum.Web/Signum/Scripts/Validator"], function(require, exports, Entities, Navigator, Operations, Validator) {
     function cloneWithData(operationKey, prefix, urlData, urlClone) {
         var modelPrefix = SF.compose(prefix, "New");
         Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
@@ -8,12 +8,14 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
             if (eHtml == null)
                 return;
 
+            var values = Validator.getFormValuesHtml(eHtml);
+
             Operations.constructFromDefault({
                 prefix: prefix,
                 operationKey: operationKey,
                 controllerUrl: urlClone,
                 isLite: true,
-                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject())
+                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, values)
             });
         });
     }
@@ -21,14 +23,16 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
 
     function createAlbumFromBand(options, urlModel, urlOperation) {
         var modelPrefix = SF.compose(options.prefix, "New");
-        Navigator.viewPopup(Entities.EntityHtml.withoutType(options.prefix), {
+        Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
             controllerUrl: urlModel
         }).then(function (eHtml) {
             if (eHtml == null)
                 return;
 
+            var values = Validator.getFormValuesHtml(eHtml);
+
             options.controllerUrl = urlOperation;
-            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject());
+            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, values);
             Operations.constructFromDefault(options);
         });
     }

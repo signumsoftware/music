@@ -45,8 +45,6 @@ namespace Music.Web
         [HttpPost]
         public ActionResult CreateAlbumFromBand(string prefix)
         {
-            BandDN band = Navigator.ExtractEntity<BandDN>(this);
-
             AlbumFromBandModel model = new AlbumFromBandModel();
 
             TypeContext tc = TypeContextUtilities.UntypedNew(model, prefix);
@@ -57,10 +55,10 @@ namespace Music.Web
         public ActionResult CreateAlbumFromBandExecute(string prefix, string modelPrefix, string newPrefix)
         {
             var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
-                .ApplyChanges(this.ControllerContext, prefix, true).Value;
+                .ApplyChanges(this.ControllerContext, modelPrefix, true).Value;
 
-            AlbumDN newAlbum = this.ExtractLite<AlbumDN>(prefix).ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand, 
-                new object[] { model.Name, model.Year, model.Label });
+            AlbumDN newAlbum = this.ExtractLite<BandDN>(prefix).ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand,
+                model.Name, model.Year, model.Label);
 
             return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix);
         }
@@ -68,7 +66,7 @@ namespace Music.Web
         [HttpPost]
         public ActionResult CreateGreatestHitsAlbum(string newPrefix)
         {
-            var sourceAlbums = Navigator.ParseLiteKeys<AlbumDN>(Request["keys"]);
+            var sourceAlbums = this.ParseLiteKeys<AlbumDN>();
             
             var newAlbum = OperationLogic.ConstructFromMany<AlbumDN, AlbumDN>(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
 
@@ -80,7 +78,7 @@ namespace Music.Web
         {
             ViewData[ViewDataKeys.Title] = "Write new album's name";
 
-            var model = new ValueLineBoxModel(this.ExtractEntity<AlbumDN>(), ValueLineBoxType.String, "Name", "Write new album's name");
+            var model = new ValueLineBoxModel(ValueLineBoxType.String, "Name", "Write new album's name");
             return this.PopupOpen(new PopupViewOptions(new TypeContext<ValueLineBoxModel>(model, prefix)));
         }
        

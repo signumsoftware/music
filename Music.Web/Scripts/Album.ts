@@ -14,12 +14,14 @@ export function cloneWithData(operationKey: string, prefix : string, urlData: st
             if (eHtml == null)
                 return;
 
+            var values = Validator.getFormValuesHtml(eHtml);
+
             Operations.constructFromDefault({
                 prefix: prefix,
                 operationKey: operationKey,
                 controllerUrl : urlClone,
                 isLite: true,
-                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject())
+                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, values)
             });
         });
 }
@@ -27,14 +29,16 @@ export function cloneWithData(operationKey: string, prefix : string, urlData: st
 export function createAlbumFromBand(options: Operations.EntityOperationOptions, urlModel: string, urlOperation: string) {
 
     var modelPrefix = SF.compose(options.prefix, "New");
-    Navigator.viewPopup(Entities.EntityHtml.withoutType(options.prefix), {
+    Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
         controllerUrl: urlModel
     }).then(eHtml=> {
         if (eHtml == null)
             return;
 
+        var values = Validator.getFormValuesHtml(eHtml);
+
         options.controllerUrl = urlOperation;
-        options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject());
+        options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, values);
         Operations.constructFromDefault(options);
     }); 
 }
