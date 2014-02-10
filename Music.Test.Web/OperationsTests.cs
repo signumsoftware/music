@@ -79,7 +79,7 @@ namespace Music.Test.Web
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
-                using( var newAlbum =  album.ConstructFromNormalPageNew<AlbumDN>(AlbumOperation.Clone))
+                using( var newAlbum =  album.ConstructFromPopup<AlbumDN>(AlbumOperation.Clone))
                 {
                     newAlbum.Selenium.Wait(() => string.IsNullOrEmpty(newAlbum.ValueLineValue(a => a.Name)));
                     newAlbum.ValueLineValue(a => a.Name, "test3");
@@ -87,7 +87,7 @@ namespace Music.Test.Web
 
                     newAlbum.EntityLine(a => a.BonusTrack).View<SongDN>().EndUsing(s => Assert.IsNull(s.EntityState()));
 
-                    newAlbum.ExecuteSubmit(AlbumOperation.Save);
+                    newAlbum.ExecuteAjax(AlbumOperation.Save);
                     Assert.IsTrue(newAlbum.HasId());
                     newAlbum.RuntimeInfo().ToLite().Delete();
                 }
