@@ -23,16 +23,12 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
 
     function createAlbumFromBand(options, urlModel, urlOperation) {
         var modelPrefix = SF.compose(options.prefix, "New");
-        Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
-            controllerUrl: urlModel
-        }).then(function (eHtml) {
-            if (eHtml == null)
+        exports.getModelData(modelPrefix, urlModel).then(function (modelData) {
+            if (modelData == null)
                 return;
 
-            var values = Validator.getFormValuesHtml(eHtml);
-
             options.controllerUrl = urlOperation;
-            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, values);
+            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
             Operations.constructFromDefault(options);
         });
     }
@@ -40,18 +36,27 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
 
     function createAlbumFromBandContextual(options, urlModel, urlOperation) {
         var modelPrefix = SF.compose(options.prefix, "New");
-        Navigator.viewPopup(Entities.EntityHtml.withoutType(options.prefix), {
-            controllerUrl: urlModel
-        }).then(function (eHtml) {
-            if (eHtml == null)
+        exports.getModelData(modelPrefix, urlModel).then(function (modelData) {
+            if (modelData == null)
                 return;
 
             options.controllerUrl = urlOperation;
-            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject());
+            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
             Operations.constructFromDefaultContextual(options);
         });
     }
     exports.createAlbumFromBandContextual = createAlbumFromBandContextual;
+
+    function getModelData(modelPrefix, urlModel) {
+        return Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
+            controllerUrl: urlModel
+        }).then(function (eHtml) {
+            if (!eHtml)
+                return null;
+            return Validator.getFormValuesHtml(eHtml);
+        });
+    }
+    exports.getModelData = getModelData;
 
     function createGreatestHitsAlbum(options, url) {
         options.controllerUrl = url;

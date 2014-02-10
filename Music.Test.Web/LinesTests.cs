@@ -341,8 +341,8 @@ namespace Music.Test.Web
 
                 //find multiple: it exists because Find is overriden to true in this EntityRepeater
                 er.Find().SelectByPosition(4, 5);
-                Assert.IsTrue(er.HasEntity(4));
-                Assert.IsTrue(er.HasEntity(5));
+                selenium.Wait(()=>er.HasEntity(4));
+                selenium.Wait(() => er.HasEntity(5));
 
                 //move up
                 string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
@@ -430,7 +430,7 @@ namespace Music.Test.Web
                 var lite2 = er2.RuntimeInfo(0).ToLite();
                 Assert.IsTrue(er2.HasEntity(0));
 
-                er2.AutoComplete(Lite.Create<GrammyAwardDN>(1));
+                er2.AutoComplete(Lite.Create<GrammyAwardDN>(2));
                 Assert.AreEqual(typeof(GrammyAwardDN), er2.RuntimeInfo(1).EntityType);
 
                 er2.AutoComplete(Lite.Create<AmericanMusicAwardDN>(1));

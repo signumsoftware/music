@@ -29,32 +29,37 @@ export function cloneWithData(operationKey: string, prefix : string, urlData: st
 export function createAlbumFromBand(options: Operations.EntityOperationOptions, urlModel: string, urlOperation: string) {
 
     var modelPrefix = SF.compose(options.prefix, "New");
-    Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
-        controllerUrl: urlModel
-    }).then(eHtml=> {
-        if (eHtml == null)
+    getModelData(modelPrefix, urlModel).then(modelData=> {
+        if (modelData == null)
             return;
 
-        var values = Validator.getFormValuesHtml(eHtml);
-
         options.controllerUrl = urlOperation;
-        options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, values);
+        options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
         Operations.constructFromDefault(options);
-    }); 
+    });
 }
 
 export function createAlbumFromBandContextual(options: Operations.OperationOptions, urlModel: string, urlOperation: string) {
 
     var modelPrefix = SF.compose(options.prefix, "New");
-    Navigator.viewPopup(Entities.EntityHtml.withoutType(options.prefix), {
+    getModelData(modelPrefix, urlModel).then(modelData=> {
+        if (modelData == null)
+            return;
+
+
+        options.controllerUrl = urlOperation;
+        options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
+        Operations.constructFromDefaultContextual(options);
+    });
+}
+
+export function getModelData(modelPrefix: string, urlModel: string): Promise<FormObject> {
+    return Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
         controllerUrl: urlModel
     }).then(eHtml=> {
-            if (eHtml == null)
-                return;
-
-            options.controllerUrl = urlOperation;
-            options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, eHtml.html.serializeObject());
-            Operations.constructFromDefaultContextual(options);
+            if (!eHtml)
+                return null;
+            return Validator.getFormValuesHtml(eHtml);
         });
 }
 

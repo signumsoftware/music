@@ -294,11 +294,11 @@ namespace Music.Test.Web
                 artists.Results.OrderBy("Id");
                 Assert.AreEqual(8, artists.Results.RowsCount());
 
-                artists.Filters.QueryTokenBuilder.SelectToken("Entity", waitForLast: true);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity");
                 Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
                 Assert.IsTrue(artists.SearchControl.IsAddColumnEnabled);
 
-                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends", waitForLast: true);
+                artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends");
                 Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
                 Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 

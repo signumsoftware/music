@@ -47,46 +47,44 @@ namespace Music.Test.Web
             string pathSampleReport = "D:\\Signum\\Music\\Assets\\Album.xlsx";
 
             SearchPage(typeof(AlbumDN), CheckLogin)
-            .Using(albums => albums.SearchControl.AdministerExcelReports())
-            .Using(reports => reports.Create<ExcelReportDN>())
-            .Using(report =>
+            .Using(albums =>
             {
-                report.ValueLineValue(a => a.DisplayName, "test");
-                report.FileLine(a => a.File).SetPath(pathSampleReport);
-                report.ExecuteSubmit(ExcelReportOperation.Save);
-                Assert.IsTrue(report.HasId());
+                using (var report = albums.SearchControl.CreateExcelReport())
+                {
+                    report.ValueLineValue(a => a.DisplayName, "test");
+                    report.FileLine(a => a.File).SetPath(pathSampleReport);
+                    report.ExecuteAjax(ExcelReportOperation.Save);
+                    Assert.IsTrue(report.HasId());
 
-                report.ValueLineValue(a => a.DisplayName, "test 2");
-                report.ExecuteAjax(ExcelReportOperation.Save);
-                selenium.WaitElementPresent("jq=.sf-entity-title:contains('test 2')");
+                    report.ValueLineValue(a => a.DisplayName, "test 2");
+                    report.ExecuteAjax(ExcelReportOperation.Save);
+                    selenium.WaitElementPresent("jq=.sf-entity-title:contains('test 2')");
 
-                return SearchPage(typeof(AlbumDN));
+                    return SearchPage(typeof(AlbumDN));
+                }
             })
             .Using(albums =>
             {
                 albums.Selenium.AssertElementPresent(albums.SearchControl.ExcelReportLocator("test 2"));
 
-                return albums.SearchControl.AdministerExcelReports();
-            })
-            .Using(reports =>
-            {
-                reports.SearchControl.WaitSearchCompleted();
-                return reports.SearchControl.Results.EntityClick(Lite.Create<ExcelReportDN>(1));
+                using (var reports = albums.SearchControl.AdministerExcelReports())
+                {
+                    reports.SearchControl.WaitInitialSearchCompleted();
+                    return reports.SearchControl.Results.EntityClick(Lite.Create<ExcelReportDN>(1));
+                }
             })
             .Using(report => report.DeleteSubmit(ExcelReportOperation.Delete))
             .Using(reports => SearchPage(typeof(AlbumDN)))
             .Using(albums =>
             {
                 albums.Selenium.AssertElementNotPresent(albums.SearchControl.ExcelReportLocator("title 2"));
-                return albums.SearchControl.AdministerExcelReports();
-            })
-            .Using(reports => reports.Create<ExcelReportDN>())
-            .Using(report =>
-            {
-                report.ValueLineValue(a => a.DisplayName, "test 3");
-                report.FileLine(a => a.File).SetPath(pathSampleReport);
-                report.ExecuteSubmit(ExcelReportOperation.Save);
-                return SearchPage(typeof(AlbumDN));
+                using (var report = albums.SearchControl.CreateExcelReport())
+                {
+                    report.ValueLineValue(a => a.DisplayName, "test 3");
+                    report.FileLine(a => a.File).SetPath(pathSampleReport);
+                    report.ExecuteAjax(ExcelReportOperation.Save);
+                    return SearchPage(typeof(AlbumDN));
+                }
             })
             .EndUsing(albums =>
             {

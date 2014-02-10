@@ -72,9 +72,6 @@ namespace Music.Test.Web
                     note.ExecuteAjax(NoteOperation.Save);
                 }
 
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
-
                 Assert.AreEqual(1, label.NotesCount());
 
                 using (var notes = label.NotesViewClick())
@@ -101,9 +98,6 @@ namespace Music.Test.Web
                     alert.ExecuteAjax(AlertOperation.SaveNew);
                 }
 
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
-
                 Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
                 Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
                 Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
@@ -115,9 +109,6 @@ namespace Music.Test.Web
                     alert.ValueLineValue(a => a.AlertDate, DateTime.Today.AddDays(-1));
                     alert.ExecuteAjax(AlertOperation.SaveNew);
                 }
-
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
 
                 Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
                 Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Alerted));

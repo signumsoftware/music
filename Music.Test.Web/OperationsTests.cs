@@ -75,64 +75,63 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations003_ConstructFrom()
         {
-            NormalPage<AlbumDN>(1, CheckLogin).Using(album =>
+            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
-                return album.ConstructFromNormalPageNew<AlbumDN>(AlbumOperation.Clone);
-            }).EndUsing(album =>
-            {
-                album.Selenium.Wait(() => string.IsNullOrEmpty(album.ValueLineValue(a => a.Name)));
-                album.ValueLineValue(a => a.Name, "test3");
-                album.ValueLineValue(a => a.Year, 2010);
+                using( var newAlbum =  album.ConstructFromNormalPageNew<AlbumDN>(AlbumOperation.Clone))
+                {
+                    newAlbum.Selenium.Wait(() => string.IsNullOrEmpty(newAlbum.ValueLineValue(a => a.Name)));
+                    newAlbum.ValueLineValue(a => a.Name, "test3");
+                    newAlbum.ValueLineValue(a => a.Year, 2010);
 
-                album.EntityLine(a => a.BonusTrack).View<SongDN>().EndUsing(s => Assert.IsNull(s.EntityState()));
+                    newAlbum.EntityLine(a => a.BonusTrack).View<SongDN>().EndUsing(s => Assert.IsNull(s.EntityState()));
 
-                album.ExecuteSubmit(AlbumOperation.Save);
-                Assert.IsTrue(album.HasId());
-                album.RuntimeInfo().ToLite().Delete();
+                    newAlbum.ExecuteSubmit(AlbumOperation.Save);
+                    Assert.IsTrue(newAlbum.HasId());
+                    newAlbum.RuntimeInfo().ToLite().Delete();
+                }
             });
         }
 
         [TestMethod]
         public void Operations004_ConstructFrom_OpenPopup()
         {
-            NormalPage<BandDN>(1, CheckLogin).Using(band =>
+            NormalPage<BandDN>(1, CheckLogin).EndUsing(band =>
             {
-                using (var model = band.ConstructFromPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand))
+                band.ConstructFromPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand).Using(model =>
                 {
                     model.ValueLineValue(m => m.Name, "test2");
                     model.ValueLineValue(m => m.Year, 2010);
                     model.EntityLine(a => a.Label).Find().SelectByPosition(0);
-                    return model.OkWaitNormalPage<AlbumDN>();
-                }
-            }).EndUsing(album =>
-            {
-                Assert.IsTrue(album.HasId());
+                    return model.OkWaitPopupControl<AlbumDN>();
+                }).EndUsing(album =>
+                {
+                    Assert.IsTrue(album.RuntimeInfo().IdOrNull.HasValue);
 
-                album.RuntimeInfo().ToLite().Delete();
-            });
+                    album.RuntimeInfo().ToLite().Delete();
+                });
+            }); 
         }
 
         [TestMethod]
         public void Operations005_ConstructFrom_OpenPopupAndSubmitFormAndPopup()
         {
-            NormalPage<AlbumDN>(1, CheckLogin).Using(album =>
+            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
             {
                 album.ButtonClick("CloneWithData");
 
-                using (ValueLinePopup popup = new ValueLinePopup(album.Selenium))
+                new ValueLinePopup(album.Selenium).Using(popup =>
                 {
                     selenium.WaitElementPresent(popup.PopupVisibleLocator);
 
                     popup.StringValueLine.StringValue = "test popup";
 
-                    return popup.OkWaitNormalPage<AlbumDN>();
-                }
-            })
-            .EndUsing(album2 =>
-            {
-                Assert.IsTrue(album2.Selenium.IsTextPresent("test popup"));
+                    return popup.OkWaitPopupControl<AlbumDN>();
+                }).EndUsing(album2 =>
+                {
+                    Assert.IsTrue(album2.Selenium.IsTextPresent("test popup"));
+                });
             });
         }
 
