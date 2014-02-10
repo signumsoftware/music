@@ -43,58 +43,62 @@ namespace Music.Web
         }
 
         [HttpPost]
-        public ActionResult CreateAlbumFromBand(string prefix)
+        public ActionResult CreateAlbumFromBandModel()
         {
             AlbumFromBandModel model = new AlbumFromBandModel();
 
-            TypeContext tc = TypeContextUtilities.UntypedNew(model, prefix);
+            TypeContext tc = TypeContextUtilities.UntypedNew(model, this.Prefix());
             return this.PopupOpen(new PopupViewOptions(tc));
         }
 
         [HttpPost]
-        public ActionResult CreateAlbumFromBandExecute(string prefix, string modelPrefix, string newPrefix)
+        public ActionResult CreateAlbumFromBandExecute()
         {
-            var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
-                .ApplyChanges(this.ControllerContext, modelPrefix, true).Value;
+            string modelPrefix = Request["modelPrefix"];
 
-            AlbumDN newAlbum = this.ExtractLite<BandDN>(prefix).ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand,
+            var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
+                .ApplyChanges(this.ControllerContext, true, modelPrefix).Value;
+
+            AlbumDN newAlbum = this.ExtractLite<BandDN>().ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand,
                 model.Name, model.Year, model.Label);
 
-            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix);
+            return OperationClient.DefaultConstructResult(this, newAlbum);
         }
 
         [HttpPost]
-        public ActionResult CreateGreatestHitsAlbum(string newPrefix)
+        public ActionResult CreateGreatestHitsAlbum()
         {
             var sourceAlbums = this.ParseLiteKeys<AlbumDN>();
             
             var newAlbum = OperationLogic.ConstructFromMany<AlbumDN, AlbumDN>(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
 
-            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix);
+            return OperationClient.DefaultConstructResult(this, newAlbum);
         }
 
         [HttpPost]
-        public ActionResult CloneValueLine(string prefix)
+        public ActionResult CloneValueLine()
         {
             ViewData[ViewDataKeys.Title] = "Write new album's name";
 
             var model = new ValueLineBoxModel(ValueLineBoxType.String, "Name", "Write new album's name");
-            return this.PopupOpen(new PopupViewOptions(new TypeContext<ValueLineBoxModel>(model, prefix)));
+            return this.PopupOpen(new PopupViewOptions(new TypeContext<ValueLineBoxModel>(model, this.Prefix())));
         }
        
 
         [HttpPost]
-        public ActionResult Clone(string prefix, string modelPrefix, string newPrefix)
+        public ActionResult Clone()
         {
-            var modelo = this.ExtractEntity<ValueLineBoxModel>(modelPrefix)
-                               .ApplyChanges(this.ControllerContext, modelPrefix, false).Value;
+            string modelPrefix = Request["modelPrefix"];
 
-            var album = this.ExtractLite<AlbumDN>(prefix);
+            var modelo = this.ExtractEntity<ValueLineBoxModel>(modelPrefix)
+                               .ApplyChanges(this.ControllerContext, false, modelPrefix).Value;
+
+            var album = this.ExtractLite<AlbumDN>();
 
             AlbumDN newAlbum = album.ConstructFromLite<AlbumDN>(AlbumOperation.Clone);
             newAlbum.Name = modelo.StringValue;
 
-            return OperationClient.DefaultConstructResult(this, newAlbum, newPrefix); 
+            return OperationClient.DefaultConstructResult(this, newAlbum); 
         }
     }
 }
