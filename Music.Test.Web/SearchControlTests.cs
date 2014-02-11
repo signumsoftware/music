@@ -76,7 +76,7 @@ namespace Music.Test.Web
                 albums.Search();
                 Assert.AreEqual(2, albums.Results.RowsCount());
 
-                albums.Filters.AddFilter("Songs.Count", FilterOperation.GreaterThan, 1);
+                albums.Filters.AddFilter("Entity.Songs.Count", FilterOperation.GreaterThan, 1);
                 albums.Search();
                 Assert.AreEqual(1, albums.Results.RowsCount());
 
