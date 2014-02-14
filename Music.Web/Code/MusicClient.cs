@@ -60,7 +60,7 @@ namespace Music.Web
                             Id = TypeContextUtilities.Compose(ctx.Prefix, "CloneWithData"),
                             Text = "Clone with data",
                             OnClick = new JsFunction(Module, "cloneWithData", OperationDN.UniqueKey(AlbumOperation.Clone), ctx.Prefix, 
-                                ctx.Url.Action((MusicController mc)=>mc.CloneValueLine()),
+                                new ValueLineBoxOptions(ValueLineBoxType.String, ctx.Prefix, "New") { title = "Write new album's name",  message = "Write new album's name", fieldName = "Name"},
                                 ctx.Url.Action((MusicController mc)=>mc.Clone()))
                         }
                     };

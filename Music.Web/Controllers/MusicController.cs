@@ -76,27 +76,12 @@ namespace Music.Web
         }
 
         [HttpPost]
-        public ActionResult CloneValueLine()
-        {
-            ViewData[ViewDataKeys.Title] = "Write new album's name";
-
-            var model = new ValueLineBoxModel(ValueLineBoxType.String, "Name", "Write new album's name");
-            return this.PopupOpen(new PopupViewOptions(new TypeContext<ValueLineBoxModel>(model, this.Prefix())));
-        }
-       
-
-        [HttpPost]
         public ActionResult Clone()
         {
-            string modelPrefix = Request["modelPrefix"];
-
-            var modelo = this.ExtractEntity<ValueLineBoxModel>(modelPrefix)
-                               .ApplyChanges(this.ControllerContext, false, modelPrefix).Value;
-
             var album = this.ExtractLite<AlbumDN>();
 
             AlbumDN newAlbum = album.ConstructFromLite<AlbumDN>(AlbumOperation.Clone);
-            newAlbum.Name = modelo.StringValue;
+            newAlbum.Name = this.ExtractValueLineBox().StringValue;
 
             return OperationClient.DefaultConstructResult(this, newAlbum); 
         }

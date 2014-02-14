@@ -6,24 +6,20 @@ import Finder = require("Framework/Signum.Web/Signum/Scripts/Finder")
 import Operations = require("Framework/Signum.Web/Signum/Scripts/Operations")
 import Validator = require("Framework/Signum.Web/Signum/Scripts/Validator")
 
-export function cloneWithData(operationKey: string, prefix : string, urlData: string, urlClone :string) {
+export function cloneWithData(operationKey: string, prefix: string, vlb: Navigator.ValueLineBoxOptions, urlClone: string) {
     var modelPrefix = SF.compose(prefix, "New");
-    Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
-        controllerUrl: urlData
-    }).then(eHtml => {
-            if (eHtml == null)
-                return;
+    Navigator.valueLineBox(vlb).then(vlr => {
+        if (vlr == null)
+            return;
 
-            var values = Validator.getFormValuesHtml(eHtml);
-
-            Operations.constructFromDefault({
-                prefix: prefix,
-                operationKey: operationKey,
-                controllerUrl : urlClone,
-                isLite: true,
-                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, values)
-            });
+        Operations.constructFromDefault({
+            prefix: prefix,
+            operationKey: operationKey,
+            controllerUrl: urlClone,
+            isLite: true,
+            requestExtraJsonData: vlr
         });
+    });
 }
 
 export function createAlbumFromBand(options: Operations.EntityOperationOptions, urlModel: string, urlOperation: string) {
@@ -65,5 +61,5 @@ export function getModelData(modelPrefix: string, urlModel: string): Promise<For
 
 export function createGreatestHitsAlbum(options: Operations.OperationOptions, url: string) {
     options.controllerUrl = url;
-    Operations.constructFromManyDefault(options); 
+    Operations.constructFromManyDefault(options);
 }

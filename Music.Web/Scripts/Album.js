@@ -1,21 +1,17 @@
 /// <reference path="../../Framework/Signum.Web/Signum/Scripts/globals.ts"/>
 define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "Framework/Signum.Web/Signum/Scripts/Navigator", "Framework/Signum.Web/Signum/Scripts/Operations", "Framework/Signum.Web/Signum/Scripts/Validator"], function(require, exports, Entities, Navigator, Operations, Validator) {
-    function cloneWithData(operationKey, prefix, urlData, urlClone) {
+    function cloneWithData(operationKey, prefix, vlb, urlClone) {
         var modelPrefix = SF.compose(prefix, "New");
-        Navigator.viewPopup(Entities.EntityHtml.withoutType(modelPrefix), {
-            controllerUrl: urlData
-        }).then(function (eHtml) {
-            if (eHtml == null)
+        Navigator.valueLineBox(vlb).then(function (vlr) {
+            if (vlr == null)
                 return;
-
-            var values = Validator.getFormValuesHtml(eHtml);
 
             Operations.constructFromDefault({
                 prefix: prefix,
                 operationKey: operationKey,
                 controllerUrl: urlClone,
                 isLite: true,
-                requestExtraJsonData: $.extend({ modelPrefix: modelPrefix }, values)
+                requestExtraJsonData: vlr
             });
         });
     }
