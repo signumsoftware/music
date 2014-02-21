@@ -81,7 +81,7 @@ namespace Music.Web
             var album = this.ExtractLite<AlbumDN>();
 
             AlbumDN newAlbum = album.ConstructFromLite<AlbumDN>(AlbumOperation.Clone);
-            newAlbum.Name = this.ExtractValueLineBox().StringValue;
+            newAlbum.Name = this.ParseValue<string>("newName");
 
             return OperationClient.DefaultConstructResult(this, newAlbum); 
         }

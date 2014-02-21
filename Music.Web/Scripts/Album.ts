@@ -8,8 +8,8 @@ import Validator = require("Framework/Signum.Web/Signum/Scripts/Validator")
 
 export function cloneWithData(operationKey: string, prefix: string, vlb: Navigator.ValueLineBoxOptions, urlClone: string) {
     var modelPrefix = SF.compose(prefix, "New");
-    Navigator.valueLineBox(vlb).then(vlr => {
-        if (vlr == null)
+    Navigator.valueLineBox(vlb).then(newName => {
+        if (!newName)
             return;
 
         Operations.constructFromDefault({
@@ -17,7 +17,7 @@ export function cloneWithData(operationKey: string, prefix: string, vlb: Navigat
             operationKey: operationKey,
             controllerUrl: urlClone,
             isLite: true,
-            requestExtraJsonData: vlr
+            requestExtraJsonData: { newName: newName }
         });
     });
 }

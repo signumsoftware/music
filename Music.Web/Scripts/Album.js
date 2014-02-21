@@ -2,8 +2,8 @@
 define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "Framework/Signum.Web/Signum/Scripts/Navigator", "Framework/Signum.Web/Signum/Scripts/Operations", "Framework/Signum.Web/Signum/Scripts/Validator"], function(require, exports, Entities, Navigator, Operations, Validator) {
     function cloneWithData(operationKey, prefix, vlb, urlClone) {
         var modelPrefix = SF.compose(prefix, "New");
-        Navigator.valueLineBox(vlb).then(function (vlr) {
-            if (vlr == null)
+        Navigator.valueLineBox(vlb).then(function (newName) {
+            if (!newName)
                 return;
 
             Operations.constructFromDefault({
@@ -11,7 +11,7 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
                 operationKey: operationKey,
                 controllerUrl: urlClone,
                 isLite: true,
-                requestExtraJsonData: vlr
+                requestExtraJsonData: { newName: newName }
             });
         });
     }
