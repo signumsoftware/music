@@ -48,9 +48,15 @@ namespace Music.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-               Navigator.NavigateRouteName,
+               Navigator.ViewRouteName,
                "View/{webTypeName}/{id}",
                new { controller = "Navigator", action = "View", webTypeName = "", id = "" }
+            );
+
+            routes.MapRoute(
+               Navigator.ViewRouteName,
+               "Create/{webTypeName}",
+               new { controller = "Navigator", action = "Create", webTypeName = "" }
             );
 
             routes.MapRoute(
