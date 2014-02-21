@@ -14,18 +14,6 @@ namespace Music.Test
         { 
         }
 
-        public AlbumFromBandModel(Lite<BandDN> band)
-        {
-            Band = band;
-        }
-
-        Lite<BandDN> band;
-        [NotNullValidator]
-        public Lite<BandDN> Band
-        {
-            get { return band; }
-            set { Set(ref band, value, () => Band); }
-        }
 
         string name;
         [StringLengthValidator(Min=3, AllowNulls=false)]

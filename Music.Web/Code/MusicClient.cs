@@ -11,12 +11,14 @@ using System.Web.Mvc;
 using Signum.Entities.Processes;
 using Music.Test;
 using Signum.Test.Environment;
+using Signum.Entities.Basics;
 
 namespace Music.Web
 {
     public static class MusicClient
     {
         public static string ViewPrefix = "~/Views/Music/{0}.cshtml";
+        public static string Module = "Album";
 
         public static void Start()
         {
@@ -40,7 +42,7 @@ namespace Music.Web
                     new EmbeddedEntitySettings<AlbumFromBandModel>(){PartialViewName = e => ViewPrefix.Formato("AlbumFromBandModel")},
                 });
 
-                LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) =>new []
+                LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) => new[]
                 {
                     new QuickLinkFind(typeof(AlbumDN), "Label", entity, true)
                 });
@@ -57,32 +59,32 @@ namespace Music.Web
                             DivCssClass = ToolBarButton.DefaultEntityDivCssClass,
                             Id = TypeContextUtilities.Compose(ctx.Prefix, "CloneWithData"),
                             Text = "Clone with data",
-                            OnClick = new JsOperationConstructorFrom(new JsOperationOptions
-                            { 
-                                ControllerUrl = RouteHelper.New().Action<MusicController>(mc => mc.CloneWithData(Js.NewPrefix(ctx.Prefix))),
-                                Prefix = ctx.Prefix
-                            }).ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk).ToJS()
+                            OnClick = new JsFunction(Module, "cloneWithData", OperationDN.UniqueKey(AlbumOperation.Clone), ctx.Prefix, 
+                                new ValueLineBoxOptions(ValueLineBoxType.String, ctx.Prefix, "New") { title = "Write new album's name",  message = "Write new album's name", fieldName = "Name"},
+                                ctx.Url.Action((MusicController mc)=>mc.Clone()))
                         }
                     };
                 });
 
-                OperationsClient.AddSettings( new List<OperationSettings>
+                OperationClient.AddSettings(new List<OperationSettings>
                 {
                     new EntityOperationSettings(AlbumOperation.CreateAlbumFromBand)
                     { 
-                        OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
-                            .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk),
+                        OnClick = ctx => new JsOperationFunction(Module, "createAlbumFromBand", 
+                            ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandModel()), 
+                            ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandExecute())),
 
                         Contextual = 
                         {
-                            OnClick = ctx => new JsOperationConstructorFrom(ctx.Options<MusicController>(mc => mc.CreateAlbumFromBand(Js.NewPrefix(ctx.Prefix))))
-                                .ajax(Js.NewPrefix(ctx.Prefix), JsOpSuccess.OpenPopupNoDefaultOk)
+                            OnClick = ctx => new JsOperationFunction(Module, "createAlbumFromBandContextual", 
+                                ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandModel()), 
+                                ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandExecute())),
                         },
                     },
                     new ContextualOperationSettings(AlbumOperation.CreateGreatestHitsAlbum)
                     {
-                        OnClick = ctx => new JsOperationConstructorFromMany(ctx.Options<MusicController>(mc => mc.CreateGreatestHitsAlbum()))
-                            .submitSelected()
+                        OnClick = ctx =>new JsOperationFunction(Module, "createGreatestHitsAlbum",  
+                              ctx.Url.Action((MusicController mc)=>mc.CreateGreatestHitsAlbum()))
                     },
                 });
             }

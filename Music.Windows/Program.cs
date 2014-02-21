@@ -51,11 +51,14 @@ namespace Music.Windows
                 OverrideExceptionHandling(errorTitle, e);
             else
             {
-                var bla = e.FollowC(ex => ex.InnerException);
-                MessageBox.Show(win,
-                    bla.ToString(ex => "{0} : {1}".Formato(ex.GetType().Name, ex.Message), "\r\n\r\n"),
-                    errorTitle + ":",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                string message = e.FollowC(ex => ex.InnerException).ToString(ex => "{0} : {1}".Formato(
+                          ex.GetType().Name != "FaultException" ? ex.GetType().Name : "Server Error",
+                          ex.Message), "\r\n\r\n");
+
+                if (win != null)
+                    MessageBox.Show(win, message, errorTitle + ":", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                    MessageBox.Show(message, errorTitle + ":", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

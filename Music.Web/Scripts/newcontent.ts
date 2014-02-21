@@ -1,5 +1,4 @@
-﻿/// <reference path="../../Framework/Signum.Web/Signum/Headers/jquery/jquery.d.ts"/>
-/// <reference path="../../Framework/Signum.Web/Signum/Scripts/references.ts"/>
+﻿/// <reference path="../../Framework/Signum.Web/Signum/Scripts/globals.ts"/>
 
 $(function () {
     $("body").bind("sf-new-content", function (e) {

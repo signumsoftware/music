@@ -72,9 +72,6 @@ namespace Music.Test.Web
                     note.ExecuteAjax(NoteOperation.Save);
                 }
 
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
-
                 Assert.AreEqual(1, label.NotesCount());
 
                 using (var notes = label.NotesViewClick())
@@ -89,9 +86,8 @@ namespace Music.Test.Web
         {
             NormalPage<LabelDN>(1, CheckLogin).Using(label =>
             {
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Future));
+
+                Assert.IsTrue(label.AlertsAre(0, 0, 0));
 
                 using (var alert = label.AlertCreateClick())
                 {
@@ -101,12 +97,7 @@ namespace Music.Test.Web
                     alert.ExecuteAjax(AlertOperation.SaveNew);
                 }
 
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
-
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
-                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
+                selenium.Wait(()=>label.AlertsAre(0, 0, 1));
 
                 using (var alert = label.AlertCreateClick())
                 {
@@ -116,12 +107,7 @@ namespace Music.Test.Web
                     alert.ExecuteAjax(AlertOperation.SaveNew);
                 }
 
-                selenium.Wait(() => selenium.IsAlertPresent());
-                selenium.GetAlert();
-
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Attended));
-                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Alerted));
-                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
+                selenium.Wait(() => label.AlertsAre(0, 1, 1));
 
                 using (var alerts = label.AlertsViewClick(AlertCurrentState.Alerted))
                 {
@@ -134,9 +120,8 @@ namespace Music.Test.Web
                 return NormalPage<LabelDN>(1);
             }).EndUsing(label =>
             {
-                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Attended));
-                Assert.AreEqual(0, label.AlertCount(AlertCurrentState.Alerted));
-                Assert.AreEqual(1, label.AlertCount(AlertCurrentState.Future));
+
+                selenium.Wait(() => label.AlertsAre(1, 0, 1));
             });
         }
     }

@@ -57,7 +57,7 @@ namespace Music.Test.Web
                 //filter is maintained
                 Assert.AreEqual("1", chart.Filters.GetFilter(0).ValueLine().StringValue);
 
-                chart.GetColumnTokenBuilder(0).SelectToken("Author", waitForLast: true);
+                chart.GetColumnTokenBuilder(0).SelectToken("Author");
                 chart.GetColumnTokenBuilder(1).SelectToken("Count");
                 chart.Draw();
 

@@ -99,6 +99,7 @@ namespace Music.Windows
                 new EntitySettings<LabelDN>() { View = e => new Label() },
                 new EntitySettings<ArtistDN>() { View = e => new Artist() },
                 new EntitySettings<BandDN>() { View = e => new Band() },
+                new EmbeddedEntitySettings<SongDN>() { View = (e, pr) => new Song(pr) },
 
                 new EntitySettings<AmericanMusicAwardDN>() { View = e => new AmericanMusicAward() },
                 new EntitySettings<GrammyAwardDN>() { View = e => new GrammyAward() },

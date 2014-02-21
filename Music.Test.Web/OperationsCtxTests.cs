@@ -57,21 +57,21 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx002_ConstructFrom_OpenPopup()
         {
-            SearchPage(typeof(BandDN), CheckLogin).Using(bands =>
+            SearchPage(typeof(BandDN), CheckLogin).EndUsing(bands =>
             {
                 bands.SearchControl.Search();
 
-                return bands.SearchControl.Results.EntityContextMenu(0).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
+                bands.SearchControl.Results.EntityContextMenu(0).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
                 {
                     album.ValueLineValue(a => a.Name, "ctxtest");
                     album.ValueLineValue(a => a.Year, DateTime.Now.Year);
                     album.EntityLine(a => a.Label).Find().SelectByPosition(0);
-                    return album.OkWaitNormalPage<AlbumDN>();
+                    return album.OkWaitPopupControl<AlbumDN>();
+                }).EndUsing(album =>
+                {
+                    Assert.IsTrue(album.HasId());
+                    album.RuntimeInfo().ToLite().Delete();
                 });
-            }).EndUsing(album =>
-            {
-                Assert.IsTrue(album.HasId());
-                album.RuntimeInfo().ToLite().Delete();
             }); 
         }
 
@@ -114,19 +114,19 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx004_ConstructFromMany()
         {
-            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
+            SearchPage(typeof(AlbumDN), CheckLogin).EndUsing(albums =>
             {
                 albums.Search();
                 albums.Results.SelectRow(0, 1);
 
-                return albums.Results.EntityContextMenu(1).ConstructFromNormalPage<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum);
-            }).EndUsing(album =>
-            {
-                album.ValueLineValue(a => a.Name, "test greatest hits");
-                album.EntityCombo(a => a.Label).SelectLabel("Virgin");
-                album.ExecuteSubmit(AlbumOperation.Save);
-                Assert.IsTrue(album.HasId());
-                album.RuntimeInfo().ToLite().Delete();
+                using (var album = albums.Results.EntityContextMenu(1).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum))
+                {
+                    album.ValueLineValue(a => a.Name, "test greatest hits");
+                    album.EntityCombo(a => a.Label).SelectLabel("Virgin");
+                    album.ExecuteAjax(AlbumOperation.Save);
+                    Assert.IsTrue(album.RuntimeInfo().IdOrNull.HasValue);
+                    album.RuntimeInfo().ToLite().Delete();
+                }
             });
         }
 
