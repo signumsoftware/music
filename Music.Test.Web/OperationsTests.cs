@@ -125,7 +125,7 @@ namespace Music.Test.Web
                 {
                     selenium.WaitElementPresent(popup.PopupVisibleLocator);
 
-                    popup.StringValueLine.StringValue = "test popup";
+                    popup.ValueLine.StringValue = "test popup";
 
                     return popup.OkWaitPopupControl<AlbumDN>();
                 }).EndUsing(album2 =>

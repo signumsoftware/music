@@ -54,7 +54,7 @@ namespace Music.Web
             );
 
             routes.MapRoute(
-               Navigator.ViewRouteName,
+               Navigator.CreateRouteName,
                "Create/{webTypeName}",
                new { controller = "Navigator", action = "Create", webTypeName = "" }
             );
