@@ -73,7 +73,7 @@ namespace Music.Test.Web
                         d.EntityLineDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
                         {
                             uq.Create();
-                            uq.Details<CountUserQueryElement>(0).EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                            uq.Details<CountUserQueryElementDN>(0).EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
                         });
                     });
 
@@ -83,13 +83,13 @@ namespace Music.Test.Web
                         d.EntityLineDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
                         {
                             le.Create();
-                            le.Details<LinkElement>(0).ValueLineValue(a => a.Label, "Best Band");
-                            le.Details<LinkElement>(0).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
+                            le.Details<LinkElementDN>(0).ValueLineValue(a => a.Label, "Best Band");
+                            le.Details<LinkElementDN>(0).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
 
 
                             le.Create();
-                            le.Details<LinkElement>(1).ValueLineValue(a => a.Label, "Best Artist");
-                            le.Details<LinkElement>(1).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
+                            le.Details<LinkElementDN>(1).ValueLineValue(a => a.Label, "Best Artist");
+                            le.Details<LinkElementDN>(1).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
                         }); 
                     });
 

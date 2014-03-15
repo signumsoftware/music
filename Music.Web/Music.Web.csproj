@@ -91,30 +91,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\site.css" />
-    <Content Include="Content\smoothness\images\animated-overlay.gif" />
-    <Content Include="Content\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\smoothness\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\smoothness\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\smoothness\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\smoothness\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\smoothness\jquery-ui-1.10.2.custom.min.css" />
+    <Content Include="Content\bootstrap-datepicker\css\datepicker3.css" />
+    <Content Include="Content\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.min.css" />
+    <Content Include="Content\bootstrap-timepicker\js\bootstrap-timepicker.js" />
+    <Content Include="Content\bootstrap-timepicker\js\bootstrap-timepicker.min.js" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\music.css" />
+    <Content Include="Content\typeahead\typeahead.bundle.js" />
     <Content Include="Global.asax" />
-    <Content Include="Images\calendar.png" />
     <TypeScriptCompile Include="Scripts\Album.ts" />
+    <Content Include="Content\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\colorbrewer.js" />
     <Content Include="Scripts\d3.v3.min.js" />
     <Content Include="Scripts\jquery-1.11.0.js" />
     <Content Include="Scripts\jquery-1.11.0.min.js" />
-    <Content Include="Scripts\jquery-ui-1.10.2.custom.min.js" />
     <Content Include="Scripts\promise-0.1.1.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -138,43 +136,20 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Images\ajax-loader.gif" />
-    <Content Include="Images\alert-overlay.png" />
-    <Content Include="Images\asc.gif" />
-    <Content Include="Images\bg-browser.gif" />
-    <Content Include="Images\bg.gif" />
-    <Content Include="Images\body-fondo.jpg" />
-    <Content Include="Images\body-fondo2.jpg" />
-    <Content Include="Images\botones.gif" />
-    <Content Include="Images\botones.jpg" />
-    <Content Include="Images\browser_buttons.gif" />
-    <Content Include="Images\browser_buttons2.gif" />
-    <Content Include="Images\desc.gif" />
-    <Content Include="Images\fade-butt.png" />
-    <Content Include="Images\fancy_closebox.png" />
-    <Content Include="Images\fondo-menu-superior.jpg" />
-    <Content Include="Images\fondo-repeater.jpg" />
-    <Content Include="Images\gray-grad.png" />
-    <Content Include="Images\lupa.gif" />
-    <Content Include="Images\popup-body-back.jpg" />
-    <Content Include="Images\popup-header-back.jpg" />
-    <Content Include="Images\popup-title-back.jpg" />
-    <Content Include="Images\separador.gif" />
-    <Content Include="Images\sign_error.gif" />
-    <Content Include="Images\sign_info.gif" />
-    <Content Include="Images\sign_tick.gif" />
-    <Content Include="Images\sign_warning.gif" />
-    <Content Include="Images\switch_minus.gif" />
-    <Content Include="Images\switch_plus.gif" />
-    <Content Include="Images\tab.png" />
     <Content Include="ServerSample.svc" />
     <Content Include="Views\Music\NoteWithDate.cshtml" />
     <Content Include="Views\Music\BandStrip.cshtml" />
     <Content Include="Views\Music\AlbumStrip.cshtml" />
+    <Content Include="Scripts\jquery-1.11.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Signum.Engine\Signum.Engine.csproj">
@@ -216,10 +191,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\newcontent.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

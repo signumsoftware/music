@@ -7,24 +7,33 @@
 <!doctype html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
-
     @Html.ScriptCss(
-        "~/Signum/Content/reset.css",
-        "~/Content/smoothness/jquery-ui-1.10.2.custom.min.css",
+        "~/Content/bootstrap/css/bootstrap.css",
+        "~/Content/bootstrap/css/bootstrap-theme.css",
+        "~/Content/bootstrap/css/bootstrap-theme.css",
+        "~/Content/bootstrap-datepicker/css/datepicker3.css",
+        "~/Content/bootstrap-timepicker/css/bootstrap-timepicker.css",
+
         "~/Signum/Content/Lines.css",
         "~/Signum/Content/NormalPage.css",
         "~/Signum/Content/Notify.css",
-        "~/Signum/Content/Search.css",    
-        "~/Signum/Content/Widgets.css",
-        "~/Content/site.css"
-        )    
-    
-    @Html.ScriptsJs(
+            //"~/Signum/Content/Search.css",    
+            //"~/Signum/Content/Widgets.css",
+        "~/Content/music.css"
+        )
+
+     @Html.ScriptsJs(
         "~/Scripts/promise-0.1.1.js",
-        "~/Scripts/jquery-1.11.0.js",     
-        "~/Scripts/jquery-ui-1.10.2.custom.min.js",
-        "~/Scripts/require.js")  
+        "~/Scripts/jquery-1.11.0.js",
+        "~/Content/bootstrap/js/bootstrap.js",
+        "~/Content/bootstrap-datepicker/js/bootstrap-datepicker.js",
+        "~/Content/bootstrap-timepicker/js/bootstrap-timepicker.js",
+        "~/Content/typeahead/typeahead.bundle.js",
+        "~/Scripts/require.js")
     <script>
         require.config({
             baseUrl: '@Url.Content("~/Scripts")',
@@ -39,62 +48,61 @@
             shim: {
                 d3: { exports: 'd3' },
                 colorbrewer: { exports: 'colorbrewer' },
-                ChartUtils : { exports: 'ChartUtils' }
+                ChartUtils: { exports: 'ChartUtils' }
             },
             urlArgs: "v=@ScriptHtmlHelper.Manager.Version"
         });
-    </script>  
+    </script>
 
     @Html.ScriptsJs("~/Signum/resources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/Signum/calendarResources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/Signum/urls/signumCommon.js")
-    
-    @Html.ScriptsJs("~/Signum/Scripts/SF.js", "~/Signum/Scripts/SF.UI.js", "~/Scripts/newcontent.js")    
 
-    @if (IsSectionDefined("head")) {
+    @Html.ScriptsJs("~/Signum/Scripts/SF.js", "~/Signum/Scripts/SF.UI.js")
+
+    @if (IsSectionDefined("head"))
+    {
         @RenderSection("head")
     }
 </head>
 
-<body> 
-    <div id="wrap">
-        <header>
-            <div id="user-info">
-                @{ Html.RenderPartial(AuthClient.LoginUserControlView);}
-            </div>    
-                
-            <div id="title">
-                <h1>@(Html.ActionLink<HomeController>( "Signum Extensions Sample", c=>c.Index()))</h1>
-            </div>
-        </header>
+<body>
 
-        <div id="main">
-            <div id="menu">
-                @if (UserDN.Current != null && !UserDN.Current.Is(AuthLogic.AnonymousUser))
-                {
-                <div class="box menu">
-                    <h2>Menú</h2>
-                    @{ Html.RenderPartial("Menu", ViewData["current"] = Context.Request.RawUrl);}
+    <header class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @(Html.ActionLink<HomeController>("Music", c => c.Index(), new { @class = "navbar-brand" }))
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (UserDN.Current != null && !UserDN.Current.Is(AuthLogic.AnonymousUser))
+                    {
+                        Html.RenderPartial("Menu", ViewData["current"] = Context.Request.RawUrl);
+                    }
 
-                </div>
-                }
-            </div>
-            <div id="content">
-                @RenderBody()
-            </div>
-            <div class="clear"></div>
-      </div>
-      <footer>
-            <div class="grid_8">
-                <span id="powered">Powered by <span class="company">Signum Framework</span></span>
-            </div>
-            <div class="grid_8">            
-                <ul>
-                   <li><a href="Help">Documentación de ayuda</a></li>
-                   <li><a href="mailto:soporte@signumsoftware.com">Soporte</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @{ Html.RenderPartial(AuthClient.LoginUserControlView);}
+                    </li>
                 </ul>
             </div>
-        </footer>
-    </div>        
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <footer class="navbar navbar-fixed-bottom">
+        <div id="footerContainer">
+            Powered by <a href="http://signumframework.com/">Signum Framework</a>
+        </div>
+    </footer>
+   
 </body>
 </html>

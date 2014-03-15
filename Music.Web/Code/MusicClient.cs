@@ -56,7 +56,6 @@ namespace Music.Web
                     {
                         new ToolBarButton
                         {
-                            DivCssClass = ToolBarButton.DefaultEntityDivCssClass,
                             Id = TypeContextUtilities.Compose(ctx.Prefix, "CloneWithData"),
                             Text = "Clone with data",
                             OnClick = new JsFunction(Module, "cloneWithData", OperationDN.UniqueKey(AlbumOperation.Clone), ctx.Prefix, 
