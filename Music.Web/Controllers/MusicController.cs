@@ -42,6 +42,11 @@ namespace Music.Web
             return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandRepeater" });
         }
 
+        public ViewResult BandTabRepeater()
+        {
+            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandTabRepeater" });
+        }
+
         [HttpPost]
         public ActionResult CreateAlbumFromBandModel()
         {

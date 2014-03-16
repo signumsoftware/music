@@ -150,6 +150,7 @@
     <Content Include="Views\Music\BandStrip.cshtml" />
     <Content Include="Views\Music\AlbumStrip.cshtml" />
     <Content Include="Scripts\jquery-1.11.0.min.map" />
+    <Content Include="Views\Music\BandTabRepeater.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Signum.Engine\Signum.Engine.csproj">
