@@ -1,9 +1,15 @@
 ﻿@using Signum.Test.Environment
 
-@using (var e = Html.TypeContext<BandDN>()) 
+@using (var e = Html.TypeContext<BandDN>())
 {
-	@Html.ValueLine(e, f => f.Name);
-	@Html.EntityListDetail(e, f => f.Members);
-    @Html.EntityLineDetail(e, f => f.LastAward);
-    @Html.EntityListDetail(e, f => f.OtherAwards);
+    @Html.ValueLine(e, f => f.Name);
+    <div class="row">
+        <div class="col-sm-6">@Html.EntityListDetail(e, f => f.Members, eld => eld.DetailDiv = e.Compose("CurrentMember"))</div>
+        <div class="col-sm-6 border" id="@e.Compose("CurrentMember")"></div>
+    </div>
+    @Html.EntityLineDetail(e, f => f.LastAward)
+    <div class="row">
+        <div class="col-sm-6">@Html.EntityListDetail(e, f => f.OtherAwards, eld => eld.DetailDiv = e.Compose("CurrentAward"))</div>
+        <div class="col-sm-6 border" id="@e.Compose("CurrentAward")"></div>
+    </div>
 }
