@@ -3,13 +3,23 @@
 @using (var e = Html.TypeContext<BandDN>())
 {
     @Html.ValueLine(e, f => f.Name);
-    <div class="row">
-        <div class="col-sm-6">@Html.EntityListDetail(e, f => f.Members, eld => eld.DetailDiv = e.Compose("CurrentMember"))</div>
-        <div class="col-sm-6 border" id="@e.Compose("CurrentMember")"></div>
-    </div>
+    <fieldset>
+        <legend>@Html.PropertyNiceName(() => e.Value.Members)</legend>
+        <div class="row">
+            <div class="col-sm-6">@Html.EntityListDetail(e, f => f.Members, eld => { eld.DetailDiv = e.Compose("CurrentMember"); eld.FormGroupStyle = FormGroupStyle.None; })</div>
+            <div class="col-sm-6" id="@e.Compose("CurrentMember")"></div>
+        </div>
+    </fieldset>
+    
+      
     @Html.EntityLineDetail(e, f => f.LastAward)
-    <div class="row">
-        <div class="col-sm-6">@Html.EntityListDetail(e, f => f.OtherAwards, eld => eld.DetailDiv = e.Compose("CurrentAward"))</div>
-        <div class="col-sm-6 border" id="@e.Compose("CurrentAward")"></div>
-    </div>
+    <fieldset>
+        <legend>@Html.PropertyNiceName(() => e.Value.OtherAwards)</legend>
+        <div class="row">
+            <div class="col-sm-6">@Html.EntityListDetail(e, f => f.OtherAwards, eld => { eld.DetailDiv = e.Compose("CurrentAward"); eld.FormGroupStyle = FormGroupStyle.None; })</div>
+            <div class="col-sm-6" id="@e.Compose("CurrentAward")"></div>
+        </div>
+    </fieldset>
+    
+  
 }

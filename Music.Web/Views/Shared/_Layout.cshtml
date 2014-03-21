@@ -21,12 +21,12 @@
         "~/Signum/Content/Lines.css",
         "~/Signum/Content/NormalPage.css",
         "~/Signum/Content/Notify.css",
-            //"~/Signum/Content/Search.css",    
-            //"~/Signum/Content/Widgets.css",
+        "~/Signum/Content/Search.css",
+        "~/Signum/Content/Widgets.css",
         "~/Content/music.css"
         )
 
-     @Html.ScriptsJs(
+    @Html.ScriptsJs(
         "~/Scripts/promise-0.1.1.js",
         "~/Scripts/jquery-1.11.0.js",
         "~/Content/bootstrap/js/bootstrap.js",
@@ -95,10 +95,10 @@
             </div>
         </div>
     </header>
+    <div class="container">
+        @RenderBody()
+    </div>
 
-    @RenderBody()
 
-  
-   
 </body>
 </html>
