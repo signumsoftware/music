@@ -611,7 +611,7 @@
             var widgetWidth = this.$widget.outerWidth(), widgetHeight = this.$widget.outerHeight(), visualPadding = 10, windowWidth =
               $(window).width(), windowHeight = $(window).height(), scrollTop = $(window).scrollTop();
 
-            var zIndex = parseInt(this.$element.parents().filter(function () { }).first().css('z-index'), 10) + 10;
+            var zIndex = 9999;//parseInt(this.$element.parents().filter(function () { }).first().css('z-index'), 10) + 10;
             var offset = this.component ? this.component.parent().offset() : this.$element.offset();
             var height = this.component ? this.component.outerHeight(true) : this.$element.outerHeight(false);
             var width = this.component ? this.component.outerWidth(true) : this.$element.outerWidth(false);
@@ -856,7 +856,9 @@
             $(document).on('mousedown.timepicker, touchend.timepicker', function (e) {
                 // This condition was inspired by bootstrap-datepicker.
                 // The element the timepicker is invoked on is the input but it has a sibling for addon/button.
-                if (!(self.$element.parent().find(e.target).length ||
+                if (!(
+                    self.$element.is(e.target) ||
+                    self.$element.find(e.target).length ||
                     self.$widget.is(e.target) ||
                     self.$widget.find(e.target).length)) {
                     self.hideWidget();
