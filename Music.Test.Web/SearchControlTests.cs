@@ -54,7 +54,7 @@ namespace Music.Test.Web
                 albums.Results.OrderBy("Id");
                 Assert.AreEqual(12, albums.Results.RowsCount());
 
-                albums.SearchControl.AddQuickFilter(0, 3);
+                albums.SearchControl.AddQuickFilter(0, "Author");
                 albums.Search();
                 Assert.AreEqual(4, albums.Results.RowsCount());
 
@@ -68,7 +68,7 @@ namespace Music.Test.Web
                 albums.Search();
                 Assert.AreEqual(2, albums.Results.RowsCount());
 
-                albums.SearchControl.AddQuickFilter(0, 5);
+                albums.SearchControl.AddQuickFilter(0, "Year");
                 selenium.Search();
                 Assert.AreEqual(1, albums.Results.RowsCount());
 
@@ -86,7 +86,7 @@ namespace Music.Test.Web
                 albums.Search();
                 Assert.AreEqual(12, albums.Results.RowsCount());
 
-                albums.SearchControl.AddQuickFilter(4);
+                albums.SearchControl.AddQuickFilter("Label");
                 albums.Search();
                 Assert.AreEqual(0, albums.Results.RowsCount());
 
@@ -111,12 +111,12 @@ namespace Music.Test.Web
                     artists.Results.OrderBy("Id");
                     Assert.AreEqual(8, artists.Results.RowsCount());
 
-                    artists.SearchControl.AddQuickFilter(0, 4);
-                    artists.SearchControl.AddQuickFilter(0, 5);
+                    artists.SearchControl.AddQuickFilter(0, "IsMale");
+                    artists.SearchControl.AddQuickFilter(0, "Sex");
                     artists.Search();
                     Assert.AreEqual(7, artists.Results.RowsCount());
 
-                    artists.SearchControl.AddQuickFilter(3, 2);
+                    artists.SearchControl.AddQuickFilter(3, "Id");
                     artists.Filters.GetFilter(2).Operation = FilterOperation.GreaterThan;
                     artists.Search();
                     Assert.AreEqual(3, artists.Results.RowsCount());
@@ -141,7 +141,7 @@ namespace Music.Test.Web
                     artists.Search();
                     Assert.AreEqual(8, artists.Results.RowsCount());
 
-                    artists.SearchControl.AddQuickFilter(2).Do(f =>
+                    artists.SearchControl.AddQuickFilter("Id").Do(f =>
                     {
                         f.Operation = FilterOperation.LessThanOrEqual;
                         f.ValueLine().StringValue = "2";
@@ -162,25 +162,21 @@ namespace Music.Test.Web
         {
             using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
             {
-                int authorCol = 3;
-
-                albums.Results.OrderBy(authorCol);
+                albums.Results.OrderBy("Author");
                 Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
 
-                int labelCol = 4;
-
-                albums.Results.ThenBy(labelCol);
+                albums.Results.ThenBy("Label");
                 Assert.AreEqual(Lite.Create<AlbumDN>(7), albums.Results.EntityInIndex(0));
-                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
 
-                albums.Results.ThenByDescending(labelCol);
+                albums.Results.ThenByDescending("Label");
                 Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
-                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
 
-                albums.Results.OrderBy(labelCol);
+                albums.Results.OrderBy("Label");
                 var first = Database.Query<AlbumDN>().OrderBy(a => a.Label.Name).Select(a => a.ToLite()).First();
                 Assert.AreEqual(first /* Lite.Create<AlbumDN>(12)*/, albums.Results.EntityInIndex(0));
-                Assert.IsFalse(albums.Results.IsHeaderMarkedSorted(authorCol, OrderType.Ascending));
+                Assert.IsFalse(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
             }
         }
 
@@ -191,26 +187,24 @@ namespace Music.Test.Web
             {
                 using (var artists = band.EntityList(b => b.Members).Find())
                 {
-                    int isMaleColumn = 4;
-                    artists.Results.OrderBy(isMaleColumn);
-                    Assert.IsTrue(artists.Results.IsElementInCell(0, isMaleColumn, "input:checkbox[value=false]"));
+                    artists.Results.OrderBy("IsMale");
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", ":checkbox:not([checked])"));
 
-                    artists.Results.OrderByDescending(isMaleColumn);
-                    Assert.IsTrue(artists.Results.IsElementInCell(0, isMaleColumn, "input:checkbox[value=true]"));
+                    artists.Results.OrderByDescending("IsMale");
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", ":checkbox[checked]"));
 
-                    int nameCol = 3;
-                    artists.Results.ThenBy(nameCol);
+                    artists.Results.ThenBy("Name");
                     Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
-                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
+                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted("IsMale", OrderType.Descending));
 
-                    artists.Results.ThenByDescending(nameCol);
+                    artists.Results.ThenByDescending("Name");
                     Assert.AreEqual(Lite.Create<ArtistDN>(8), artists.Results.EntityInIndex(0));
-                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted(isMaleColumn, OrderType.Descending));
+                    Assert.IsTrue(artists.Results.IsHeaderMarkedSorted("IsMale", OrderType.Descending));
 
-                    artists.Results.OrderBy(2);
+                    artists.Results.OrderBy("Id");
                     Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
-                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(isMaleColumn));
-                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted(nameCol));
+                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted("IsMale"));
+                    Assert.IsFalse(artists.Results.IsHeaderMarkedSorted("Name"));
                 }
             }
         }
@@ -223,18 +217,18 @@ namespace Music.Test.Web
                 albums.SearchControl.AddColumn("Label.Id");
                 albums.SearchControl.AddColumn("Label.Name");
 
-                albums.Results.EditColumnName(7, "Label Id");
+                albums.Results.EditColumnName("Label.Id", "Label Id");
 
                 albums.Results.OrderBy("Id");
 
-                albums.Results.MoveLeft(7);
-                albums.Results.MoveRight(6);
+                //albums.Results.MoveBefore("Label.Id", "Name");
+                //albums.Results.MoveAfter("Label.Id", "Name");
 
-                albums.Results.RemoveColumn(7);
+                albums.Results.RemoveColumn("Label.Id");
                 selenium.Wait(() => albums.Results.RowsCount() == 0);
                 albums.Search();
 
-                selenium.AssertElementNotPresent(albums.Results.HeaderCellLocator(8));
+                selenium.AssertElementNotPresent(albums.Results.HeaderCellLocator("Label.Id"));
             }
         }
 
@@ -245,15 +239,15 @@ namespace Music.Test.Web
             {
                 using (var artists = band.EntityList(b=> b.Members).Find())
                 {
-                    artists.Results.EditColumnName(5, "Male");
-                    artists.Results.MoveRight(2);
-                    artists.Results.MoveLeft(3);
+                    artists.Results.EditColumnName("IsMale", "Male");
+                    //artists.Results.MoveAfter("IsMale", "Id");
+                    //artists.Results.MoveBefore("IsMale", "LastAward");
 
-                    artists.Results.RemoveColumn(3);
+                    artists.Results.RemoveColumn("IsMale");
                     selenium.Wait(() => artists.Results.RowsCount() == 0);
                     artists.Search();
 
-                    selenium.AssertElementNotPresent(artists.Results.HeaderCellLocator(7));
+                    selenium.AssertElementNotPresent(artists.Results.HeaderCellLocator("IsMale"));
                 }
             }
         }
@@ -261,7 +255,7 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl007_ImplementedByFinder()
         {
-            using (var authors = SearchPage(typeof(IAuthorDN), CheckLogin))
+            SearchPage(typeof(IAuthorDN), CheckLogin).Using(authors =>
             {
                 authors.Results.OrderBy("Id");
                 Assert.AreEqual(Lite.Create<ArtistDN>(1), authors.Results.EntityInIndex(0));
@@ -276,11 +270,9 @@ namespace Music.Test.Web
                 authors.Search();
                 Assert.IsTrue(authors.Results.RowsCount() == 1);
 
-                using (var artist = authors.CreateChoose<ArtistDN>())
-                {
-                    selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Prefix);
-                }
-            }
+                return authors.CreateChoose<ArtistDN>();
+
+            }).EndUsing(artist => selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Prefix));
         }
 
         [TestMethod]
@@ -308,12 +300,12 @@ namespace Music.Test.Web
 
                 artists.Filters.AddFilter("Entity.Friends.Count", FilterOperation.EqualTo, 1);
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(3, artists.Results.RowsCount());
 
                 artists.SearchControl.AddColumn("Entity.Friends.Count");
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(3, artists.Results.RowsCount());
 
                 artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends");
@@ -321,40 +313,40 @@ namespace Music.Test.Web
                 Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
                 artists.Filters.GetFilter(0).Delete();
-                artists.Results.RemoveColumn(8);
+                artists.Results.RemoveColumn("Entity.Friends.Count");
                 artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.Element");
                 Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
                 Assert.IsTrue(artists.SearchControl.IsAddColumnEnabled);
 
                 artists.SearchControl.AddColumn("Entity.Friends.Element");
                 artists.Search();
-                Assert.IsTrue(artists.Results.HasMultiplyMessage);
+                Assert.IsTrue(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(10, artists.Results.RowsCount());
 
                 artists.Filters.AddFilter().EntityLine().Find().SelectByPositionOrderById(2);
                 artists.Search();
-                Assert.IsTrue(artists.Results.HasMultiplyMessage);
+                Assert.IsTrue(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(3, artists.Results.RowsCount());
 
                 artists.Filters.GetFilter(0).Delete();
-                artists.Results.RemoveColumn(8);
+                artists.Results.RemoveColumn("Entity.Friends.Element");
                 artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends.Any");
                 Assert.IsTrue(artists.Filters.IsAddFilterEnabled);
                 Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);
 
                 artists.Filters.AddFilter().EntityLine().Find().SelectByPositionOrderById(2);
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(3, artists.Results.RowsCount());
 
                 artists.Filters.AddFilter("Entity.Friends.Any.Name", FilterOperation.Contains, "i");
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(0, artists.Results.RowsCount());
 
                 artists.Filters.GetFilter(1).ValueLine().StringValue = "arcy";
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(3, artists.Results.RowsCount());
 
                 artists.Filters.GetFilter(0).Delete();
@@ -369,13 +361,13 @@ namespace Music.Test.Web
                     a.EntityLine().Find().SelectByPositionOrderById(2);
                 });
                 artists.Search();
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(5, artists.Results.RowsCount());
 
                 artists.Filters.AddFilter("Entity.Friends.All.Name", FilterOperation.Contains, "Corgan");
                 artists.Search();
 
-                Assert.IsFalse(artists.Results.HasMultiplyMessage);
+                Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
                 Assert.AreEqual(4, artists.Results.RowsCount());
             }
         }

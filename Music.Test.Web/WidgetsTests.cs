@@ -44,14 +44,14 @@ namespace Music.Test.Web
         {
             using (var label = NormalPage<LabelDN>(1, CheckLogin))
             {
-                using (var albums = label.QuickLinkClickSearch(0))
+                using (var albums = label.QuickLinkClickSearch("Album"))
                     Assert.IsTrue(albums.Results.RowsCount() > 0);
             }
 
             using (var label = SearchPage(typeof(LabelDN)))
             {
                 label.Search();
-                using (var albums = label.Results.EntityContextMenu(0).QuickLinkClickSearch(0))
+                using (var albums = label.Results.EntityContextMenu(0).QuickLinkClickSearch("Album"))
                 {
                     selenium.Wait(() => albums.Results.RowsCount() > 0);
                 }
@@ -72,7 +72,7 @@ namespace Music.Test.Web
                     note.ExecuteAjax(NoteOperation.Save);
                 }
 
-                Assert.AreEqual(1, label.NotesCount());
+                selenium.Wait(() => 1 == label.NotesCount());
 
                 using (var notes = label.NotesViewClick())
                 {

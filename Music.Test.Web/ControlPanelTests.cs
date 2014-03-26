@@ -56,52 +56,92 @@ namespace Music.Test.Web
                 .EndUsing(controlPanel =>
                 {
                     controlPanel.ValueLineValue(cp => cp.DisplayName, "Control Panel Home Page");
-                    controlPanel.ValueLineValue(a => a.NumberOfColumns, 2);
                     controlPanel.ExecuteSubmit(ControlPanelOperation.Save);
 
-                    var parts = controlPanel.EntityRepeater(a => a.Parts);
 
-                    controlPanel.CreateNewPart<UserQueryPartDN>(0).Do(d =>
+                    string newPrefix;
+                    PropertyRoute newRoute = controlPanel.GetRoute(a=>a.Parts, out newPrefix);
+                    var parts = new PartsRepeaterProxy(selenium, newPrefix, newRoute);
+
+                    parts.CreatePartElement<UserQueryPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "Last Albums");
                         d.EntityLineDetail(a => a.Content).Details<UserQueryPartDN>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
                     });
 
-                    controlPanel.CreateNewPart<CountSearchControlPartDN>(1).Do(d =>
+                    parts.CreatePartElement<CountSearchControlPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My count controls");
                         d.EntityLineDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
                         {
-                            uq.Create();
-                            uq.Details<CountUserQueryElementDN>(0).EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                            uq.CreateElement<CountUserQueryElementDN>().Do(cp => cp.EntityLine(a => a.UserQuery).Find().SelectByPosition(0));
                         });
                     });
 
-                    controlPanel.CreateNewPart<LinkListPartDN>(2).Do(d =>
+                    parts.CreatePartElement<LinkListPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My Links");
                         d.EntityLineDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
                         {
-                            le.Create();
-                            le.Details<LinkElementDN>(0).ValueLineValue(a => a.Label, "Best Band");
-                            le.Details<LinkElementDN>(0).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
+                            le.CreateElement<LinkElementDN>().Do(e =>
+                            {
+                                e.ValueLineValue(a => a.Label, "Best Band");
+                                e.ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
+                            });
 
 
-                            le.Create();
-                            le.Details<LinkElementDN>(1).ValueLineValue(a => a.Label, "Best Artist");
-                            le.Details<LinkElementDN>(1).ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
+                            le.CreateElement<LinkElementDN>().Do(e  =>
+                            {
+                                e.ValueLineValue(a => a.Label, "Best Artist");
+                                e.ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
+                            });
                         }); 
                     });
-
-                    controlPanel.Selenium.DragAndDropToObject(
-                        "jq=#sfCpAdminContainer td[data-column=0] .sf-ftbl-part:eq(1)",
-                        "jq=#sfCpAdminContainer td[data-column=1] .sf-ftbl-droppable");
 
                     controlPanel.ExecuteAjax(ControlPanelOperation.Save);
 
                     Assert.IsTrue(controlPanel.HasId());
 
                 }); 
+        }
+    }
+
+    public class GridRepeaterProxy : EntityRepeaterProxy
+    {
+        public override int? NewIndex()
+        {
+            string result = Selenium.GetEval("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".Formato(Prefix));
+
+            return string.IsNullOrEmpty(result) ? 0 : result.Split(',').Select(int.Parse).Max() + 1;
+        }
+
+        public GridRepeaterProxy(ISelenium selenium, string prefix, PropertyRoute route)
+            : base(selenium, prefix, route)
+        {
+        }
+    }
+
+    public class PartsRepeaterProxy : GridRepeaterProxy
+    {
+        public PartsRepeaterProxy(ISelenium selenium, string prefix, PropertyRoute route)
+            : base(selenium, prefix, route)
+        {
+        }
+
+        public LineContainer<PanelPartDN> CreatePartElement<T>() where T : IPartDN
+        {
+            var index = NewIndex();
+
+            var prefix = "_".CombineIfNotEmpty(this.Prefix, index, "New");
+
+            WaitChanges(() =>
+            {
+                Selenium.Click(CreateLocator);
+
+                new ChooserPopup(this.Selenium, prefix).EndUsing(e => e.Choose<T>());
+            }, "create clicked");
+
+            return this.Details<PanelPartDN>(index.Value);
         }
     }
 }

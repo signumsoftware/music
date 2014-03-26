@@ -117,8 +117,6 @@ namespace Music.Test.Web
                     el.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
                     Assert.IsTrue(el.HasEntity());
 
-                    artist.Close();
-
                     lite.Delete();
                 }
             }
@@ -136,16 +134,13 @@ namespace Music.Test.Web
                 Assert.IsFalse(ed.HasEntity());
 
                 //create with implementations
-                ed.CreateImplementations(typeof(AmericanMusicAwardDN));
-                selenium.Wait(() => ed.HasEntity());
-                ed.Details<AmericanMusicAwardDN>().Do(award =>
+                ed.GetOrCreateDetailControl<AmericanMusicAwardDN>().Do(award =>
                 {
                     award.ValueLineValue(a => a.Category, "test");
                 });
 
                 ed.Remove();
                 ed.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
-                selenium.Wait(() => ed.HasEntity());
             }
         }
 
@@ -211,7 +206,7 @@ namespace Music.Test.Web
                 el2.View<GrammyAwardDN>(0).EndUsing(grammy =>
                 {
                     grammy.ValueLineValue(a => a.Category, "test2");
-                    grammy.Close();
+                    grammy.CloseDiscardChanges();
                 });
 
                 lite.Delete();
@@ -249,8 +244,8 @@ namespace Music.Test.Web
 
                     //delete multiple
                     el.Select(1);
-                    el.AddSelection(2);
                     el.Remove();
+                    el.Select(2);
                     el.Remove();
                     Assert.IsFalse(el.HasEntity(1));
                     Assert.IsFalse(el.HasEntity(2));
@@ -267,14 +262,13 @@ namespace Music.Test.Web
             using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
             {
                 var el = band.EntityListDetail(a => a.Members);
+                el.DetailsDivSelector = "jq=#{0}CurrentMember".Formato(band.PrefixUnderscore());
 
                 //1st element is shown by default
                 el.HasDetailEntity();
 
                 //create
-                el.Create();
-                selenium.Wait(() => el.HasDetailEntity());
-                el.Details<ArtistDN>(4).Do(artist =>
+                el.CreateElement<ArtistDN>().Do(artist =>
                 {
                     artist.ValueLineValue(a => a.Name, "test");
                 });
@@ -292,15 +286,16 @@ namespace Music.Test.Web
                 Assert.IsTrue(el.HasDetailEntity());
 
                 var el2 = band.EntityListDetail(a => a.OtherAwards);
-                el2.CreateImplementations(typeof(GrammyAwardDN));
-                selenium.Wait(() => el2.HasDetailEntity());
-                Assert.IsTrue(el2.HasEntity(0));
-                el2.Details<GrammyAwardDN>(0).Do(grammy => grammy.ValueLineValue(a => a.Category, "text"));
+                el2.DetailsDivSelector = "jq=#{0}CurrentAward".Formato(band.PrefixUnderscore());
+
+                el2.CreateElement<GrammyAwardDN>().Do(grammy =>
+                {
+                    grammy.ValueLineValue(a => a.Category, "text");
+                }); 
 
                 //find with implementations
                 el2.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
                 Assert.IsTrue(el2.HasEntity(1));
-                selenium.Wait(() => el2.HasDetailEntity());
 
                 //Delete
                 el2.Remove();
@@ -326,9 +321,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(er.HasEntity(3));
 
                 //Create
-                er.Create();
-                er.WaitItemLoaded(4);
-                er.Details<ArtistDN>(4).Do(artist => artist.ValueLineValue(a => a.Name, "test"));
+                er.CreateElement<ArtistDN>().Do(artist => artist.ValueLineValue(a => a.Name, "test"));
                 Assert.IsTrue(er.HasEntity(4));
 
                 //delete new element (created in client)
@@ -360,9 +353,8 @@ namespace Music.Test.Web
                 var er2 = band.EntityRepeater(b => b.OtherAwards); 
 
                 //create with implementations
-                er2.CreateImplementations(typeof(GrammyAwardDN));
+                er2.CreateElement<GrammyAwardDN>().Do(g => g.ValueLineValue(a => a.Category, "test"));
                 Assert.IsTrue(er2.HasEntity(0));
-                er2.Details<GrammyAwardDN>(0).Do(g => g.ValueLineValue(a => a.Category, "test"));
 
                 //find does not exist by default
                 Assert.IsFalse(selenium.IsElementPresent(er2.FindLocator));

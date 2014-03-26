@@ -51,8 +51,8 @@ namespace Music.Test.Web
                 album.Filters.AddFilter("Label", FilterOperation.EqualTo, Lite.Create<LabelDN>(1));
                 album.SearchControl.AddColumn("Label.Owner");
 
-                album.Results.OrderBy(6);
-                album.Results.OrderByDescending(6);
+                album.Results.OrderBy("Label.Owner");
+                album.Results.OrderByDescending("Label.Owner");
 
                 return album.SearchControl.NewUserQuery();
             })
@@ -68,7 +68,7 @@ namespace Music.Test.Web
                 albums.SearchControl.UserQueryLocatorClick("Last albums");
                 albums.Selenium.WaitElementPresent(albums.Filters.GetFilter(0).ValueLine().Prefix);
                 Assert.IsTrue(albums.Results.HasColumn("Label.Owner"));
-                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted(6, OrderType.Descending));
+                Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Label.Owner", OrderType.Descending));
             }); 
         }
 
@@ -91,8 +91,7 @@ namespace Music.Test.Web
             }).Using(uq =>
             {
                 uq.EntityRepeater(a => a.Filters).Remove(0);
-                uq.EntityRepeater(a => a.Columns).Create();
-                uq.EntityRepeater(a => a.Columns).Details<QueryColumnDN>(0).Do(qc =>
+                uq.EntityRepeater(a => a.Columns).CreateElement<QueryColumnDN>().Do(qc =>
                 {
                     qc.ValueLineValue(a => a.DisplayName, "Label owner's country");
                     qc.QueryTokenBuilder(a => a.Token).SelectToken("Label.Owner.Country");
@@ -115,7 +114,7 @@ namespace Music.Test.Web
         {
             SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
             {
-                albums.Results.OrderBy(5);
+                albums.Results.OrderBy("Year");
                 return albums.SearchControl.NewUserQuery();
             })
             .Using(uq =>
@@ -127,7 +126,7 @@ namespace Music.Test.Web
             }).Using(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick("test");
-                selenium.Wait(() => albums.Results.IsHeaderMarkedSorted(5, OrderType.Ascending));
+                selenium.Wait(() => albums.Results.IsHeaderMarkedSorted("Year", OrderType.Ascending));
                 return albums.SearchControl.EditUserQuery();
             }).Using(uq =>
             {

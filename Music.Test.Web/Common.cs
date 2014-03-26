@@ -60,7 +60,7 @@ namespace Music.Test.Web
             selenium.Type("password", pwd);
             selenium.Click("rememberMe");
 
-            selenium.Click("jq=input.login");
+            selenium.Click("jq=#login");
             selenium.WaitForPageToLoad();
 
             Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));

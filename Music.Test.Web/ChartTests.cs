@@ -68,7 +68,7 @@ namespace Music.Test.Web
 
                 selenium.Wait(() => chart.Results.RowsCount() == 2);
                 chart.DataTab();
-                chart.Results.OrderBy(0);
+                chart.Results.OrderBy("Author");
                 selenium.WaitElementPresent(chart.Results.RowLocator(0) + ":contains('Michael')");
 
                 return chart.NewUserChart();

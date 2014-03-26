@@ -130,7 +130,7 @@ namespace Music.Test
         private static void OverrideImplementations(SchemaBuilder sb)
         {
             sb.Settings.OverrideAttributes((UserDN u) => u.Related, new ImplementedByAttribute());
-            sb.Settings.OverrideAttributes((ControlPanelDN cp) => cp.Related, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.OverrideAttributes((ControlPanelDN cp) => cp.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
             sb.Settings.OverrideAttributes((UserQueryDN uq) => uq.Related, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
             sb.Settings.OverrideAttributes((UserChartDN uq) => uq.Related, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
 
