@@ -91,29 +91,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-datepicker\css\datepicker3.css" />
-    <Content Include="Content\bootstrap-datepicker\js\bootstrap-datepicker.js" />
-    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.css" />
-    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.css" />
-    <Content Include="Content\bootstrap-timepicker\css\bootstrap-timepicker.min.css" />
-    <Content Include="Content\bootstrap-timepicker\js\bootstrap-timepicker.js" />
-    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap\css\bootstrap.css" />
-    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Libs\bootstrap-datepicker\css\datepicker3.css" />
+    <Content Include="Libs\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Libs\bootstrap-timepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Libs\bootstrap-timepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Libs\bootstrap-timepicker\css\bootstrap-timepicker.min.css" />
+    <Content Include="Libs\bootstrap-timepicker\js\bootstrap-timepicker.js" />
+    <Content Include="Libs\bootstrap-typeahead\bootstrap3-typeahead.js" />
+    <Content Include="Libs\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Libs\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Libs\bootstrap\css\bootstrap.css" />
+    <Content Include="Libs\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\music.css" />
-    <Content Include="Content\typeahead\typeahead.bundle.js" />
     <Content Include="Global.asax" />
     <TypeScriptCompile Include="Scripts\Album.ts" />
-    <Content Include="Content\bootstrap\js\bootstrap.js" />
-    <Content Include="Content\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Scripts\colorbrewer.js" />
-    <Content Include="Scripts\d3.v3.min.js" />
-    <Content Include="Scripts\jquery-1.11.0.js" />
-    <Content Include="Scripts\jquery-1.11.0.min.js" />
-    <Content Include="Scripts\promise-0.1.1.js" />
-    <Content Include="Scripts\require.js" />
+    <Content Include="Libs\bootstrap\js\bootstrap.js" />
+    <Content Include="Libs\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Libs\colorbrewer.js" />
+    <Content Include="Libs\d3.v3.min.js" />
+    <Content Include="Libs\jquery-1.11.0.js" />
+    <Content Include="Libs\jquery-1.11.0.min.js" />
+    <Content Include="Libs\promise-0.1.1.js" />
+    <Content Include="Libs\require.js" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Music\Album.cshtml" />
     <Content Include="Views\Music\AmericanMusicAward.cshtml" />
@@ -135,11 +135,11 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap\css\bootstrap.css.map" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Libs\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Libs\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -148,7 +148,7 @@
     <Content Include="Views\Music\NoteWithDate.cshtml" />
     <Content Include="Views\Music\BandStrip.cshtml" />
     <Content Include="Views\Music\AlbumStrip.cshtml" />
-    <Content Include="Scripts\jquery-1.11.0.min.map" />
+    <Content Include="Libs\jquery-1.11.0.min.map" />
     <Content Include="Views\Music\BandTabRepeater.cshtml" />
   </ItemGroup>
   <ItemGroup>

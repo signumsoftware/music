@@ -12,10 +12,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
     @Html.ScriptCss(
-        "~/Content/bootstrap/css/bootstrap.css",
-        "~/Content/bootstrap/css/bootstrap-theme.css",
-        "~/Content/bootstrap-datepicker/css/datepicker3.css",
-        "~/Content/bootstrap-timepicker/css/bootstrap-timepicker.css",
+        "~/Libs/bootstrap/css/bootstrap.css",
+        "~/Libs/bootstrap/css/bootstrap-theme.css",
+        "~/Libs/bootstrap-datepicker/css/datepicker3.css",
+        "~/Libs/bootstrap-timepicker/css/bootstrap-timepicker.css",
 
         "~/Signum/Content/Lines.css",
         "~/Signum/Content/NormalPage.css",
@@ -26,13 +26,13 @@
         )
 
     @Html.ScriptsJs(
-        "~/Scripts/promise-0.1.1.js",
-        "~/Scripts/jquery-1.11.0.js",
-        "~/Content/bootstrap/js/bootstrap.js",
-        "~/Content/bootstrap-datepicker/js/bootstrap-datepicker.js",
-        "~/Content/bootstrap-timepicker/js/bootstrap-timepicker.js",
-        "~/Content/typeahead/typeahead.bundle.js",
-        "~/Scripts/require.js")
+        "~/Libs/promise-0.1.1.js",
+        "~/Libs/jquery-1.11.0.js",
+        "~/Libs/bootstrap/js/bootstrap.js",
+        "~/Libs/bootstrap-datepicker/js/bootstrap-datepicker.js",
+        "~/Libs/bootstrap-timepicker/js/bootstrap-timepicker.js",
+        "~/Libs/bootstrap-typeahead/bootstrap3-typeahead.js",
+        "~/Libs/require.js")
     <script>
         require.config({
             baseUrl: '@Url.Content("~/Scripts")',
@@ -40,8 +40,8 @@
                 "Framework/Signum.Web": "..",
                 "Extensions/Signum.Web.Extensions": "..",
 
-                "d3": "d3.v3.min",
-                "colorbrewer": "/Scripts/colorbrewer",
+                "d3": "../Libs/d3.v3.min",
+                "colorbrewer": "../Libs/colorbrewer",
                 "ChartUtils": "../Chart/Scripts/ChartUtils",
             },
             shim: {
@@ -56,7 +56,6 @@
     @Html.ScriptsJs("~/Signum/resources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/Signum/calendarResources/" + System.Globalization.CultureInfo.CurrentCulture.Name + ".js")
     @Html.ScriptsJs("~/Signum/urls/signumCommon.js")
-
     @Html.ScriptsJs("~/Signum/Scripts/SF.js", "~/Signum/Scripts/SF.UI.js")
 
     @if (IsSectionDefined("head"))
@@ -80,9 +79,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (UserDN.Current != null && !UserDN.Current.Is(AuthLogic.AnonymousUser))
+                    @if (UserDN.Current != null)
                     {
-                        Html.RenderPartial("Menu", ViewData["current"] = Context.Request.RawUrl);
+                        Html.RenderPartial("Menu");
                     }
 
                 </ul>
@@ -97,7 +96,5 @@
     <div class="container">
         @RenderBody()
     </div>
-
-
 </body>
 </html>
