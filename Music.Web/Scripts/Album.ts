@@ -7,7 +7,6 @@ import Operations = require("Framework/Signum.Web/Signum/Scripts/Operations")
 import Validator = require("Framework/Signum.Web/Signum/Scripts/Validator")
 
 export function cloneWithData(operationKey: string, prefix: string, vlb: Navigator.ValueLineBoxOptions, urlClone: string) {
-    var modelPrefix = SF.compose(prefix, "New");
     Navigator.valueLineBox(vlb).then(newName => {
         if (!newName)
             return;
