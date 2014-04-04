@@ -43,9 +43,11 @@ namespace Music.Test.Web
         [TestMethod]
         public void Chart001_Open_Filter_Draw_CreateUC()
         {
+            Login();
+
             string userChartName = "uctest" + DateTime.Now.Ticks.ToString();
 
-            SearchPage(typeof(AlbumDN), CheckLogin)
+            SearchPage(typeof(AlbumDN))
             .Using(a =>
             {
                 a.SearchControl.Filters.AddFilter("Id", FilterOperation.GreaterThan, 1);

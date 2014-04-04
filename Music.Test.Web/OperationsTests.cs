@@ -45,7 +45,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations001_Execute_Navigate()
         {
-            SearchPage(typeof(AlbumDN), CheckLogin)
+            Login();
+
+            SearchPage(typeof(AlbumDN))
                 .Using(albums => albums.Create<AlbumDN>())
                 .EndUsing(album =>
             {
@@ -63,7 +65,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations002_Execute_ReloadContent()
         {
-            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
+            Login();
+            NormalPage<AlbumDN>(1).EndUsing(album =>
             {
                 string name = "Siamese Dreamm";
                 album.ValueLineValue(a => a.Name, name);
@@ -75,7 +78,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations003_ConstructFrom()
         {
-            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
+            Login();
+
+            NormalPage<AlbumDN>(1).EndUsing(album =>
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
@@ -97,7 +102,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations004_ConstructFrom_OpenPopup()
         {
-            NormalPage<BandDN>(1, CheckLogin).EndUsing(band =>
+            Login();
+
+            NormalPage<BandDN>(1).EndUsing(band =>
             {
                 band.ConstructFromPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand).Using(model =>
                 {
@@ -117,7 +124,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations005_ConstructFrom_OpenPopupAndSubmitFormAndPopup()
         {
-            NormalPage<AlbumDN>(1, CheckLogin).EndUsing(album =>
+            Login();
+
+            NormalPage<AlbumDN>(1).EndUsing(album =>
             {
                 album.ButtonClick("CloneWithData");
 
@@ -138,6 +147,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations006_Delete()
         {
+            Login();
+
             Lite<AlbumDN> lite = null;
             using (AuthLogic.UnsafeUserSession("internal"))
             {
@@ -147,7 +158,7 @@ namespace Music.Test.Web
                 lite = album.Execute(AlbumOperation.Save).ToLite(); 
             }
 
-            NormalPage<AlbumDN>(lite, CheckLogin).Using(album =>
+            NormalPage<AlbumDN>(lite).Using(album =>
             {
                 return album.DeleteSubmit(AlbumOperation.Delete);
             }).EndUsing(albums =>
@@ -160,7 +171,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Operations007_ConstructFromMany()
         {
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            Login();
+
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 albums.Search();
 

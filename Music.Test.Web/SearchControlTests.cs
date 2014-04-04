@@ -49,7 +49,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl001_Filters()
         {
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            Login();
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 albums.Results.OrderBy("Id");
                 Assert.AreEqual(12, albums.Results.RowsCount());
@@ -104,7 +105,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl002_FiltersInPopup()
         {
-            using (var band = NormalPage<BandDN>(CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>())
             {
                 using (var artists = band.EntityList(a => a.Members).Find())
                 {
@@ -160,7 +162,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl003_Orders()
         {
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            Login();
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 albums.Results.OrderBy("Author");
                 Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
@@ -183,7 +186,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl004_OrdersInPopup()
         {
-            using (var band = NormalPage<BandDN>(CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>())
             {
                 using (var artists = band.EntityList(b => b.Members).Find())
                 {
@@ -212,7 +216,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl005_UserColumns()
         {
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            Login();
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 albums.SearchControl.AddColumn("Label.Id");
                 albums.SearchControl.AddColumn("Label.Name");
@@ -235,7 +240,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl006_UserColumnsInPopup()
         {
-            using (var band = NormalPage<BandDN>(CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>())
             {
                 using (var artists = band.EntityList(b=> b.Members).Find())
                 {
@@ -255,7 +261,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl007_ImplementedByFinder()
         {
-            SearchPage(typeof(IAuthorDN), CheckLogin).Using(authors =>
+            Login();
+            SearchPage(typeof(IAuthorDN)).Using(authors =>
             {
                 authors.Results.OrderBy("Id");
                 Assert.AreEqual(Lite.Create<ArtistDN>(1), authors.Results.EntityInIndex(0));
@@ -278,7 +285,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void SearchControl008_MultiplyFinder()
         {
-            using(var artists = SearchPage(typeof(ArtistDN), CheckLogin))
+            Login();
+            using(var artists = SearchPage(typeof(ArtistDN)))
             {
                 Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
                 Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);

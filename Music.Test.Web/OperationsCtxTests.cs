@@ -42,7 +42,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx001_Execute()
         {
-            using (var artists = SearchPage(typeof(ArtistDN), CheckLogin))
+            Login();
+            using (var artists = SearchPage(typeof(ArtistDN)))
             {
                 artists.Results.OrderBy("Id");
 
@@ -57,7 +58,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx002_ConstructFrom_OpenPopup()
         {
-            SearchPage(typeof(BandDN), CheckLogin).EndUsing(bands =>
+            Login();
+            SearchPage(typeof(BandDN)).EndUsing(bands =>
             {
                 bands.SearchControl.Search();
 
@@ -78,7 +80,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx003_Delete()
         {
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            Login();
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 CreateAlbum("blasco");
 
@@ -114,7 +117,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx004_ConstructFromMany()
         {
-            SearchPage(typeof(AlbumDN), CheckLogin).EndUsing(albums =>
+            Login();
+            SearchPage(typeof(AlbumDN)).EndUsing(albums =>
             {
                 albums.Search();
                 albums.Results.SelectRow(0, 1);
@@ -133,9 +137,11 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx010_FromMany_Execute()
         {
+            Login();
+
             ProcessViewStart();
 
-            using (var artist = SearchPage(typeof(ArtistDN), CheckLogin))
+            using (var artist = SearchPage(typeof(ArtistDN)))
             {
                 artist.Results.OrderBy("Id");
 
@@ -156,9 +162,11 @@ namespace Music.Test.Web
         [TestMethod]
         public void OperationCtx011_FromMany_Delete()
         {
+            Login();
+
             ProcessViewStart();
 
-            using (var albums = SearchPage(typeof(AlbumDN), CheckLogin))
+            using (var albums = SearchPage(typeof(AlbumDN)))
             {
                 CreateAlbum("alb1");
                 CreateAlbum("alb2");
@@ -194,8 +202,6 @@ namespace Music.Test.Web
 
             selenium.Open(url);
             selenium.WaitForPageToLoad();
-
-            CheckLogin(url);
 
             if (selenium.IsElementPresent("jq=#processMainDiv span:contains('STOPPED')"))
             {

@@ -45,7 +45,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void UserQueries001_Create()
         {
-            SearchPage(typeof(AlbumDN), CheckLogin).Using(album =>
+            Login(); 
+
+            SearchPage(typeof(AlbumDN)).Using(album =>
             {
                 album.Filters.AddFilter("Year", FilterOperation.GreaterThan, 2000);
                 album.Filters.AddFilter("Label", FilterOperation.EqualTo, Lite.Create<LabelDN>(1));
@@ -75,6 +77,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void UserQueries002_Edit()
         {
+            Login();
+
             var uqName = "uq" + DateTime.Now.Ticks.ToString().Substring(8);
             var userQuery = AuthLogic.UnsafeUserSession("su").Using(_ => 
                 new UserQueryDN(typeof(AlbumDN))
@@ -84,7 +88,7 @@ namespace Music.Test.Web
                     Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
                 }.ParseAndSave());
 
-            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
+            SearchPage(typeof(AlbumDN)).Using(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick(uqName);
                 return albums.SearchControl.EditUserQuery();
@@ -112,7 +116,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void UserQueries003_Delete()
         {
-            SearchPage(typeof(AlbumDN), CheckLogin).Using(albums =>
+            Login();
+
+            SearchPage(typeof(AlbumDN)).Using(albums =>
             {
                 albums.Results.OrderBy("Year");
                 return albums.SearchControl.NewUserQuery();

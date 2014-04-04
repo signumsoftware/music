@@ -44,9 +44,11 @@ namespace Music.Test.Web
         [TestMethod]
         public void ExcelReport()
         {
+            Login();
+
             string pathSampleReport = "D:\\Signum\\Music\\Assets\\Album.xlsx";
 
-            SearchPage(typeof(AlbumDN), CheckLogin)
+            SearchPage(typeof(AlbumDN))
             .Using(albums =>
             {
                 using (var report = albums.SearchControl.CreateExcelReport())

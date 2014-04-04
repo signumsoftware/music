@@ -43,7 +43,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines001_EntityLine()
         {
-            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>(1))
             {
                 var el = band.EntityLine(b => b.LastAward);
 
@@ -83,7 +84,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines002_EntityLineInPopup()
         {
-            using (var album = NormalPage<AlbumDN>(1, CheckLogin))
+            Login();
+            using (var album = NormalPage<AlbumDN>(1))
             {
                 //open popup
                 using (var artist = album.EntityLine(a => a.Author).View<ArtistDN>())
@@ -125,7 +127,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines003_EntityLineDetail()
         {
-            using (var bandDetail = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
+            Login();
+            using (var bandDetail = NormalPageUrl<BandDN>(Url("Music/BandDetail")))
             {
                 var ed = bandDetail.EntityLineDetail(a => a.LastAward);
                 Assert.IsTrue(ed.HasEntity());
@@ -147,7 +150,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines004_EntityList()
         {
-            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>(1))
             {
                 var el = band.EntityList(b => b.Members);
 
@@ -217,7 +221,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines005_EntityListInPopup()
         {
-            using (var band = NormalPage<BandDN>(1, CheckLogin))
+            Login();
+            using (var band = NormalPage<BandDN>(1))
             {
                 //open popup
                 using (var artist = band.EntityList(a => a.Members).View<ArtistDN>(0))
@@ -259,7 +264,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines006_EntityListDetail()
         {
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail"), CheckLogin))
+            Login();
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail")))
             {
                 var el = band.EntityListDetail(a => a.Members);
                 el.DetailsDivSelector = "jq=#{0}CurrentMember".Formato(band.PrefixUnderscore());
@@ -310,7 +316,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines007_EntityRepeater()
         {
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandRepeater"), CheckLogin))
+            Login();
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandRepeater")))
             {
                 var er = band.EntityRepeater(a => a.Members);
 
@@ -364,7 +371,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Lines007_EntityStrip()
         {
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandStrip"), CheckLogin))
+            Login();
+            using (var band = NormalPageUrl<BandDN>(Url("Music/BandStrip")))
             {
                 var er = band.EntityStrip(a => a.Members);
 

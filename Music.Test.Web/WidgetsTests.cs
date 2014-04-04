@@ -42,7 +42,9 @@ namespace Music.Test.Web
         [TestMethod]
         public void Widgets001_QuickLinkFind()
         {
-            using (var label = NormalPage<LabelDN>(1, CheckLogin))
+            Login(); 
+
+            using (var label = NormalPage<LabelDN>(1))
             {
                 using (var albums = label.QuickLinkClickSearch("Album"))
                     Assert.IsTrue(albums.Results.RowsCount() > 0);
@@ -62,7 +64,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Widgets010_Notes()
         {
-            using (var label = NormalPage<LabelDN>(1, CheckLogin))
+            Login();
+            using (var label = NormalPage<LabelDN>(1))
             {
                 Assert.AreEqual(0, label.NotesCount());
 
@@ -84,7 +87,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void Widgets020_Alerts()
         {
-            NormalPage<LabelDN>(1, CheckLogin).Using(label =>
+            Login();
+            NormalPage<LabelDN>(1).Using(label =>
             {
 
                 Assert.IsTrue(label.AlertsAre(0, 0, 0));

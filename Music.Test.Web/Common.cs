@@ -39,46 +39,5 @@ namespace Music.Test.Web
         {
             Login("internal", "internal");
         }
-
-        protected void Login(string username, string pwd)
-        {
-            selenium.Open("/Music.Web/");
-            selenium.WaitForPageToLoad();
-
-            //is already logged?
-            bool logged = selenium.IsElementPresent("jq=a.sf-logout");
-            if (logged)
-            {
-                selenium.Click("jq=a.sf-logout");
-                selenium.WaitForPageToLoad();
-            }
-
-            selenium.Click("jq=a.sf-login");
-            selenium.WaitForPageToLoad();
-
-            selenium.Type("username", username);
-            selenium.Type("password", pwd);
-            selenium.Click("rememberMe");
-
-            selenium.Click("jq=#login");
-            selenium.WaitForPageToLoad();
-
-            Assert.IsTrue(selenium.IsElementPresent("jq=a.sf-logout"));
-        }
-
-        protected void LogOut()
-        {
-            selenium.Click("jq=a.sf-logout");
-            selenium.Wait(() => selenium.IsElementPresent("jq=a.sf-login"));
-        }
-
-        protected void CheckLogin(string url)
-        {
-            if (!selenium.IsElementPresent("jq=a.sf-logout"))
-                Login();
-
-            selenium.Open(url);
-            selenium.WaitForPageToLoad();
-        }
     }
 }

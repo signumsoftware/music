@@ -51,7 +51,8 @@ namespace Music.Test.Web
         [TestMethod]
         public void ControlPanel001_Create()
         {
-            this.SearchPage(typeof(ControlPanelDN), CheckLogin)
+            Login();
+            this.SearchPage(typeof(ControlPanelDN))
                 .Using(cps => cps.Create<ControlPanelDN>())
                 .EndUsing(controlPanel =>
                 {
