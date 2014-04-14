@@ -340,15 +340,15 @@ namespace Music.Test.Web
                 Assert.IsFalse(er.HasEntity(0));
 
                 //find multiple: it exists because Find is overriden to true in this EntityRepeater
-                er.Find().SelectByPosition(4, 5);
-                selenium.Wait(()=>er.HasEntity(4));
-                selenium.Wait(() => er.HasEntity(5));
+                er.Find().SelectByPosition(3, 4);
+                selenium.Wait(() => er.HasEntity(0));
+                selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
-                string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
+                string secondItemMichael = "jq=#Members_0_sfIndexes[value=';2']";
+                string thirdItemMichael = "jq=#Members_0_sfIndexes[value=';3']";
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
-                er.MoveUp(4);
+                er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
                 //move down
                 er.MoveDown(2); 
@@ -401,14 +401,14 @@ namespace Music.Test.Web
 
                 //find multiple: it exists because Find is overriden to true in this EntityStrip
                 er.Find().SelectByPosition(4, 5);
-                Assert.IsTrue(er.HasEntity(4));
-                Assert.IsTrue(er.HasEntity(5));
+                selenium.Wait(() => er.HasEntity(0));
+                selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_4_sfIndexes[value=';2']";
-                string thirdItemMichael = "jq=#Members_4_sfIndexes[value=';3']";
+                string secondItemMichael = "jq=#Members_0_sfIndexes[value=';2']";
+                string thirdItemMichael = "jq=#Members_0_sfIndexes[value=';3']";
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
-                er.MoveUp(4);
+                er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
                 //move down
                 er.MoveDown(2);
