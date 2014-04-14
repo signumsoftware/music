@@ -144,10 +144,10 @@ namespace Music.Test
 
     }
 
-    public enum MusicGroups
+    public static class MusicGroups
     {
-        JapanEntities,
-        RoleEntities,
-        UserEntities
+        public static readonly TypeConditionSymbol JapanEntities = new TypeConditionSymbol();
+        public static readonly TypeConditionSymbol RoleEntities = new TypeConditionSymbol();
+        public static readonly TypeConditionSymbol UserEntities = new TypeConditionSymbol();
     }
 }

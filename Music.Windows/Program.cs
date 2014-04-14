@@ -51,7 +51,7 @@ namespace Music.Windows
                 OverrideExceptionHandling(errorTitle, e);
             else
             {
-                string message = e.FollowC(ex => ex.InnerException).ToString(ex => "{0} : {1}".Formato(
+                string message = e.Follow(ex => ex.InnerException).ToString(ex => "{0} : {1}".Formato(
                           ex.GetType().Name != "FaultException" ? ex.GetType().Name : "Server Error",
                           ex.Message), "\r\n\r\n");
 

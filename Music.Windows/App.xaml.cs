@@ -70,7 +70,7 @@ namespace Music.Windows
 
             OperationClient.Start(new OperationManager
             {
-                Settings = new Dictionary<Enum, OperationSettings>()
+                Settings = new Dictionary<OperationSymbol, OperationSettings>()
                 {
                 }
             });

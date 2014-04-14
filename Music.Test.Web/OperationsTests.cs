@@ -84,7 +84,7 @@ namespace Music.Test.Web
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
-                using( var newAlbum =  album.ConstructFromPopup<AlbumDN>(AlbumOperation.Clone))
+                using( var newAlbum =  album.ConstructFromPopup(AlbumOperation.Clone))
                 {
                     newAlbum.Selenium.Wait(() => string.IsNullOrEmpty(newAlbum.ValueLineValue(a => a.Name)));
                     newAlbum.ValueLineValue(a => a.Name, "test3");
@@ -106,7 +106,7 @@ namespace Music.Test.Web
 
             NormalPage<BandDN>(1).EndUsing(band =>
             {
-                band.ConstructFromPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand).Using(model =>
+                band.OperationPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand).Using(model =>
                 {
                     model.ValueLineValue(m => m.Name, "test2");
                     model.ValueLineValue(m => m.Year, 2010);
@@ -152,7 +152,7 @@ namespace Music.Test.Web
             Lite<AlbumDN> lite = null;
             using (AuthLogic.UnsafeUserSession("internal"))
             {
-                AlbumDN album = Database.Query<AlbumDN>().First().ConstructFrom<AlbumDN>(AlbumOperation.Clone);
+                AlbumDN album = Database.Query<AlbumDN>().First().ConstructFrom(AlbumOperation.Clone);
                 album.Name = "test6";
                 album.Year = 2012;
                 lite = album.Execute(AlbumOperation.Save).ToLite(); 
@@ -179,7 +179,7 @@ namespace Music.Test.Web
 
                 albums.SearchControl.Results.SelectRow(0, 1);
 
-                using (var alb = albums.SearchControl.Results.SelectedClick().ConstructFromPopup<AlbumDN>(AlbumOperation.CreateEmptyGreatestHitsAlbum))
+                using (var alb = albums.SearchControl.Results.SelectedClick().MenuClickPopup<AlbumDN>(AlbumOperation.CreateEmptyGreatestHitsAlbum))
                 {
                     alb.ValueLineValue(a => a.Name, "test greatest empty");
                     alb.EntityCombo(a => a.Label).SelectLabel("Virgin");

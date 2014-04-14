@@ -20,7 +20,7 @@ namespace Music.Test
         public string Name
         {
             get { return name; }
-            set { Set(ref name, value, () => Name); }
+            set { Set(ref name, value); }
         }
 
         int year;
@@ -28,7 +28,7 @@ namespace Music.Test
         public int Year
         {
             get { return year; }
-            set { Set(ref year, value, () => Year); }
+            set { Set(ref year, value); }
         }
 
         LabelDN label;
@@ -36,7 +36,7 @@ namespace Music.Test
         public LabelDN Label
         {
             get { return label; }
-            set { Set(ref label, value, () => Label); }
+            set { Set(ref label, value); }
         }
     }
 }

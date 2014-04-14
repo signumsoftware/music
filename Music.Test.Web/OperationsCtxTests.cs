@@ -63,7 +63,7 @@ namespace Music.Test.Web
             {
                 bands.SearchControl.Search();
 
-                bands.SearchControl.Results.EntityContextMenu(0).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
+                bands.SearchControl.Results.EntityContextMenu(0).MenuClickPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
                 {
                     album.ValueLineValue(a => a.Name, "ctxtest");
                     album.ValueLineValue(a => a.Year, DateTime.Now.Year);
@@ -123,7 +123,7 @@ namespace Music.Test.Web
                 albums.Search();
                 albums.Results.SelectRow(0, 1);
 
-                using (var album = albums.Results.EntityContextMenu(1).ConstructFromPopup<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum))
+                using (var album = albums.Results.EntityContextMenu(1).MenuClickPopup<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum))
                 {
                     album.ValueLineValue(a => a.Name, "test greatest hits");
                     album.EntityCombo(a => a.Label).SelectLabel("Virgin");
@@ -147,7 +147,7 @@ namespace Music.Test.Web
 
                 artist.Results.SelectRow(0, 1);
 
-                using (var process = artist.Results.EntityContextMenu(1).ConstructFromPopup<ProcessDN>(ArtistOperation.AssignPersonalAward))
+                using (var process = artist.Results.EntityContextMenu(1).MenuClickPopup<ProcessDN>(ArtistOperation.AssignPersonalAward))
                 {
                     process.ExecuteAjax(ProcessOperation.Execute);
 

@@ -64,7 +64,7 @@ namespace Music.Web
             var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
                 .ApplyChanges(this.ControllerContext, true, modelPrefix).Value;
 
-            AlbumDN newAlbum = this.ExtractLite<BandDN>().ConstructFromLite<AlbumDN>(AlbumOperation.CreateAlbumFromBand,
+            AlbumDN newAlbum = this.ExtractLite<BandDN>().ConstructFromLite(AlbumOperation.CreateAlbumFromBand,
                 model.Name, model.Year, model.Label);
 
             return OperationClient.DefaultConstructResult(this, newAlbum);
@@ -75,7 +75,7 @@ namespace Music.Web
         {
             var sourceAlbums = this.ParseLiteKeys<AlbumDN>();
             
-            var newAlbum = OperationLogic.ConstructFromMany<AlbumDN, AlbumDN>(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
+            var newAlbum = OperationLogic.ConstructFromMany(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
 
             return OperationClient.DefaultConstructResult(this, newAlbum);
         }
@@ -85,7 +85,7 @@ namespace Music.Web
         {
             var album = this.ExtractLite<AlbumDN>();
 
-            AlbumDN newAlbum = album.ConstructFromLite<AlbumDN>(AlbumOperation.Clone);
+            AlbumDN newAlbum = album.ConstructFromLite(AlbumOperation.Clone);
             newAlbum.Name = this.ParseValue<string>("newName");
 
             return OperationClient.DefaultConstructResult(this, newAlbum); 
