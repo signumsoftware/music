@@ -47,7 +47,7 @@ namespace Music.Test.Web
             {
                 artists.Results.OrderBy("Id");
 
-                selenium.Wait(() => selenium.IsElementPresent(SearchTestExtensions.RowSelector(selenium, 1)));
+                selenium.Wait(() => selenium.IsElementPresent(artists.Results.RowLocator(1)));
 
                 artists.SearchControl.Results.EntityContextMenu(0).ExecuteClick(ArtistOperation.AssignPersonalAward);
 
@@ -189,7 +189,7 @@ namespace Music.Test.Web
                         !process.OperationEnabled(ProcessOperation.Suspend));
                 }
 
-                selenium.Search();
+                albums.Search();
 
                 Assert.AreEqual(count - 2, albums.Results.RowsCount());
             }

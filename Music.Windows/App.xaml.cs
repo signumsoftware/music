@@ -53,27 +53,9 @@ namespace Music.Windows
 
         public static void StartApplication()
         {
-            Navigator.Start(new NavigationManager(multithreaded: true)
-            {
-                EntitySettings = new Dictionary<Type, EntitySettings>()
-                {
-                }
-            });
-
-            Constructor.Start(new ConstructorManager
-            {
-                Constructors = new Dictionary<Type, Func<FrameworkElement, object>>()
-                {
-              
-                }
-            });
-
-            OperationClient.Start(new OperationManager
-            {
-                Settings = new Dictionary<OperationSymbol, OperationSettings>()
-                {
-                }
-            });
+            Navigator.Start(new NavigationManager(multithreaded: true));
+            Constructor.Start(new ConstructorManager());
+            OperationClient.Start(new OperationManager());
 
             AuthClient.Start(
                 types: true,

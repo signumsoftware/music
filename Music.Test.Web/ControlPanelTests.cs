@@ -38,7 +38,7 @@ namespace Music.Test.Web
                 {
                     Owner = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
                     DisplayName = "test",
-                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, Value = 3 } },
+                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
                 }.ParseAndSave());
         }
 

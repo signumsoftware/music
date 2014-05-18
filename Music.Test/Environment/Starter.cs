@@ -32,6 +32,8 @@ using Signum.Test.Environment;
 using Signum.Engine.Translation;
 using System.Threading;
 using System.Globalization;
+using Signum.Entities.Alerts;
+using Signum.Entities.Notes;
 
 namespace Music.Test
 {
@@ -77,6 +79,7 @@ namespace Music.Test
                 sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
                 sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
+                MixinDeclarations.Register<ProcessDN, UserProcessSessionMixin>();
                 OverrideImplementations(sb);
 
                 CacheLogic.Start(sb);
@@ -89,8 +92,7 @@ namespace Music.Test
                 UserTicketLogic.Start(sb, dqm);
 
                 ProcessLogic.Start(sb, dqm, userProcessSession: true);
-                PackageLogic.Start(sb, dqm, true, true);
-                ProcessLogic.CreateDefaultProcessSession = UserProcessSessionDN.CreateCurrent;             
+                PackageLogic.Start(sb, dqm, true, true);          
 
                 AuthLogic.StartAllModules(sb, dqm);
 
@@ -137,9 +139,14 @@ namespace Music.Test
             sb.Schema.Settings.OverrideAttributes((ProcessDN cp) => cp.Data, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
             sb.Schema.Settings.OverrideAttributes((PackageLineDN cp) => cp.Package, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
             sb.Schema.Settings.OverrideAttributes((ProcessExceptionLineDN cp) => cp.Line, new ImplementedByAttribute(typeof(PackageLineDN)));
+            sb.Schema.Settings.OverrideAttributes((ProcessDN cp) => cp.Mixin<UserProcessSessionMixin>().User, new ImplementedByAttribute(typeof(UserDN)));
 
             sb.Schema.Settings.OverrideAttributes((OperationLogDN ol) => ol.User, new ImplementedByAttribute(typeof(UserDN)));
             sb.Schema.Settings.OverrideAttributes((ExceptionDN e) => e.User, new ImplementedByAttribute(typeof(UserDN)));
+
+            sb.Schema.Settings.OverrideAttributes((AlertDN e) => e.CreatedBy, new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.OverrideAttributes((AlertDN e) => e.AttendedBy, new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.OverrideAttributes((NoteDN e) => e.CreatedBy, new ImplementedByAttribute(typeof(UserDN)));
         }
 
     }

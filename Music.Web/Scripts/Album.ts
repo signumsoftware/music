@@ -23,7 +23,7 @@ export function cloneWithData(operationKey: string, prefix: string, vlb: Navigat
 
 export function createAlbumFromBand(options: Operations.EntityOperationOptions, urlModel: string, urlOperation: string) {
 
-    var modelPrefix = SF.compose(options.prefix, "New");
+    var modelPrefix = options.prefix.child("New");
     getModelData(modelPrefix, urlModel).then(modelData=> {
         if (modelData == null)
             return;
@@ -36,7 +36,7 @@ export function createAlbumFromBand(options: Operations.EntityOperationOptions, 
 
 export function createAlbumFromBandContextual(options: Operations.OperationOptions, urlModel: string, urlOperation: string) {
 
-    var modelPrefix = SF.compose(options.prefix, "New");
+    var modelPrefix = options.prefix.child("New");
     getModelData(modelPrefix, urlModel).then(modelData=> {
         if (modelData == null)
             return;

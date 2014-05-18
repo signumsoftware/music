@@ -111,7 +111,7 @@ namespace Music.Web
                 resetPassword: false,
                 passwordExpiration: false);
 
-            AuthClient.CookieName = "sfUserMusicSample";
+            UserTicketClient.CookieName = "sfUserMusicSample";
 
             AuthAdminClient.Start(
                 types: true, 
@@ -153,7 +153,7 @@ namespace Music.Web
 
         protected void Session_Start(object sender, EventArgs e)
         {
-            if (!AuthController.LoginFromCookie())
+            if (!UserTicketClient.LoginFromCookie())
                 UserDN.Current = AuthLogic.AnonymousUser;
         }
     }

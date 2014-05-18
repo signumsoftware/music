@@ -40,12 +40,6 @@ namespace Music.Test.Web
             Common.MyTestCleanup();
         }
 
-        void OrderById(string prefix = null)
-        {
-            selenium.Click(SearchTestExtensions.TableHeaderSelector(3, prefix));
-            SearchTestExtensions.WaitSearchCompleted(selenium, prefix);
-        }
-
         [TestMethod]
         public void SearchControl001_Filters()
         {
@@ -70,7 +64,7 @@ namespace Music.Test.Web
                 Assert.AreEqual(2, albums.Results.RowsCount());
 
                 albums.SearchControl.AddQuickFilter(0, "Year");
-                selenium.Search();
+                albums.Search();
                 Assert.AreEqual(1, albums.Results.RowsCount());
 
                 albums.Filters.GetFilter(2).Delete();

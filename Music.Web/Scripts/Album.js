@@ -17,7 +17,7 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
     exports.cloneWithData = cloneWithData;
 
     function createAlbumFromBand(options, urlModel, urlOperation) {
-        var modelPrefix = SF.compose(options.prefix, "New");
+        var modelPrefix = options.prefix.child("New");
         exports.getModelData(modelPrefix, urlModel).then(function (modelData) {
             if (modelData == null)
                 return;
@@ -30,7 +30,7 @@ define(["require", "exports", "Framework/Signum.Web/Signum/Scripts/Entities", "F
     exports.createAlbumFromBand = createAlbumFromBand;
 
     function createAlbumFromBandContextual(options, urlModel, urlOperation) {
-        var modelPrefix = SF.compose(options.prefix, "New");
+        var modelPrefix = options.prefix.child("New");
         exports.getModelData(modelPrefix, urlModel).then(function (modelData) {
             if (modelData == null)
                 return;
