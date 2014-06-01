@@ -101,7 +101,7 @@ namespace Music.Web
         private void WebStart()
         {
             Navigator.Start(new NavigationManager("myLittleSecret"));
-            Constructor.Start(new ConstructorManager());
+            Constructor.Start(new ConstructorManager(), new ClientConstructorManager());
             OperationClient.Start(new OperationManager(), true);
 
             AuthClient.Start(

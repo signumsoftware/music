@@ -62,7 +62,7 @@ namespace Music.Web
             string modelPrefix = Request["modelPrefix"];
 
             var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
-                .ApplyChanges(this.ControllerContext, true, modelPrefix).Value;
+                .ApplyChanges(this, modelPrefix).Value;
 
             AlbumDN newAlbum = this.ExtractLite<BandDN>().ConstructFromLite(AlbumOperation.CreateAlbumFromBand,
                 model.Name, model.Year, model.Label);
