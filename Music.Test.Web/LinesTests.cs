@@ -345,8 +345,8 @@ namespace Music.Test.Web
                 selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_0_sfIndexes[value=';2']";
-                string thirdItemMichael = "jq=#Members_0_sfIndexes[value=';3']";
+                string secondItemMichael = "jq=#Members_0_sfIndex[value='2']";
+                string thirdItemMichael = "jq=#Members_0_sfIndex[value='3']";
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
                 er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
@@ -405,8 +405,8 @@ namespace Music.Test.Web
                 selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_0_sfIndexes[value=';2']";
-                string thirdItemMichael = "jq=#Members_0_sfIndexes[value=';3']";
+                string secondItemMichael = "jq=#Members_0_sfIndex[value='2']";
+                string thirdItemMichael = "jq=#Members_0_sfIndex[value='3']";
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
                 er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));

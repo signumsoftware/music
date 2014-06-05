@@ -59,7 +59,7 @@ namespace Music.Test
                 {
                     new UserDN
                     {
-                        State = UserState.Created,
+                        State = UserState.Saved,
                         UserName = AuthLogic.SystemUserName,
                         PasswordHash = Security.EncodePassword(Guid.NewGuid().ToString()),
                         Role = superUserRole
@@ -67,7 +67,7 @@ namespace Music.Test
 
                     new UserDN
                     {
-                        State = UserState.Created,
+                        State = UserState.Saved,
                         UserName = AuthLogic.AnonymousUserName,
                         PasswordHash = Security.EncodePassword(Guid.NewGuid().ToString()),
                         Role = anonymousUserRole
@@ -75,7 +75,7 @@ namespace Music.Test
 
                     new UserDN
                     {
-                        State = UserState.Created,
+                        State = UserState.Saved,
                         UserName = "su",
                         PasswordHash = Security.EncodePassword("su"),
                         Role = superUserRole
@@ -83,7 +83,7 @@ namespace Music.Test
 
                     new UserDN
                     {
-                        State = UserState.Created,
+                        State = UserState.Saved,
                         UserName = "internal",
                         PasswordHash = Security.EncodePassword("internal"),
                         Role = internalUserRole
@@ -91,7 +91,7 @@ namespace Music.Test
 
                     new UserDN
                     {
-                        State = UserState.Created,
+                        State = UserState.Saved,
                         UserName = "external",
                         PasswordHash = Security.EncodePassword("external"),
                         Role = externalUserRole
