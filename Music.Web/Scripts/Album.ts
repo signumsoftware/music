@@ -6,7 +6,7 @@ import Finder = require("Framework/Signum.Web/Signum/Scripts/Finder")
 import Operations = require("Framework/Signum.Web/Signum/Scripts/Operations")
 import Validator = require("Framework/Signum.Web/Signum/Scripts/Validator")
 
-export function cloneWithData(operationKey: string, prefix: string, vlb: Navigator.ValueLineBoxOptions, urlClone: string) {
+export function cloneWithData(event: MouseEvent, operationKey: string, prefix: string, vlb: Navigator.ValueLineBoxOptions, urlClone: string) {
     Navigator.valueLineBox(vlb).then(newName => {
         if (!newName)
             return;
@@ -17,11 +17,11 @@ export function cloneWithData(operationKey: string, prefix: string, vlb: Navigat
             controllerUrl: urlClone,
             isLite: true,
             requestExtraJsonData: { newName: newName }
-        });
+        }, event);
     });
 }
 
-export function createAlbumFromBand(options: Operations.EntityOperationOptions, urlModel: string, urlOperation: string) {
+export function createAlbumFromBand(options: Operations.EntityOperationOptions, event: MouseEvent, urlModel: string, urlOperation: string) {
 
     var modelPrefix = options.prefix.child("New");
     getModelData(modelPrefix, urlModel).then(modelData=> {
@@ -30,11 +30,11 @@ export function createAlbumFromBand(options: Operations.EntityOperationOptions, 
 
         options.controllerUrl = urlOperation;
         options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
-        Operations.constructFromDefault(options);
+        Operations.constructFromDefault(options, event);
     });
 }
 
-export function createAlbumFromBandContextual(options: Operations.OperationOptions, urlModel: string, urlOperation: string) {
+export function createAlbumFromBandContextual(options: Operations.OperationOptions, event: MouseEvent, urlModel: string, urlOperation: string) {
 
     var modelPrefix = options.prefix.child("New");
     getModelData(modelPrefix, urlModel).then(modelData=> {
@@ -44,7 +44,7 @@ export function createAlbumFromBandContextual(options: Operations.OperationOptio
 
         options.controllerUrl = urlOperation;
         options.requestExtraJsonData = $.extend({ modelPrefix: modelPrefix }, modelData);
-        Operations.constructFromDefaultContextual(options);
+        Operations.constructFromDefaultContextual(options, event);
     });
 }
 
@@ -58,7 +58,7 @@ export function getModelData(modelPrefix: string, urlModel: string): Promise<For
         });
 }
 
-export function createGreatestHitsAlbum(options: Operations.OperationOptions, url: string) {
+export function createGreatestHitsAlbum(options: Operations.OperationOptions, event: MouseEvent,  url: string) {
     options.controllerUrl = url;
-    Operations.constructFromManyDefault(options);
+    Operations.constructFromManyDefault(options, event);
 }
