@@ -54,9 +54,8 @@ namespace Music.Web
 
                     return new ToolBarButton[]
                     {
-                        new ToolBarButton
+                        new ToolBarButton(ctx.Prefix, "CloneWithData")
                         {
-                            Id = TypeContextUtilities.Compose(ctx.Prefix, "CloneWithData"),
                             Text = "Clone with data",
                             OnClick = Module["cloneWithData"](JsFunction.Event, AlbumOperation.Clone.Operation.Key, ctx.Prefix, 
                                 new ValueLineBoxOptions(ValueLineType.TextBox, ctx.Prefix, "New") { title = "New name",  message = "Write new album's name", labelText = "Name"},
