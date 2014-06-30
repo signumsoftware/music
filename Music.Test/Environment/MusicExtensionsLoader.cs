@@ -36,11 +36,6 @@ namespace Music.Test
     {
         public static void Load()
         {
-            Administrator.TotalGeneration();
-
-            Administrator.SetSnapshotIsolation(true);
-            Administrator.MakeSnapshotIsolationDefault(true);
-
             using (AuthLogic.Disable())
             {
                 RoleDN anonymousUserRole = null;

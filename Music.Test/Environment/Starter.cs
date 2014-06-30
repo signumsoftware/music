@@ -50,6 +50,9 @@ namespace Music.Test
             {
                 Administrator.TotalGeneration();
 
+                Administrator.SetSnapshotIsolation(true);
+                Administrator.MakeSnapshotIsolationDefault(true);
+
                 using (AuthLogic.Disable())
                 {      
                     Schema.Current.InitializeUntil(InitLevel.Level0SyncEntities);
