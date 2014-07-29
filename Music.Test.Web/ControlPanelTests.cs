@@ -13,20 +13,21 @@ using Music.Test.Web.Properties;
 using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
-using Signum.Entities.Reports;
+using Signum.Entities.Excel;
 using Signum.Engine.Basics;
 using Signum.Entities;
 using Signum.Entities.DynamicQuery;
 using Signum.Engine.DynamicQuery;
 using Signum.Entities.UserQueries;
 using Signum.Engine.UserQueries;
-using Signum.Entities.ControlPanel;
+using Signum.Entities.Dashboard;
 using Signum.Test.Environment;
+using Signum.Entities.UserAssets;
 
 namespace Music.Test.Web
 {
     [TestClass]
-    public class ControlPanelTests : Common
+    public class DashboardTests : Common
     {
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -49,19 +50,19 @@ namespace Music.Test.Web
         }
 
         [TestMethod]
-        public void ControlPanel001_Create()
+        public void Dashboard001_Create()
         {
             Login();
-            this.SearchPage(typeof(ControlPanelDN))
-                .Using(cps => cps.Create<ControlPanelDN>())
-                .EndUsing(controlPanel =>
+            this.SearchPage(typeof(DashboardDN))
+                .Using(cps => cps.Create<DashboardDN>())
+                .EndUsing(dashboard =>
                 {
-                    controlPanel.ValueLineValue(cp => cp.DisplayName, "Control Panel Home Page");
-                    controlPanel.ExecuteSubmit(ControlPanelOperation.Save);
+                    dashboard.ValueLineValue(cp => cp.DisplayName, "Control Panel Home Page");
+                    dashboard.ExecuteSubmit(DashboardOperation.Save);
 
 
                     string newPrefix;
-                    PropertyRoute newRoute = controlPanel.GetRoute(a=>a.Parts, out newPrefix);
+                    PropertyRoute newRoute = dashboard.GetRoute(a=>a.Parts, out newPrefix);
                     var parts = new PartsRepeaterProxy(selenium, newPrefix, newRoute);
 
                     parts.CreatePartElement<UserQueryPartDN>().Do(d =>
@@ -99,9 +100,9 @@ namespace Music.Test.Web
                         }); 
                     });
 
-                    controlPanel.ExecuteAjax(ControlPanelOperation.Save);
+                    dashboard.ExecuteAjax(DashboardOperation.Save);
 
-                    Assert.IsTrue(controlPanel.HasId());
+                    Assert.IsTrue(dashboard.HasId());
 
                 }); 
         }

@@ -15,11 +15,11 @@ using Signum.Engine;
 using Signum.Engine.Authorization;
 using Signum.Entities;
 using Signum.Web.UserQueries;
-using Signum.Web.Reports;
+using Signum.Web.Excel;
 using Signum.Web.Auth;
 using Signum.Web.AuthAdmin;
-using Signum.Web.ControlPanel;
-using Signum.Entities.ControlPanel;
+using Signum.Web.Dashboard;
+using Signum.Entities.Dashboard;
 using Signum.Web.Combine;
 using System.Reflection;
 using Signum.Web.PortableAreas;
@@ -124,11 +124,11 @@ namespace Music.Web
 
             QueryClient.Start();
             UserQueriesClient.Start();
-            ControlPanelClient.Start();
+            DashboardClient.Start();
 
             FilesClient.Start(true, true, true);
             ChartClient.Start();
-            ReportSpreadsheetClient.Start(true, true);
+            ExcelClient.Start(true, true);
             ExceptionClient.Start();
 
             ProcessesClient.Start(packages: true, packageOperations: true);

@@ -9,7 +9,7 @@ using Signum.Windows;
 using Signum.Windows.Authorization;
 using Signum.Windows.Operations;
 using Signum.Windows.Processes;
-using Signum.Windows.Reports;
+using Signum.Windows.Excel;
 using Signum.Windows.Scheduler;
 using Signum.Entities;
 using Signum.Entities.Basics;
@@ -69,7 +69,7 @@ namespace Music.Windows
             //SchedulerClient.Start();
 
             LinksClient.Start(widget: true, contextualMenu: true);
-            ReportClient.Start(toExcel: true, excelReport: false);
+            ExcelClient.Start(toExcel: true, excelReport: false);
 
             UserQueryClient.Start();
             ChartClient.Start();

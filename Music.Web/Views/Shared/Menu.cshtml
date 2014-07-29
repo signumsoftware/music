@@ -1,5 +1,5 @@
 ﻿@using Signum.Test.Environment
-@using Signum.Entities.ControlPanel
+@using Signum.Entities.Dashboard
 @using Signum.Entities.Authorization
 
 @Html.WebMenu( 
@@ -38,5 +38,5 @@ new WebMenuItem
         new WebMenuItem { Link = new FindOptions(typeof(RoleDN)) },
     }
 },
-new WebMenuItem { Link = new FindOptions(typeof(ControlPanelDN)) }
+new WebMenuItem { Link = new FindOptions(typeof(DashboardDN)) }
 )

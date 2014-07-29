@@ -11,10 +11,10 @@ using Signum.Entities.Authorization;
 using Signum.Entities;
 using Signum.Services;
 using Signum.Engine.Basics;
-using Signum.Engine.Reports;
-using Signum.Engine.ControlPanel;
-using Signum.Entities.ControlPanel;
-using Signum.Entities.Reports;
+using Signum.Engine.Excel;
+using Signum.Engine.Dashboard;
+using Signum.Entities.Dashboard;
+using Signum.Entities.Excel;
 using Signum.Entities.Chart;
 using Signum.Engine.UserQueries;
 using Signum.Entities.UserQueries;
@@ -93,7 +93,7 @@ namespace Music.Test
                     }.Save();
                 }
 
-                Schema.Current.InitializeUntil(InitLevel.Level3MainEntities);
+                Schema.Current.Initialize();
 
                 using (AuthLogic.UnsafeUserSession("su"))
                 {
@@ -126,7 +126,7 @@ namespace Music.Test
                         new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                         new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));
 
-            TypeAuthLogic.Manual.SetAllowed(role, typeof(ControlPanelDN),
+            TypeAuthLogic.Manual.SetAllowed(role, typeof(DashboardDN),
                 new TypeAllowedAndConditions(TypeAllowed.None,
                         new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                         new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));

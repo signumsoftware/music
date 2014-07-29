@@ -11,10 +11,10 @@ using Signum.Entities.Authorization;
 using Signum.Entities;
 using Signum.Services;
 using Signum.Engine.Basics;
-using Signum.Engine.Reports;
-using Signum.Engine.ControlPanel;
-using Signum.Entities.ControlPanel;
-using Signum.Entities.Reports;
+using Signum.Engine.Excel;
+using Signum.Engine.Dashboard;
+using Signum.Entities.Dashboard;
+using Signum.Entities.Excel;
 using Signum.Entities.Chart;
 using Signum.Engine.UserQueries;
 using Signum.Entities.UserQueries;
@@ -54,12 +54,10 @@ namespace Music.Test
                 Administrator.MakeSnapshotIsolationDefault(true);
 
                 using (AuthLogic.Disable())
-                {      
-                    Schema.Current.InitializeUntil(InitLevel.Level0SyncEntities);
+                {
+                    Schema.Current.Initialize();
 
                     MusicExtensionsLoader.Load();
-
-                    Schema.Current.Initialize();
                 }
 
                 hasData = true;
@@ -108,15 +106,15 @@ namespace Music.Test
                 UserChartLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
                 UserChartLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
 
-                ControlPanelLogic.Start(sb, dqm);
-                ControlPanelLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
-                ControlPanelLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
+                DashboardLogic.Start(sb, dqm);
+                DashboardLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
+                DashboardLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
 
                 AlertLogic.Start(sb, dqm, new [] { typeof(LabelDN) });
                 NoteLogic.Start(sb, dqm, new[] { typeof(LabelDN) });
 
                 FilePathLogic.Start(sb, dqm);
-                ReportSpreadsheetsLogic.Start(sb, dqm, true);
+                ExcelLogic.Start(sb, dqm, true);
 
                 MusicLogic.Start(sb, dqm);
 
@@ -134,8 +132,7 @@ namespace Music.Test
 
         private static void OverrideImplementations(SchemaBuilder sb)
         {
-            sb.Settings.OverrideAttributes((UserDN u) => u.Related, new ImplementedByAttribute());
-            sb.Settings.OverrideAttributes((ControlPanelDN cp) => cp.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.OverrideAttributes((DashboardDN cp) => cp.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
             sb.Settings.OverrideAttributes((UserQueryDN uq) => uq.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
             sb.Settings.OverrideAttributes((UserChartDN uq) => uq.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
 

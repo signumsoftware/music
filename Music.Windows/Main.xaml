@@ -8,7 +8,7 @@
     xmlns:sep="clr-namespace:Signum.Entities.Processes;assembly=Signum.Entities.Extensions"
     xmlns:sea="clr-namespace:Signum.Entities.Authorization;assembly=Signum.Entities.Extensions"
     xmlns:sef="clr-namespace:Signum.Entities.Files;assembly=Signum.Entities.Extensions"
-    xmlns:ser="clr-namespace:Signum.Entities.Reports;assembly=Signum.Entities.Extensions"
+    xmlns:see="clr-namespace:Signum.Entities.Excel;assembly=Signum.Entities.Extensions"
     xmlns:seuq="clr-namespace:Signum.Entities.UserQueries;assembly=Signum.Entities.Extensions"
     xmlns:st="clr-namespace:Signum.Test.Environment;assembly=Signum.Test"
     Title="Music Database" 
@@ -40,7 +40,7 @@
                 </MenuItem>
                 <MenuItem Header="Reports">
                     <MenuItem Tag="{m:Explore QueryName={x:Type seuq:UserQueryDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type ser:ExcelReportDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type see:ExcelReportDN}}"/>
                 </MenuItem>
                 <MenuItem Header="Operations">
                     <MenuItem Tag="{m:Explore QueryName={x:Type seb:OperationLogDN}}"/>

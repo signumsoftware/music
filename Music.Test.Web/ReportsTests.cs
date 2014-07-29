@@ -15,7 +15,7 @@ using Signum.Engine.Authorization;
 using System.Text.RegularExpressions;
 using Signum.Utilities;
 using System.Resources;
-using Signum.Entities.Reports;
+using Signum.Entities.Excel;
 using Signum.Entities;
 using Signum.Test.Environment;
 

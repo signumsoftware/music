@@ -19,6 +19,7 @@ using Signum.Entities;
 using Signum.Test.Environment;
 using Signum.Entities.DynamicQuery;
 using Signum.Engine.UserQueries;
+using Signum.Entities.UserAssets;
 
 namespace Music.Test.Web
 {
