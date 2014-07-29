@@ -91,11 +91,8 @@ namespace Music.Test.Web
 
                 Assert.AreEqual(count, albums.Results.RowsCount());
 
-                albums.Results.EntityContextMenu(0).ExecuteClick(AlbumOperation.Delete);
+                albums.Results.EntityContextMenu(0).DeleteClick(AlbumOperation.Delete);
 
-                albums.Selenium.ConsumeConfirmation();
-
-                albums.Search();
                 albums.Search();
 
                 Assert.AreEqual(count - 1, albums.Results.RowsCount());
