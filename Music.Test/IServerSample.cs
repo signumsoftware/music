@@ -12,7 +12,7 @@ namespace Music.Test
     public interface IServerSample : 
         IBaseServer, IDynamicQueryServer, ILoginServer, IOperationServer, IQueryServer, IChartServer, IUserQueryServer,
         IQueryAuthServer, IPropertyAuthServer, ITypeAuthServer, IPermissionAuthServer, IOperationAuthServer,
-        IExcelReportServer
+        IExcelReportServer, IDiffLogServer
     {
     }
 }

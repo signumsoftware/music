@@ -35,6 +35,7 @@ using Signum.Web;
 using Signum.Web.Exceptions;
 using Signum.Test.Environment;
 using System.IO;
+using Signum.Web.DiffLog;
 
 namespace Music.Web
 {
@@ -130,6 +131,7 @@ namespace Music.Web
             ChartClient.Start();
             ExcelClient.Start(true, true);
             ExceptionClient.Start();
+            DiffLogClient.Start();
 
             ProcessesClient.Start(packages: true, packageOperations: true);
 

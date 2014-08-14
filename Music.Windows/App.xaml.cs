@@ -21,6 +21,7 @@ using Signum.Entities.DynamicQuery;
 using Signum.Windows.Chart;
 using Signum.Windows.UserQueries;
 using Signum.Test.Environment;
+using Signum.Windows.DiffLog;
 
 namespace Music.Windows
 {
@@ -70,6 +71,7 @@ namespace Music.Windows
 
             LinksClient.Start(widget: true, contextualMenu: true);
             ExcelClient.Start(toExcel: true, excelReport: false);
+            DiffLogClient.Start();
 
             UserQueryClient.Start();
             ChartClient.Start();

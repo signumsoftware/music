@@ -34,6 +34,8 @@ using System.Threading;
 using System.Globalization;
 using Signum.Entities.Alerts;
 using Signum.Entities.Notes;
+using Signum.Entities.DiffLog;
+using Signum.Engine.DiffLog;
 
 namespace Music.Test
 {
@@ -80,6 +82,7 @@ namespace Music.Test
                 sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
                 sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
+                MixinDeclarations.Register<OperationLogDN, DiffLogMixin>();
                 MixinDeclarations.Register<ProcessDN, UserProcessSessionMixin>();
                 OverrideImplementations(sb);
 
@@ -87,6 +90,9 @@ namespace Music.Test
                 TypeLogic.Start(sb, dqm);
 
                 OperationLogic.Start(sb, dqm);
+                DiffLogLogic.Start(sb, dqm);
+                DiffLogLogic.RegisterGraph<AlbumDN>(DiffLogStrategy.All);
+
                 CultureInfoLogic.Start(sb, dqm); 
                 ExceptionLogic.Start(sb, dqm);
                 AuthLogic.Start(sb, dqm, "System", "Anonymous");
