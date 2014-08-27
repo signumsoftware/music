@@ -107,6 +107,9 @@ namespace Music.Test
                 Assert.AreEqual(JapAlb, Database.RetrieveAll<AlbumDN>().Count);
                 Assert.AreEqual(JapAlb, Database.RetrieveAllLite<AlbumDN>().Count);
 
+                var count = Database.Query<AlbumDN>().SelectMany(a => a.Songs).Count();
+                Assert.AreEqual(count, Database.MListQuery((AlbumDN a) => a.Songs).Count()); 
+
                 using (TypeAuthLogic.DisableQueryFilter())
                 {
                     Assert.AreEqual(AllAlb, Database.Query<AlbumDN>().Count());
@@ -151,7 +154,10 @@ namespace Music.Test
             {
                 Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().UnsafeDelete());
                 Assert.AreEqual(JapLab, Database.Query<LabelDN>().UnsafeDelete());
-                
+
+                var count = Database.Query<AlbumDN>().SelectMany(a => a.Songs).Count();
+                Assert.AreEqual(count, Database.MListQuery((AlbumDN a) => a.Songs).UnsafeDeleteMList()); 
+
                 //tr.Commit();
             }
         }
