@@ -303,12 +303,12 @@ namespace Music.Test.Web
                 artists.Filters.AddFilter("Entity.Friends.Count", FilterOperation.EqualTo, 1);
                 artists.Search();
                 Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
-                Assert.AreEqual(3, artists.Results.RowsCount());
+                Assert.AreEqual(4, artists.Results.RowsCount());
 
                 artists.SearchControl.AddColumn("Entity.Friends.Count");
                 artists.Search();
                 Assert.IsFalse(artists.SearchControl.HasMultiplyMessage);
-                Assert.AreEqual(3, artists.Results.RowsCount());
+                Assert.AreEqual(4, artists.Results.RowsCount());
 
                 artists.Filters.QueryTokenBuilder.SelectToken("Entity.Friends");
                 Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
