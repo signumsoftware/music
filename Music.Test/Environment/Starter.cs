@@ -88,7 +88,6 @@ namespace Music.Test
 
                 OperationLogic.Start(sb, dqm);
                 DiffLogLogic.Start(sb, dqm);
-                DiffLogLogic.RegisterGraph<AlbumDN>(DiffLogStrategy.All);
 
                 CultureInfoLogic.Start(sb, dqm); 
                 ExceptionLogic.Start(sb, dqm);
