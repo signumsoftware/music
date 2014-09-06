@@ -61,7 +61,7 @@ namespace Music.Web
             );
 
             routes.MapRoute(
-                Navigator.FindRouteName,
+                Finder.FindRouteName,
                 "Find/{webQueryName}",
                 new { controller = "Finder", action = "Find", webQueryName = "" }
             );
@@ -102,6 +102,7 @@ namespace Music.Web
         private void WebStart()
         {
             Navigator.Start(new NavigationManager("myLittleSecret"));
+            Finder.Start(new FinderManager());
             Constructor.Start(new ConstructorManager(), new ClientConstructorManager());
             OperationClient.Start(new OperationManager(), true);
 

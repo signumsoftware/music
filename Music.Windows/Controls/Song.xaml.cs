@@ -22,15 +22,8 @@ namespace Music.Windows.Controls
     /// </summary>
     public partial class Song : UserControl
     {
-        public Song(PropertyRoute route)
-        {
-            Common.SetPropertyRoute(this, route);
-            InitializeComponent();
-        }
-
         public Song()
         {
-            Common.SetDelayedRoutes(this, true);
             InitializeComponent();
         }
     }

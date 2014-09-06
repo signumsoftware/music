@@ -55,6 +55,7 @@ namespace Music.Windows
         public static void StartApplication()
         {
             Navigator.Start(new NavigationManager(multithreaded: true));
+            Finder.Start(new FinderManager());
             Constructor.Start(new ConstructorManager());
             OperationClient.Start(new OperationManager());
 
@@ -83,7 +84,7 @@ namespace Music.Windows
                 new EntitySettings<LabelDN>() { View = e => new Label() },
                 new EntitySettings<ArtistDN>() { View = e => new Artist() },
                 new EntitySettings<BandDN>() { View = e => new Band() },
-                new EmbeddedEntitySettings<SongDN>() { View = (e, pr) => new Song(pr) },
+                new EmbeddedEntitySettings<SongDN>() { View = e => new Song() },
 
                 new EntitySettings<AmericanMusicAwardDN>() { View = e => new AmericanMusicAward() },
                 new EntitySettings<GrammyAwardDN>() { View = e => new GrammyAward() },
