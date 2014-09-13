@@ -22,6 +22,8 @@ using Signum.Windows.Chart;
 using Signum.Windows.UserQueries;
 using Signum.Test.Environment;
 using Signum.Windows.DiffLog;
+using System.Windows.Controls;
+using Signum.Utilities;
 
 namespace Music.Windows
 {
@@ -81,7 +83,7 @@ namespace Music.Windows
             {
                 new EntitySettings<AlbumDN>(){ View = e => new Album() },
 
-                new EntitySettings<LabelDN>() { View = e => new Label() },
+                new EntitySettings<LabelDN>() { View = e => new Music.Windows.Controls.Label() },
                 new EntitySettings<ArtistDN>() { View = e => new Artist() },
                 new EntitySettings<BandDN>() { View = e => new Band() },
                 new EmbeddedEntitySettings<SongDN>() { View = e => new Song() },
@@ -94,6 +96,9 @@ namespace Music.Windows
 
                 new EntitySettings<NoteWithDateDN>() { View = e => new NoteWithDate() },
             });
+
+            QuerySettings.FormatRules.Add(new FormatterRule("timeSpan", c => c.Type.UnNullify() == typeof(TimeSpan),
+                c => b=>Fluent.GetDataTemplate(() => new TextBlock().Bind(TextBlock.TextProperty, b))));
 
             Navigator.Initialize();
         }

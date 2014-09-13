@@ -44,7 +44,7 @@ namespace Music.Web
 
                 LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) => new[]
                 {
-                    new QuickLinkFind(typeof(AlbumDN), "Label", entity, true)
+                    new QuickLinkExplore(typeof(AlbumDN), "Label", entity)
                 });
 
                 ButtonBarEntityHelper.RegisterEntityButtons<AlbumDN>((ctx, entity) =>
