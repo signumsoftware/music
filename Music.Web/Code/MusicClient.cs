@@ -57,7 +57,7 @@ namespace Music.Web
                         new ToolBarButton(ctx.Prefix, "CloneWithData")
                         {
                             Text = "Clone with data",
-                            OnClick = Module["cloneWithData"](JsFunction.Event, AlbumOperation.Clone.Operation.Key, ctx.Prefix, 
+                            OnClick = Module["cloneWithData"](JsFunction.Event, AlbumOperation.Clone.Symbol.Key, ctx.Prefix, 
                                 new ValueLineBoxOptions(ValueLineType.TextBox, ctx.Prefix, "New") { title = "New name",  message = "Write new album's name", labelText = "Name"},
                                 ctx.Url.Action((MusicController mc)=>mc.Clone()))
                         }
@@ -66,22 +66,22 @@ namespace Music.Web
 
                 OperationClient.AddSettings(new List<OperationSettings>
                 {
-                    new EntityOperationSettings(AlbumOperation.CreateAlbumFromBand)
+                    new EntityOperationSettings<BandDN>(AlbumOperation.CreateAlbumFromBand)
                     { 
-                        OnClick = ctx => Module["createAlbumFromBand"](ctx.Options(), JsFunction.Event,
+                        Click = ctx => Module["createAlbumFromBand"](ctx.Options(), JsFunction.Event,
                             ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandModel()), 
                             ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandExecute())),
 
                         Contextual = 
                         {
-                            OnClick = ctx => Module["createAlbumFromBandContextual"](ctx.Options(), JsFunction.Event,
+                            Click = ctx => Module["createAlbumFromBandContextual"](ctx.Options(), JsFunction.Event,
                                 ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandModel()), 
                                 ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandExecute())),
                         },
                     },
-                    new ContextualOperationSettings(AlbumOperation.CreateGreatestHitsAlbum)
+                    new ContextualOperationSettings<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum)
                     {
-                        OnClick = ctx =>Module["createGreatestHitsAlbum"](ctx.Options(),  JsFunction.Event,
+                        Click = ctx =>Module["createGreatestHitsAlbum"](ctx.Options(),  JsFunction.Event,
                             ctx.Url.Action((MusicController mc)=>mc.CreateGreatestHitsAlbum()))
                     },
                 });

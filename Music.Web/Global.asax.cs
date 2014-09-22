@@ -132,7 +132,7 @@ namespace Music.Web
             ExceptionClient.Start();
             DiffLogClient.Start();
 
-            ProcessesClient.Start(packages: true, packageOperations: true);
+            ProcessClient.Start(packages: true, packageOperations: true);
 
             LinksClient.Start(widget: true, contextualItems: true);
             NoteClient.Start(typeof(LabelDN));
