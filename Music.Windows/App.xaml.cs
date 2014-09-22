@@ -97,9 +97,6 @@ namespace Music.Windows
                 new EntitySettings<NoteWithDateDN>() { View = e => new NoteWithDate() },
             });
 
-            QuerySettings.FormatRules.Add(new FormatterRule("timeSpan", c => c.Type.UnNullify() == typeof(TimeSpan),
-                c => b=>Fluent.GetDataTemplate(() => new TextBlock().Bind(TextBlock.TextProperty, b))));
-
             Navigator.Initialize();
         }
     }

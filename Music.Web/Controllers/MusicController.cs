@@ -24,27 +24,27 @@ namespace Music.Web
     {
         public ViewResult AlbumStrip()
         {
-            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<AlbumDN>(1)) { PartialViewName = "AlbumStrip" });
+            return this.NormalPage(Database.Retrieve<AlbumDN>(1), new NavigateOptions { PartialViewName = "AlbumStrip" });
         }
 
         public ViewResult BandStrip()
         {
-            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandStrip" });
+            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandStrip" });
         }
 
         public ViewResult BandDetail()
         {
-            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandDetail" });
+            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandDetail" });
         }
 
         public ViewResult BandRepeater() 
         {
-            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandRepeater" });
+            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandRepeater" });
         }
 
         public ViewResult BandTabRepeater()
         {
-            return Navigator.NormalPage(this, new NavigateOptions(Database.Retrieve<BandDN>(1)) { PartialViewName = "BandTabRepeater" });
+            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandTabRepeater" });
         }
 
         [HttpPost]
@@ -52,8 +52,7 @@ namespace Music.Web
         {
             AlbumFromBandModel model = new AlbumFromBandModel();
 
-            TypeContext tc = TypeContextUtilities.UntypedNew(model, this.Prefix());
-            return this.PopupOpen(new PopupViewOptions(tc));
+            return this.PopupView(model, new PopupViewOptions(this.Prefix()));
         }
 
         [HttpPost]

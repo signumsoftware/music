@@ -122,8 +122,6 @@ namespace Music.Web
                 operations: true, 
                 permissions: true);
 
-            ContextualItemsHelper.Start();
-
             QueryClient.Start();
             UserQueriesClient.Start();
             DashboardClient.Start();
