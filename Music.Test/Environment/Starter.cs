@@ -73,9 +73,9 @@ namespace Music.Test
         {
             if (!started)
             {
-                SchemaBuilder sb = new SchemaBuilder(DBMS.SqlServer2008);
+                SchemaBuilder sb = new SchemaBuilder();
                 DynamicQueryManager dqm = new DynamicQueryManager();
-                Connector.Default = new SqlConnector(connectionString, sb.Schema, dqm);
+                Connector.Default = new SqlConnector(connectionString, sb.Schema, dqm, SqlServerVersion.SqlServer2008);
                 sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
                 sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
