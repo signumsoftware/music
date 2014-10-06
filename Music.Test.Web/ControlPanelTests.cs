@@ -37,7 +37,7 @@ namespace Music.Test.Web
             AuthLogic.UnsafeUserSession("su").Using(_ =>
                 new UserQueryDN(typeof(AlbumDN))
                 {
-                    Owner = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<IdentifiableEntity>()).SingleEx(),
+                    Owner = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<Entity>()).SingleEx(),
                     DisplayName = "test",
                     Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
                 }.ParseAndSave());

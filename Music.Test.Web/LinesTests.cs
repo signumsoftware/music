@@ -74,7 +74,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(el.HasEntity());
 
                 el.Remove();
-                el.AutoComplete(Lite.Create<GrammyAwardDN>(1));
+                el.AutoComplete(Lite.Create<GrammyAwardDN>(1L));
                 Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
 
                 lite.Delete();
@@ -430,10 +430,10 @@ namespace Music.Test.Web
                 var lite2 = er2.RuntimeInfo(0).ToLite();
                 Assert.IsTrue(er2.HasEntity(0));
 
-                er2.AutoComplete(Lite.Create<GrammyAwardDN>(2));
+                er2.AutoComplete(Lite.Create<GrammyAwardDN>(2L));
                 Assert.AreEqual(typeof(GrammyAwardDN), er2.RuntimeInfo(1).EntityType);
 
-                er2.AutoComplete(Lite.Create<AmericanMusicAwardDN>(1));
+                er2.AutoComplete(Lite.Create<AmericanMusicAwardDN>(1L));
                 Assert.AreEqual(typeof(AmericanMusicAwardDN), er2.RuntimeInfo(2).EntityType);
 
                 //find does not exist by default
