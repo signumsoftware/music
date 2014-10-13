@@ -29,7 +29,7 @@ namespace Music.Test.Windows
             using (MainWindowProxy win = Common.StartAndLogin())
             {
                 //win.Core.MenuItemInvoke("Music");
-                using (SearchWindowProxy albums = new SearchWindowProxy(win.MenuItemOpenWindow("Music", "Albumes")))
+                using (SearchWindowProxy albums = new SearchWindowProxy(win.MenuItemOpenWindow("Music", "Albums")))
                 {
                     albums.AddFilterString("Entity.Name", FilterOperation.Contains, "A");
                     albums.AddFilterString("Entity.Author", FilterOperation.EqualTo, "Smashing");
