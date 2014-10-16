@@ -134,21 +134,21 @@ namespace Music.Test
 
         private static void OverrideImplementations(SchemaBuilder sb)
         {
-            sb.Settings.OverrideAttributes((DashboardDN cp) => cp.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
-            sb.Settings.OverrideAttributes((UserQueryDN uq) => uq.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
-            sb.Settings.OverrideAttributes((UserChartDN uq) => uq.Owner, new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.FieldAttributes((DashboardDN cp) => cp.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.FieldAttributes((UserQueryDN uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.FieldAttributes((UserChartDN uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
 
-            sb.Schema.Settings.OverrideAttributes((ProcessDN cp) => cp.Data, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
-            sb.Schema.Settings.OverrideAttributes((PackageLineDN cp) => cp.Package, new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
-            sb.Schema.Settings.OverrideAttributes((ProcessExceptionLineDN cp) => cp.Line, new ImplementedByAttribute(typeof(PackageLineDN)));
-            sb.Schema.Settings.OverrideAttributes((ProcessDN cp) => cp.Mixin<UserProcessSessionMixin>().User, new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((ProcessDN cp) => cp.Data).Replace(new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
+            sb.Schema.Settings.FieldAttributes((PackageLineDN cp) => cp.Package).Replace(new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
+            sb.Schema.Settings.FieldAttributes((ProcessExceptionLineDN cp) => cp.Line).Replace(new ImplementedByAttribute(typeof(PackageLineDN)));
+            sb.Schema.Settings.FieldAttributes((ProcessDN cp) => cp.Mixin<UserProcessSessionMixin>().User).Replace(new ImplementedByAttribute(typeof(UserDN)));
 
-            sb.Schema.Settings.OverrideAttributes((OperationLogDN ol) => ol.User, new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.OverrideAttributes((ExceptionDN e) => e.User, new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((OperationLogDN ol) => ol.User).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((ExceptionDN e) => e.User).Replace(new ImplementedByAttribute(typeof(UserDN)));
 
-            sb.Schema.Settings.OverrideAttributes((AlertDN e) => e.CreatedBy, new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.OverrideAttributes((AlertDN e) => e.AttendedBy, new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.OverrideAttributes((NoteDN e) => e.CreatedBy, new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((AlertDN e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((AlertDN e) => e.AttendedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((NoteDN e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
         }
 
     }
