@@ -12,7 +12,7 @@
     </fieldset>
     
       
-    @Html.EntityLineDetail(e, f => f.LastAward)
+    @Html.EntityDetail(e, f => f.LastAward)
     <fieldset>
         <legend>@Html.PropertyNiceName(() => e.Value.OtherAwards)</legend>
         <div class="row">

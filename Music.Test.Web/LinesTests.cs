@@ -130,7 +130,7 @@ namespace Music.Test.Web
             Login();
             using (var bandDetail = NormalPageUrl<BandDN>(Url("Music/BandDetail")))
             {
-                var ed = bandDetail.EntityLineDetail(a => a.LastAward);
+                var ed = bandDetail.EntityDetail(a => a.LastAward);
                 Assert.IsTrue(ed.HasEntity());
 
                 ed.Remove();

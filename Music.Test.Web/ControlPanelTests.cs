@@ -68,13 +68,13 @@ namespace Music.Test.Web
                     parts.CreatePartElement<UserQueryPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "Last Albums");
-                        d.EntityLineDetail(a => a.Content).Details<UserQueryPartDN>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                        d.EntityDetail(a => a.Content).Details<UserQueryPartDN>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
                     });
 
                     parts.CreatePartElement<CountSearchControlPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My count controls");
-                        d.EntityLineDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
+                        d.EntityDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
                         {
                             uq.CreateElement<CountUserQueryElementDN>().Do(cp => cp.EntityLine(a => a.UserQuery).Find().SelectByPosition(0));
                         });
@@ -83,7 +83,7 @@ namespace Music.Test.Web
                     parts.CreatePartElement<LinkListPartDN>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My Links");
-                        d.EntityLineDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
+                        d.EntityDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
                         {
                             le.CreateElement<LinkElementDN>().Do(e =>
                             {
