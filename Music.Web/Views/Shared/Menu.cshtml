@@ -8,13 +8,13 @@ new WebMenuItem
     Text="Music Items", 
     Children = 
     {
-        new WebMenuItem { Link = new FindOptions(typeof(AlbumDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(ArtistDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(BandDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(LabelDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(GrammyAwardDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(NoteWithDateDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(IAuthorDN)) },
+        new WebMenuItem { Link = new FindOptions(typeof(AlbumEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(ArtistEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(BandEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(LabelEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(GrammyAwardEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(NoteWithDateEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(IAuthorEntity)) },
     },
 },
 new WebMenuItem
@@ -34,9 +34,9 @@ new WebMenuItem
     Text = "Auth",
     Children = 
     {
-        new WebMenuItem { Link = new FindOptions(typeof(UserDN)) },
-        new WebMenuItem { Link = new FindOptions(typeof(RoleDN)) },
+        new WebMenuItem { Link = new FindOptions(typeof(UserEntity)) },
+        new WebMenuItem { Link = new FindOptions(typeof(RoleEntity)) },
     }
 },
-new WebMenuItem { Link = new FindOptions(typeof(DashboardDN)) }
+new WebMenuItem { Link = new FindOptions(typeof(DashboardEntity)) }
 )

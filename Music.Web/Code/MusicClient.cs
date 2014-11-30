@@ -26,28 +26,28 @@ namespace Music.Web
             {
                 Navigator.AddSettings(new List<EntitySettings>
                 {
-                    new EntitySettings<AlbumDN>() { PartialViewName = e => ViewPrefix.Formato("Album") },
-                    new EntitySettings<ArtistDN>() { PartialViewName = e => ViewPrefix.Formato("Artist") },
-                    new EntitySettings<BandDN>() { PartialViewName = e => ViewPrefix.Formato("Band") },
+                    new EntitySettings<AlbumEntity>() { PartialViewName = e => ViewPrefix.FormatWith("Album") },
+                    new EntitySettings<ArtistEntity>() { PartialViewName = e => ViewPrefix.FormatWith("Artist") },
+                    new EntitySettings<BandEntity>() { PartialViewName = e => ViewPrefix.FormatWith("Band") },
                     
-                    new EntitySettings<GrammyAwardDN>() { PartialViewName = e => ViewPrefix.Formato("GrammyAward") },
-                    new EntitySettings<AmericanMusicAwardDN>() { PartialViewName = e => ViewPrefix.Formato("AmericanMusicAward") },
-                    new EntitySettings<PersonalAwardDN>() { PartialViewName = e => ViewPrefix.Formato("PersonalAward") },
+                    new EntitySettings<GrammyAwardEntity>() { PartialViewName = e => ViewPrefix.FormatWith("GrammyAward") },
+                    new EntitySettings<AmericanMusicAwardEntity>() { PartialViewName = e => ViewPrefix.FormatWith("AmericanMusicAward") },
+                    new EntitySettings<PersonalAwardEntity>() { PartialViewName = e => ViewPrefix.FormatWith("PersonalAward") },
                     
-                    new EntitySettings<LabelDN>() { PartialViewName = e => ViewPrefix.Formato("Label") },
-                    new EmbeddedEntitySettings<SongDN>() { PartialViewName = e => ViewPrefix.Formato("Song")},
+                    new EntitySettings<LabelEntity>() { PartialViewName = e => ViewPrefix.FormatWith("Label") },
+                    new EmbeddedEntitySettings<SongEntity>() { PartialViewName = e => ViewPrefix.FormatWith("Song")},
 
-                    new EntitySettings<NoteWithDateDN>() { PartialViewName = e => ViewPrefix.Formato("NoteWithDate") },
+                    new EntitySettings<NoteWithDateEntity>() { PartialViewName = e => ViewPrefix.FormatWith("NoteWithDate") },
 
-                    new EmbeddedEntitySettings<AlbumFromBandModel>(){PartialViewName = e => ViewPrefix.Formato("AlbumFromBandModel")},
+                    new EmbeddedEntitySettings<AlbumFromBandModel>(){PartialViewName = e => ViewPrefix.FormatWith("AlbumFromBandModel")},
                 });
 
-                LinksClient.RegisterEntityLinks<LabelDN>((entity, ctx) => new[]
+                LinksClient.RegisterEntityLinks<LabelEntity>((entity, ctx) => new[]
                 {
-                    new QuickLinkExplore(typeof(AlbumDN), "Label", entity)
+                    new QuickLinkExplore(typeof(AlbumEntity), "Label", entity)
                 });
 
-                ButtonBarEntityHelper.RegisterEntityButtons<AlbumDN>((ctx, entity) =>
+                ButtonBarEntityHelper.RegisterEntityButtons<AlbumEntity>((ctx, entity) =>
                 {
                     if (entity.IsNew)
                         return null;
@@ -66,7 +66,7 @@ namespace Music.Web
 
                 OperationClient.AddSettings(new List<OperationSettings>
                 {
-                    new EntityOperationSettings<BandDN>(AlbumOperation.CreateAlbumFromBand)
+                    new EntityOperationSettings<BandEntity>(AlbumOperation.CreateAlbumFromBand)
                     { 
                         Click = ctx => Module["createAlbumFromBand"](ctx.Options(), JsFunction.Event,
                             ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandModel()), 
@@ -79,7 +79,7 @@ namespace Music.Web
                                 ctx.Url.Action((MusicController mc)=>mc.CreateAlbumFromBandExecute())),
                         },
                     },
-                    new ContextualOperationSettings<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum)
+                    new ContextualOperationSettings<AlbumEntity>(AlbumOperation.CreateGreatestHitsAlbum)
                     {
                         Click = ctx =>Module["createGreatestHitsAlbum"](ctx.Options(),  JsFunction.Event,
                             ctx.Url.Action((MusicController mc)=>mc.CreateGreatestHitsAlbum()))

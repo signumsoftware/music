@@ -17,33 +17,33 @@
     <DockPanel>
         <Menu MaxHeight="{x:Static SystemParameters.MenuBarHeight}" x:Name="menu" DockPanel.Dock="Top">
             <MenuItem Header="Music">
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:AlbumDN}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:AlbumEntity}}"/>
 
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:ArtistDN}}"/>
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:BandDN}}"/>
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:IAuthorDN}}"/>
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:NoteWithDateDN}}"/>
-                <MenuItem Tag="{m:Explore QueryName={x:Type st:LabelDN}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:ArtistEntity}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:BandEntity}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:IAuthorEntity}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:NoteWithDateEntity}}"/>
+                <MenuItem Tag="{m:Explore QueryName={x:Type st:LabelEntity}}"/>
 
                 <MenuItem Header="Awards">
-                    <MenuItem Tag="{m:Explore QueryName={x:Type st:AmericanMusicAwardDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type st:GrammyAwardDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type st:PersonalAwardDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type st:AmericanMusicAwardEntity}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type st:GrammyAwardEntity}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type st:PersonalAwardEntity}}"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Admin">
                 <MenuItem Header="Users">
-                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:UserDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:RoleDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:UserTicketDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:UserEntity}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:RoleEntity}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type sea:UserTicketEntity}}"/>
                     <MenuItem Header="Actualizar Reglas de Autorización" x:Name="miUpdateRules" Click="miUpdateRules_Click"/>
                 </MenuItem>
                 <MenuItem Header="Reports">
-                    <MenuItem Tag="{m:Explore QueryName={x:Type seuq:UserQueryDN}}"/>
-                    <MenuItem Tag="{m:Explore QueryName={x:Type see:ExcelReportDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type seuq:UserQueryEntity}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type see:ExcelReportEntity}}"/>
                 </MenuItem>
                 <MenuItem Header="Operations">
-                    <MenuItem Tag="{m:Explore QueryName={x:Type seb:OperationLogDN}}"/>
+                    <MenuItem Tag="{m:Explore QueryName={x:Type seb:OperationLogEntity}}"/>
                 </MenuItem>
             </MenuItem>
         </Menu>

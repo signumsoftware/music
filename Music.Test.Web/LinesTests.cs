@@ -44,19 +44,19 @@ namespace Music.Test.Web
         public void Lines001_EntityLine()
         {
             Login();
-            using (var band = NormalPage<BandDN>(1))
+            using (var band = NormalPage<BandEntity>(1))
             {
                 var el = band.EntityLine(b => b.LastAward);
 
                 //view cancel 
-                el.View<AmericanMusicAwardDN>().EndUsing(la => la.Close());
+                el.View<AmericanMusicAwardEntity>().EndUsing(la => la.Close());
 
                 //remove
                 el.Remove();
                 Assert.IsFalse(el.HasEntity());
 
                 //create with implementations
-                el.CreatePopup<GrammyAwardDN>().EndUsing(award =>
+                el.CreatePopup<GrammyAwardEntity>().EndUsing(award =>
                 {
                     award.ValueLineValue(a => a.Category, "test");
                     award.ExecuteAjax(AwardOperation.Save);
@@ -65,17 +65,17 @@ namespace Music.Test.Web
 
                 Assert.IsTrue(el.HasEntity());
                 var lite = el.RuntimeInfo().ToLite();
-                Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
+                Assert.AreEqual(typeof(GrammyAwardEntity), el.RuntimeInfo().EntityType);
                 Assert.IsFalse(el.RuntimeInfo().IsNew); //Already saved
 
                 //find with implementations
                 el.Remove();
-                el.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                el.Find(typeof(GrammyAwardEntity)).SelectByPosition(0);
                 Assert.IsTrue(el.HasEntity());
 
                 el.Remove();
-                el.AutoComplete(Lite.Create<GrammyAwardDN>(1L));
-                Assert.AreEqual(typeof(GrammyAwardDN), el.RuntimeInfo().EntityType);
+                el.AutoComplete(Lite.Create<GrammyAwardEntity>(1L));
+                Assert.AreEqual(typeof(GrammyAwardEntity), el.RuntimeInfo().EntityType);
 
                 lite.Delete();
             }
@@ -85,22 +85,22 @@ namespace Music.Test.Web
         public void Lines002_EntityLineInPopup()
         {
             Login();
-            using (var album = NormalPage<AlbumDN>(1))
+            using (var album = NormalPage<AlbumEntity>(1))
             {
                 //open popup
-                using (var artist = album.EntityLine(a => a.Author).View<ArtistDN>())
+                using (var artist = album.EntityLine(a => a.Author).View<ArtistEntity>())
                 {
                     var el = artist.EntityLine(b => b.LastAward);
 
                     //view cancel 
-                    el.View<AmericanMusicAwardDN>().EndUsing(la => la.Close());
+                    el.View<AmericanMusicAwardEntity>().EndUsing(la => la.Close());
 
                     //remove
                     el.Remove();
                     Assert.IsFalse(el.HasEntity());
 
                     //create with implementations
-                    el.CreatePopup<AmericanMusicAwardDN>().EndUsing(award =>
+                    el.CreatePopup<AmericanMusicAwardEntity>().EndUsing(award =>
                     {
                         award.ValueLineValue(a => a.Category, "test");
                         award.ExecuteAjax(AwardOperation.Save);
@@ -111,12 +111,12 @@ namespace Music.Test.Web
 
 
                     Assert.IsTrue(el.HasEntity());
-                    Assert.AreEqual(typeof(AmericanMusicAwardDN), el.RuntimeInfo().EntityType);
+                    Assert.AreEqual(typeof(AmericanMusicAwardEntity), el.RuntimeInfo().EntityType);
                     Assert.IsFalse(el.RuntimeInfo().IsNew); //Already saved
 
                     //find with implementations
                     el.Remove();
-                    el.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
+                    el.Find(typeof(AmericanMusicAwardEntity)).SelectByPosition(0);
                     Assert.IsTrue(el.HasEntity());
 
                     lite.Delete();
@@ -128,7 +128,7 @@ namespace Music.Test.Web
         public void Lines003_EntityLineDetail()
         {
             Login();
-            using (var bandDetail = NormalPageUrl<BandDN>(Url("Music/BandDetail")))
+            using (var bandDetail = NormalPageUrl<BandEntity>(Url("Music/BandDetail")))
             {
                 var ed = bandDetail.EntityDetail(a => a.LastAward);
                 Assert.IsTrue(ed.HasEntity());
@@ -137,13 +137,13 @@ namespace Music.Test.Web
                 Assert.IsFalse(ed.HasEntity());
 
                 //create with implementations
-                ed.GetOrCreateDetailControl<AmericanMusicAwardDN>().Do(award =>
+                ed.GetOrCreateDetailControl<AmericanMusicAwardEntity>().Do(award =>
                 {
                     award.ValueLineValue(a => a.Category, "test");
                 });
 
                 ed.Remove();
-                ed.Find(typeof(AmericanMusicAwardDN)).SelectByPosition(0);
+                ed.Find(typeof(AmericanMusicAwardEntity)).SelectByPosition(0);
             }
         }
 
@@ -151,16 +151,16 @@ namespace Music.Test.Web
         public void Lines004_EntityList()
         {
             Login();
-            using (var band = NormalPage<BandDN>(1))
+            using (var band = NormalPage<BandEntity>(1))
             {
                 var el = band.EntityList(b => b.Members);
 
                 //Create and cancel
-                el.CreatePopup<ArtistDN>().EndUsing(artist => artist.CloseDiscardChanges());
+                el.CreatePopup<ArtistEntity>().EndUsing(artist => artist.CloseDiscardChanges());
                 Assert.IsFalse(el.HasEntity(4));
 
                 //Create and ok
-                el.CreatePopup<ArtistDN>().EndUsing(artist =>
+                el.CreatePopup<ArtistEntity>().EndUsing(artist =>
                 {
                     artist.ValueLineValue(a => a.Name, "test");
                     artist.ExecuteAjax(ArtistOperation.Save);
@@ -169,7 +169,7 @@ namespace Music.Test.Web
 
                 Assert.IsTrue(el.HasEntity(4));
                 var lite = el.RuntimeInfo(4).ToLite();
-                Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(4).EntityType);
+                Assert.AreEqual(typeof(ArtistEntity), el.RuntimeInfo(4).EntityType);
                 Assert.IsFalse(el.RuntimeInfo(4).IsNew);
 
                 //Delete
@@ -184,7 +184,7 @@ namespace Music.Test.Web
 
                 var el2 = band.EntityList(a => a.OtherAwards);
 
-                el2.CreatePopup<GrammyAwardDN>().EndUsing(grammy =>
+                el2.CreatePopup<GrammyAwardEntity>().EndUsing(grammy =>
                 {
                     grammy.ValueLineValue(a => a.Category, "test");
                     grammy.ExecuteAjax(AwardOperation.Save);
@@ -194,11 +194,11 @@ namespace Music.Test.Web
 
                 var lite2 = el2.RuntimeInfo(0).ToLite();
                 Assert.IsTrue(el2.HasEntity(0));
-                Assert.AreEqual(typeof(GrammyAwardDN), el2.RuntimeInfo(0).EntityType);
+                Assert.AreEqual(typeof(GrammyAwardEntity), el2.RuntimeInfo(0).EntityType);
                 Assert.IsFalse(el2.RuntimeInfo(0).IsNew);
 
                 //find with implementations
-                el2.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                el2.Find(typeof(GrammyAwardEntity)).SelectByPosition(0);
                 Assert.IsTrue(el2.HasEntity(1));
 
                 //Delete
@@ -206,8 +206,8 @@ namespace Music.Test.Web
                 Assert.IsFalse(el2.HasEntity(1));
 
                 //View
-                el2.View<GrammyAwardDN>(0).EndUsing(grammy => grammy.Close());
-                el2.View<GrammyAwardDN>(0).EndUsing(grammy =>
+                el2.View<GrammyAwardEntity>(0).EndUsing(grammy => grammy.Close());
+                el2.View<GrammyAwardEntity>(0).EndUsing(grammy =>
                 {
                     grammy.ValueLineValue(a => a.Category, "test2");
                     grammy.CloseDiscardChanges();
@@ -222,15 +222,15 @@ namespace Music.Test.Web
         public void Lines005_EntityListInPopup()
         {
             Login();
-            using (var band = NormalPage<BandDN>(1))
+            using (var band = NormalPage<BandEntity>(1))
             {
                 //open popup
-                using (var artist = band.EntityList(a => a.Members).View<ArtistDN>(0))
+                using (var artist = band.EntityList(a => a.Members).View<ArtistEntity>(0))
                 {
                     var el = artist.EntityList(a => a.Friends);
 
                     //create
-                    el.CreatePopup<ArtistDN>().EndUsing(friend =>
+                    el.CreatePopup<ArtistEntity>().EndUsing(friend =>
                     {
                         friend.ValueLineValue(a => a.Name, "test");
                         friend.ExecuteAjax(ArtistOperation.Save);
@@ -239,7 +239,7 @@ namespace Music.Test.Web
 
                     Assert.IsTrue(el.HasEntity(1));
                     var lite = el.RuntimeInfo(1).ToLite();
-                    Assert.AreEqual(typeof(ArtistDN), el.RuntimeInfo(1).EntityType);
+                    Assert.AreEqual(typeof(ArtistEntity), el.RuntimeInfo(1).EntityType);
                     Assert.IsFalse(el.RuntimeInfo(1).IsNew);
 
                     //find multiple
@@ -265,25 +265,23 @@ namespace Music.Test.Web
         public void Lines006_EntityListDetail()
         {
             Login();
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandDetail")))
+            using (var band = NormalPageUrl<BandEntity>(Url("Music/BandDetail")))
             {
                 var el = band.EntityListDetail(a => a.Members);
-                el.DetailsDivSelector = "jq=#{0}CurrentMember".Formato(band.PrefixUnderscore());
+                el.DetailsDivSelector = "jq=#{0}CurrentMember".FormatWith(band.PrefixUnderscore());
 
                 //1st element is shown by default
                 el.HasDetailEntity();
 
                 //create
-                el.CreateElement<ArtistDN>().Do(artist =>
+                el.CreateElement<ArtistEntity>().Do(artist =>
                 {
                     artist.ValueLineValue(a => a.Name, "test");
                 });
 
-
                 //delete
                 el.Remove();
                 Assert.IsFalse(el.HasEntity(4));
-                Assert.IsFalse(el.HasDetailEntity());
 
                 //find multiple
                 el.Find().SelectByPosition(4, 5);
@@ -292,15 +290,15 @@ namespace Music.Test.Web
                 Assert.IsTrue(el.HasDetailEntity());
 
                 var el2 = band.EntityListDetail(a => a.OtherAwards);
-                el2.DetailsDivSelector = "jq=#{0}CurrentAward".Formato(band.PrefixUnderscore());
+                el2.DetailsDivSelector = "jq=#{0}CurrentAward".FormatWith(band.PrefixUnderscore());
 
-                el2.CreateElement<GrammyAwardDN>().Do(grammy =>
+                el2.CreateElement<GrammyAwardEntity>().Do(grammy =>
                 {
                     grammy.ValueLineValue(a => a.Category, "text");
                 }); 
 
                 //find with implementations
-                el2.Find(typeof(GrammyAwardDN)).SelectByPosition(0);
+                el2.Find(typeof(GrammyAwardEntity)).SelectByPosition(0);
                 Assert.IsTrue(el2.HasEntity(1));
 
                 //Delete
@@ -317,7 +315,7 @@ namespace Music.Test.Web
         public void Lines007_EntityRepeater()
         {
             Login();
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandRepeater")))
+            using (var band = NormalPageUrl<BandEntity>(Url("Music/BandRepeater")))
             {
                 var er = band.EntityRepeater(a => a.Members);
 
@@ -328,7 +326,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(er.HasEntity(3));
 
                 //Create
-                er.CreateElement<ArtistDN>().Do(artist => artist.ValueLineValue(a => a.Name, "test"));
+                er.CreateElement<ArtistEntity>().Do(artist => artist.ValueLineValue(a => a.Name, "test"));
                 Assert.IsTrue(er.HasEntity(4));
 
                 //delete new element (created in client)
@@ -360,7 +358,7 @@ namespace Music.Test.Web
                 var er2 = band.EntityRepeater(b => b.OtherAwards); 
 
                 //create with implementations
-                er2.CreateElement<GrammyAwardDN>().Do(g => g.ValueLineValue(a => a.Category, "test"));
+                er2.CreateElement<GrammyAwardEntity>().Do(g => g.ValueLineValue(a => a.Category, "test"));
                 Assert.IsTrue(er2.HasEntity(0));
 
                 //find does not exist by default
@@ -372,7 +370,7 @@ namespace Music.Test.Web
         public void Lines007_EntityStrip()
         {
             Login();
-            using (var band = NormalPageUrl<BandDN>(Url("Music/BandStrip")))
+            using (var band = NormalPageUrl<BandEntity>(Url("Music/BandStrip")))
             {
                 var er = band.EntityStrip(a => a.Members);
 
@@ -383,7 +381,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(er.HasEntity(3));
 
                 //Create
-                er.CreatePopup<ArtistDN>().EndUsing(artist => 
+                er.CreatePopup<ArtistEntity>().EndUsing(artist => 
                 {
                     artist.ValueLineValue(a => a.Name, "test");
                     artist.ExecuteAjax(ArtistOperation.Save);
@@ -420,7 +418,7 @@ namespace Music.Test.Web
                 var er2 = band.EntityStrip(b => b.OtherAwards);
 
                 //create with implementations
-                er2.CreatePopup<GrammyAwardDN>().EndUsing(award =>
+                er2.CreatePopup<GrammyAwardEntity>().EndUsing(award =>
                 {
                     award.ValueLineValue(a => a.Category, "test");
                     award.ExecuteAjax(AwardOperation.Save);
@@ -430,11 +428,11 @@ namespace Music.Test.Web
                 var lite2 = er2.RuntimeInfo(0).ToLite();
                 Assert.IsTrue(er2.HasEntity(0));
 
-                er2.AutoComplete(Lite.Create<GrammyAwardDN>(2L));
-                Assert.AreEqual(typeof(GrammyAwardDN), er2.RuntimeInfo(1).EntityType);
+                er2.AutoComplete(Lite.Create<GrammyAwardEntity>(2L));
+                Assert.AreEqual(typeof(GrammyAwardEntity), er2.RuntimeInfo(1).EntityType);
 
-                er2.AutoComplete(Lite.Create<AmericanMusicAwardDN>(1L));
-                Assert.AreEqual(typeof(AmericanMusicAwardDN), er2.RuntimeInfo(2).EntityType);
+                er2.AutoComplete(Lite.Create<AmericanMusicAwardEntity>(1L));
+                Assert.AreEqual(typeof(AmericanMusicAwardEntity), er2.RuntimeInfo(2).EntityType);
 
                 //find does not exist by default
                 Assert.IsFalse(selenium.IsElementPresent(er2.FindLocator));

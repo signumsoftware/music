@@ -1,6 +1,6 @@
 ﻿@using Signum.Test.Environment
 
-@using (var e = Html.TypeContext<LabelDN>()) 
+@using (var e = Html.TypeContext<LabelEntity>()) 
 {
 	@Html.ValueLine(e, f => f.Name)
     @Html.EntityCombo(e, f => f.Owner)

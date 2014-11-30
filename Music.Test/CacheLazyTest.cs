@@ -35,38 +35,38 @@ namespace Music.Test
         [TestMethod]
         public void CacheInvalidationTest()
         {
-            int invalidations = CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations;
+            int invalidations = CacheLogic.Statistics().Single(t => t.Type == typeof(LabelEntity)).Invalidations;
 
-            Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
+            Assert.IsTrue(Schema.Current.EntityEvents<LabelEntity>().CacheController.Enabled);
 
             using (AuthLogic.Disable())
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             {
                 using (Transaction tr = new Transaction())
                 {
-                    Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
-                    var label = Database.Retrieve<LabelDN>(1);
+                    Assert.IsTrue(Schema.Current.EntityEvents<LabelEntity>().CacheController.Enabled);
+                    var label = Database.Retrieve<LabelEntity>(1);
 
                     label.Name += " - ";
 
                     label.Save();
 
-                    Assert.AreEqual(invalidations, CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
-                    Assert.IsFalse(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
+                    Assert.AreEqual(invalidations, CacheLogic.Statistics().Single(t => t.Type == typeof(LabelEntity)).Invalidations);
+                    Assert.IsFalse(Schema.Current.EntityEvents<LabelEntity>().CacheController.Enabled);
 
                     Task.Factory.StartNew(() =>
                     {
-                        Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
+                        Assert.IsTrue(Schema.Current.EntityEvents<LabelEntity>().CacheController.Enabled);
                     }).Wait();
 
                     tr.Commit();
                 }
 
-                Assert.IsTrue(invalidations < CacheLogic.Statistics().Single(t => t.Type == typeof(LabelDN)).Invalidations);
-                Assert.IsTrue(Schema.Current.EntityEvents<LabelDN>().CacheController.Enabled);
+                Assert.IsTrue(invalidations < CacheLogic.Statistics().Single(t => t.Type == typeof(LabelEntity)).Invalidations);
+                Assert.IsTrue(Schema.Current.EntityEvents<LabelEntity>().CacheController.Enabled);
 
 
-                var l = Database.Retrieve<LabelDN>(1);
+                var l = Database.Retrieve<LabelEntity>(1);
                 l.Name = "Virgin";
                 l.Save();
             }
@@ -78,7 +78,7 @@ namespace Music.Test
             using (AuthLogic.Disable())
             using (new EntityCache(EntityCacheType.ForceNewSealed))
             {
-                var labels = Database.Query<LabelDN>().ToList();
+                var labels = Database.Query<LabelEntity>().ToList();
                 Assert2.AssertAll(GraphExplorer.FromRoots(labels), a => a.Modified == ModifiedState.Sealed);
             }
         }
@@ -86,14 +86,14 @@ namespace Music.Test
         [TestMethod]
         public void InvalidateRace()
         {
-            List<LabelDN> labels = new List<LabelDN>();
+            List<LabelEntity> labels = new List<LabelEntity>();
 
             using (AuthLogic.Disable())
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    LabelDN l = new LabelDN { Name = "Label" + DateTime.Now.Ticks, Node = SqlHierarchyId.Parse("/234234/" + i.ToString() + "/") }.Save();
+                    LabelEntity l = new LabelEntity { Name = "Label" + DateTime.Now.Ticks, Node = SqlHierarchyId.Parse("/234234/" + i.ToString() + "/") }.Save();
 
                     l.ToLite().Retrieve();
 

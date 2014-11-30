@@ -44,7 +44,7 @@ namespace Music.Test.Web
         public void SearchControl001_Filters()
         {
             Login();
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 albums.Results.OrderBy("Id");
                 Assert.AreEqual(12, albums.Results.RowsCount());
@@ -100,7 +100,7 @@ namespace Music.Test.Web
         public void SearchControl002_FiltersInPopup()
         {
             Login();
-            using (var band = NormalPage<BandDN>())
+            using (var band = NormalPage<BandEntity>())
             {
                 using (var artists = band.EntityList(a => a.Members).Find())
                 {
@@ -157,22 +157,22 @@ namespace Music.Test.Web
         public void SearchControl003_Orders()
         {
             Login();
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 albums.Results.OrderBy("Author");
-                Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
+                Assert.AreEqual(Lite.Create<AlbumEntity>(5), albums.Results.EntityInIndex(0));
 
                 albums.Results.ThenBy("Label");
-                Assert.AreEqual(Lite.Create<AlbumDN>(7), albums.Results.EntityInIndex(0));
+                Assert.AreEqual(Lite.Create<AlbumEntity>(7), albums.Results.EntityInIndex(0));
                 Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
 
                 albums.Results.ThenByDescending("Label");
-                Assert.AreEqual(Lite.Create<AlbumDN>(5), albums.Results.EntityInIndex(0));
+                Assert.AreEqual(Lite.Create<AlbumEntity>(5), albums.Results.EntityInIndex(0));
                 Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
 
                 albums.Results.OrderBy("Label");
-                var first = Database.Query<AlbumDN>().OrderBy(a => a.Label.Name).Select(a => a.ToLite()).First();
-                Assert.AreEqual(first /* Lite.Create<AlbumDN>(12)*/, albums.Results.EntityInIndex(0));
+                var first = Database.Query<AlbumEntity>().OrderBy(a => a.Label.Name).Select(a => a.ToLite()).First();
+                Assert.AreEqual(first /* Lite.Create<AlbumEntity>(12)*/, albums.Results.EntityInIndex(0));
                 Assert.IsFalse(albums.Results.IsHeaderMarkedSorted("Author", OrderType.Ascending));
             }
         }
@@ -181,7 +181,7 @@ namespace Music.Test.Web
         public void SearchControl004_OrdersInPopup()
         {
             Login();
-            using (var band = NormalPage<BandDN>())
+            using (var band = NormalPage<BandEntity>())
             {
                 using (var artists = band.EntityList(b => b.Members).Find())
                 {
@@ -192,15 +192,15 @@ namespace Music.Test.Web
                     Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", ":checkbox[checked]"));
 
                     artists.Results.ThenBy("Name");
-                    Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
+                    Assert.AreEqual(Lite.Create<ArtistEntity>(1), artists.Results.EntityInIndex(0));
                     Assert.IsTrue(artists.Results.IsHeaderMarkedSorted("IsMale", OrderType.Descending));
 
                     artists.Results.ThenByDescending("Name");
-                    Assert.AreEqual(Lite.Create<ArtistDN>(8), artists.Results.EntityInIndex(0));
+                    Assert.AreEqual(Lite.Create<ArtistEntity>(8), artists.Results.EntityInIndex(0));
                     Assert.IsTrue(artists.Results.IsHeaderMarkedSorted("IsMale", OrderType.Descending));
 
                     artists.Results.OrderBy("Id");
-                    Assert.AreEqual(Lite.Create<ArtistDN>(1), artists.Results.EntityInIndex(0));
+                    Assert.AreEqual(Lite.Create<ArtistEntity>(1), artists.Results.EntityInIndex(0));
                     Assert.IsFalse(artists.Results.IsHeaderMarkedSorted("IsMale"));
                     Assert.IsFalse(artists.Results.IsHeaderMarkedSorted("Name"));
                 }
@@ -211,7 +211,7 @@ namespace Music.Test.Web
         public void SearchControl005_UserColumns()
         {
             Login();
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 albums.SearchControl.AddColumn("Label.Id");
                 albums.SearchControl.AddColumn("Label.Name");
@@ -235,7 +235,7 @@ namespace Music.Test.Web
         public void SearchControl006_UserColumnsInPopup()
         {
             Login();
-            using (var band = NormalPage<BandDN>())
+            using (var band = NormalPage<BandEntity>())
             {
                 using (var artists = band.EntityList(b=> b.Members).Find())
                 {
@@ -256,11 +256,11 @@ namespace Music.Test.Web
         public void SearchControl007_ImplementedByFinder()
         {
             Login();
-            SearchPage(typeof(IAuthorDN)).Using(authors =>
+            SearchPage(typeof(IAuthorEntity)).Using(authors =>
             {
                 authors.Results.OrderBy("Id");
-                Assert.AreEqual(Lite.Create<ArtistDN>(1), authors.Results.EntityInIndex(0));
-                Assert.AreEqual(Lite.Create<BandDN>(1), authors.Results.EntityInIndex(1));
+                Assert.AreEqual(Lite.Create<ArtistEntity>(1), authors.Results.EntityInIndex(0));
+                Assert.AreEqual(Lite.Create<BandEntity>(1), authors.Results.EntityInIndex(1));
 
                 authors.Filters.AddFilter("Id", FilterOperation.EqualTo, 1);
                 authors.Search();
@@ -271,7 +271,7 @@ namespace Music.Test.Web
                 authors.Search();
                 Assert.IsTrue(authors.Results.RowsCount() == 1);
 
-                return authors.CreateChoose<ArtistDN>();
+                return authors.CreateChoose<ArtistEntity>();
 
             }).EndUsing(artist => selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Prefix));
         }
@@ -280,7 +280,7 @@ namespace Music.Test.Web
         public void SearchControl008_MultiplyFinder()
         {
             Login();
-            using(var artists = SearchPage(typeof(ArtistDN)))
+            using(var artists = SearchPage(typeof(ArtistEntity)))
             {
                 Assert.IsFalse(artists.Filters.IsAddFilterEnabled);
                 Assert.IsFalse(artists.SearchControl.IsAddColumnEnabled);

@@ -135,8 +135,8 @@ namespace Music.Web
             ProcessClient.Start(packages: true, packageOperations: true);
 
             LinksClient.Start(widget: true, contextualItems: true);
-            NoteClient.Start(typeof(LabelDN));
-            AlertClient.Start(typeof(LabelDN));
+            NoteClient.Start(typeof(LabelEntity));
+            AlertClient.Start(typeof(LabelEntity));
 
             MusicClient.Start();
 
@@ -155,7 +155,7 @@ namespace Music.Web
         protected void Session_Start(object sender, EventArgs e)
         {
             if (!UserTicketClient.LoginFromCookie())
-                UserDN.Current = AuthLogic.AnonymousUser;
+                UserEntity.Current = AuthLogic.AnonymousUser;
         }
     }
 }

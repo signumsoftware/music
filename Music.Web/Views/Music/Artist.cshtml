@@ -1,6 +1,6 @@
 ﻿@using Signum.Test.Environment
 
-@using (var e = Html.TypeContext<ArtistDN>()) 
+@using (var e = Html.TypeContext<ArtistEntity>()) 
 {
 	@Html.ValueLine(e, f => f.Name)
 	@Html.ValueLine(e, f => f.Dead)

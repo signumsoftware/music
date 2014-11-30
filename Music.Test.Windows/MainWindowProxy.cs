@@ -36,7 +36,7 @@ namespace Music.Test.Windows
         //    return OmniBox.SelectEntity<T>(lite);
         //}
 
-        //public SearchWindowProxy SelectUserQuery(Lite<UserQueryDN> userQuery)
+        //public SearchWindowProxy SelectUserQuery(Lite<UserQueryEntity> userQuery)
         //{
         //    return OmniBox.SelectUserQuery(userQuery);
         //}

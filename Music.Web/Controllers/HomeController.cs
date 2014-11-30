@@ -17,12 +17,12 @@ namespace Music.Web
     {
         public ActionResult Index()
         {
-            if (UserDN.Current == null)
+            if (UserEntity.Current == null)
                 return View();
 
             var panel = DashboardLogic.GetHomePageDashboard();
             if (panel != null)
-                return View(DashboardClient.ViewPrefix.Formato("Dashboard"), panel);
+                return View(DashboardClient.ViewPrefix.FormatWith("Dashboard"), panel);
             else
                 return View();
         }

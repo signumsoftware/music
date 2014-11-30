@@ -51,7 +51,7 @@ namespace Music.Windows
                 OverrideExceptionHandling(errorTitle, e);
             else
             {
-                string message = e.Follow(ex => ex.InnerException).ToString(ex => "{0} : {1}".Formato(
+                string message = e.Follow(ex => ex.InnerException).ToString(ex => "{0} : {1}".FormatWith(
                           ex.GetType().Name != "FaultException" ? ex.GetType().Name : "Server Error",
                           ex.Message), "\r\n\r\n");
 
@@ -75,7 +75,7 @@ namespace Music.Windows
             {
                 string[] usernamePassword = auto.Split('/');
                 result.Login(usernamePassword[0], Security.EncodePassword(usernamePassword[1]));
-                UserDN.Current = result.GetCurrentUser();
+                UserEntity.Current = result.GetCurrentUser();
 
                 return result;
             }
@@ -128,7 +128,7 @@ namespace Music.Windows
             bool? dialogResult = login.ShowDialog();
             if (dialogResult == true)
             {
-                UserDN.Current = result.GetCurrentUser();
+                UserEntity.Current = result.GetCurrentUser();
 
                 return result;
             }

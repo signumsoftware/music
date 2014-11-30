@@ -44,13 +44,13 @@ namespace Music.Test.Web
         {
             Login(); 
 
-            using (var label = NormalPage<LabelDN>(1))
+            using (var label = NormalPage<LabelEntity>(1))
             {
                 using (var albums = label.QuickLinkClickSearch("Album"))
                     Assert.IsTrue(albums.Results.RowsCount() > 0);
             }
 
-            using (var label = SearchPage(typeof(LabelDN)))
+            using (var label = SearchPage(typeof(LabelEntity)))
             {
                 label.Search();
                 using (var albums = label.Results.EntityContextMenu(0).QuickLinkClickSearch("Album"))
@@ -65,7 +65,7 @@ namespace Music.Test.Web
         public void Widgets010_Notes()
         {
             Login();
-            using (var label = NormalPage<LabelDN>(1))
+            using (var label = NormalPage<LabelEntity>(1))
             {
                 Assert.AreEqual(0, label.NotesCount());
 
@@ -88,7 +88,7 @@ namespace Music.Test.Web
         public void Widgets020_Alerts()
         {
             Login();
-            NormalPage<LabelDN>(1).Using(label =>
+            NormalPage<LabelEntity>(1).Using(label =>
             {
 
                 Assert.IsTrue(label.AlertsAre(0, 0, 0));
@@ -115,13 +115,13 @@ namespace Music.Test.Web
 
                 using (var alerts = label.AlertsViewClick(AlertCurrentState.Alerted))
                 {
-                    return alerts.Results.EntityClick<AlertDN>(0);
+                    return alerts.Results.EntityClick<AlertEntity>(0);
                 }
             })
             .Using(alert =>
             {
                 alert.ExecuteAjax(AlertOperation.Attend);
-                return NormalPage<LabelDN>(1);
+                return NormalPage<LabelEntity>(1);
             }).EndUsing(label =>
             {
 

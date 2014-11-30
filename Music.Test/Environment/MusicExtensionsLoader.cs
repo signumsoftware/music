@@ -38,21 +38,21 @@ namespace Music.Test
         {
             using (AuthLogic.Disable())
             {
-                RoleDN anonymousUserRole = null;
-                RoleDN superUserRole = null;
-                RoleDN internalUserRole = null;
-                RoleDN externalUserRole = null;
-                using (OperationLogic.AllowSave<RoleDN>())
+                RoleEntity anonymousUserRole = null;
+                RoleEntity superUserRole = null;
+                RoleEntity internalUserRole = null;
+                RoleEntity externalUserRole = null;
+                using (OperationLogic.AllowSave<RoleEntity>())
                 {
-                    anonymousUserRole = new RoleDN { Name = "Anonymous", MergeStrategy = MergeStrategy.Intersection }.Save();
-                    superUserRole = new RoleDN { Name = "SuperUser", MergeStrategy = MergeStrategy.Intersection }.Save();
-                    internalUserRole = new RoleDN { Name = "InternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
-                    externalUserRole = new RoleDN { Name = "ExternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    anonymousUserRole = new RoleEntity { Name = "Anonymous", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    superUserRole = new RoleEntity { Name = "SuperUser", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    internalUserRole = new RoleEntity { Name = "InternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
+                    externalUserRole = new RoleEntity { Name = "ExternalUser", MergeStrategy = MergeStrategy.Intersection }.Save();
                 }
 
-                using (OperationLogic.AllowSave<UserDN>())
+                using (OperationLogic.AllowSave<UserEntity>())
                 {
-                    new UserDN
+                    new UserEntity
                     {
                         State = UserState.Saved,
                         UserName = AuthLogic.SystemUserName,
@@ -60,7 +60,7 @@ namespace Music.Test
                         Role = superUserRole
                     }.Save();
 
-                    new UserDN
+                    new UserEntity
                     {
                         State = UserState.Saved,
                         UserName = AuthLogic.AnonymousUserName,
@@ -68,7 +68,7 @@ namespace Music.Test
                         Role = anonymousUserRole
                     }.Save();
 
-                    new UserDN
+                    new UserEntity
                     {
                         State = UserState.Saved,
                         UserName = "su",
@@ -76,7 +76,7 @@ namespace Music.Test
                         Role = superUserRole
                     }.Save();
 
-                    new UserDN
+                    new UserEntity
                     {
                         State = UserState.Saved,
                         UserName = "internal",
@@ -84,7 +84,7 @@ namespace Music.Test
                         Role = internalUserRole
                     }.Save();
 
-                    new UserDN
+                    new UserEntity
                     {
                         State = UserState.Saved,
                         UserName = "external",
@@ -99,17 +99,17 @@ namespace Music.Test
                 {
                     MusicLoader.Load();
 
-                    new AlertTypeDN { Name = "test alert" }.Execute(AlertTypeOperation.Save);
+                    new AlertTypeEntity { Name = "test alert" }.Execute(AlertTypeOperation.Save);
                 }
 
 
                 TypeConditionUsersRoles(externalUserRole.ToLite());
 
-                TypeAuthLogic.Manual.SetAllowed(externalUserRole.ToLite(), typeof(LabelDN),
+                TypeAuthLogic.Manual.SetAllowed(externalUserRole.ToLite(), typeof(LabelEntity),
                     new TypeAllowedAndConditions(TypeAllowed.None,
                             new TypeConditionRule(MusicGroups.JapanEntities, TypeAllowed.Create)));
 
-                TypeAuthLogic.Manual.SetAllowed(externalUserRole.ToLite(), typeof(AlbumDN),
+                TypeAuthLogic.Manual.SetAllowed(externalUserRole.ToLite(), typeof(AlbumEntity),
                     new TypeAllowedAndConditions(TypeAllowed.None,
                             new TypeConditionRule(MusicGroups.JapanEntities, TypeAllowed.Create)));
 
@@ -119,24 +119,24 @@ namespace Music.Test
             }
         }
 
-        private static void TypeConditionUsersRoles(Lite<RoleDN> role)
+        private static void TypeConditionUsersRoles(Lite<RoleEntity> role)
         {
-            TypeAuthLogic.Manual.SetAllowed(role, typeof(UserQueryDN),
+            TypeAuthLogic.Manual.SetAllowed(role, typeof(UserQueryEntity),
                 new TypeAllowedAndConditions(TypeAllowed.None,
                         new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                         new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));
 
-            TypeAuthLogic.Manual.SetAllowed(role, typeof(DashboardDN),
+            TypeAuthLogic.Manual.SetAllowed(role, typeof(DashboardEntity),
                 new TypeAllowedAndConditions(TypeAllowed.None,
                         new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                         new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));
 
-            TypeAuthLogic.Manual.SetAllowed(role, typeof(UserChartDN),
+            TypeAuthLogic.Manual.SetAllowed(role, typeof(UserChartEntity),
                 new TypeAllowedAndConditions(TypeAllowed.None,
                         new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                         new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));
 
-            TypeAuthLogic.Manual.SetAllowed(role, typeof(LinkListPartDN),
+            TypeAuthLogic.Manual.SetAllowed(role, typeof(LinkListPartEntity),
               new TypeAllowedAndConditions(TypeAllowed.None,
                       new TypeConditionRule(MusicGroups.RoleEntities, TypeAllowed.Read),
                       new TypeConditionRule(MusicGroups.UserEntities, TypeAllowed.Create)));

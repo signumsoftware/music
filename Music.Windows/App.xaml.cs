@@ -81,20 +81,20 @@ namespace Music.Windows
 
             Navigator.AddSettings(new List<EntitySettings>()
             {
-                new EntitySettings<AlbumDN>(){ View = e => new Album() },
+                new EntitySettings<AlbumEntity>(){ View = e => new Album() },
 
-                new EntitySettings<LabelDN>() { View = e => new Music.Windows.Controls.Label() },
-                new EntitySettings<ArtistDN>() { View = e => new Artist() },
-                new EntitySettings<BandDN>() { View = e => new Band() },
-                new EmbeddedEntitySettings<SongDN>() { View = e => new Song() },
+                new EntitySettings<LabelEntity>() { View = e => new Music.Windows.Controls.Label() },
+                new EntitySettings<ArtistEntity>() { View = e => new Artist() },
+                new EntitySettings<BandEntity>() { View = e => new Band() },
+                new EmbeddedEntitySettings<SongEntity>() { View = e => new Song() },
 
-                new EntitySettings<AmericanMusicAwardDN>() { View = e => new AmericanMusicAward() },
-                new EntitySettings<GrammyAwardDN>() { View = e => new GrammyAward() },
-                new EntitySettings<PersonalAwardDN>() { View = e => new PersonalAward() },
+                new EntitySettings<AmericanMusicAwardEntity>() { View = e => new AmericanMusicAward() },
+                new EntitySettings<GrammyAwardEntity>() { View = e => new GrammyAward() },
+                new EntitySettings<PersonalAwardEntity>() { View = e => new PersonalAward() },
 
-                new EntitySettings<CountryDN>() { View = e => new Country() },
+                new EntitySettings<CountryEntity>() { View = e => new Country() },
 
-                new EntitySettings<NoteWithDateDN>() { View = e => new NoteWithDate() },
+                new EntitySettings<NoteWithDateEntity>() { View = e => new NoteWithDate() },
             });
 
             Navigator.Initialize();

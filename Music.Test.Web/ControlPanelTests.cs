@@ -35,11 +35,11 @@ namespace Music.Test.Web
             Common.Start();
 
             AuthLogic.UnsafeUserSession("su").Using(_ =>
-                new UserQueryDN(typeof(AlbumDN))
+                new UserQueryEntity(typeof(AlbumEntity))
                 {
-                    Owner = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<Entity>()).SingleEx(),
+                    Owner = Database.Query<UserEntity>().Where(u => u.UserName == "internal").Select(a => a.ToLite<Entity>()).SingleEx(),
                     DisplayName = "test",
-                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
+                    Filters = { new QueryFilterEntity { Token = new QueryTokenEntity("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
                 }.ParseAndSave());
         }
 
@@ -53,8 +53,8 @@ namespace Music.Test.Web
         public void Dashboard001_Create()
         {
             Login();
-            this.SearchPage(typeof(DashboardDN))
-                .Using(cps => cps.Create<DashboardDN>())
+            this.SearchPage(typeof(DashboardEntity))
+                .Using(cps => cps.Create<DashboardEntity>())
                 .EndUsing(dashboard =>
                 {
                     dashboard.ValueLineValue(cp => cp.DisplayName, "Control Panel Home Page");
@@ -65,34 +65,34 @@ namespace Music.Test.Web
                     PropertyRoute newRoute = dashboard.GetRoute(a=>a.Parts, out newPrefix);
                     var parts = new PartsRepeaterProxy(selenium, newPrefix, newRoute);
 
-                    parts.CreatePartElement<UserQueryPartDN>().Do(d =>
+                    parts.CreatePartElement<UserQueryPartEntity>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "Last Albums");
-                        d.EntityDetail(a => a.Content).Details<UserQueryPartDN>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
+                        d.EntityDetail(a => a.Content).Details<UserQueryPartEntity>().EntityLine(a => a.UserQuery).Find().SelectByPosition(0);
                     });
 
-                    parts.CreatePartElement<CountSearchControlPartDN>().Do(d =>
+                    parts.CreatePartElement<CountSearchControlPartEntity>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My count controls");
-                        d.EntityDetail(a => a.Content).Details<CountSearchControlPartDN>().EntityRepeater(a => a.UserQueries).Do(uq =>
+                        d.EntityDetail(a => a.Content).Details<CountSearchControlPartEntity>().EntityRepeater(a => a.UserQueries).Do(uq =>
                         {
-                            uq.CreateElement<CountUserQueryElementDN>().Do(cp => cp.EntityLine(a => a.UserQuery).Find().SelectByPosition(0));
+                            uq.CreateElement<CountUserQueryElementEntity>().Do(cp => cp.EntityLine(a => a.UserQuery).Find().SelectByPosition(0));
                         });
                     });
 
-                    parts.CreatePartElement<LinkListPartDN>().Do(d =>
+                    parts.CreatePartElement<LinkListPartEntity>().Do(d =>
                     {
                         d.ValueLineValue(a => a.Title, "My Links");
-                        d.EntityDetail(a => a.Content).Details<LinkListPartDN>().EntityRepeater(a => a.Links).Do(le =>
+                        d.EntityDetail(a => a.Content).Details<LinkListPartEntity>().EntityRepeater(a => a.Links).Do(le =>
                         {
-                            le.CreateElement<LinkElementDN>().Do(e =>
+                            le.CreateElement<LinkElementEntity>().Do(e =>
                             {
                                 e.ValueLineValue(a => a.Label, "Best Band");
                                 e.ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Band/1");
                             });
 
 
-                            le.CreateElement<LinkElementDN>().Do(e  =>
+                            le.CreateElement<LinkElementEntity>().Do(e  =>
                             {
                                 e.ValueLineValue(a => a.Label, "Best Artist");
                                 e.ValueLineValue(a => a.Link, "http://localhost/Music.Web/View/Artist/1");
@@ -112,7 +112,7 @@ namespace Music.Test.Web
     {
         public override int? NewIndex()
         {
-            string result = Selenium.GetEval("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".Formato(Prefix));
+            string result = Selenium.GetEval("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".FormatWith(Prefix));
 
             return string.IsNullOrEmpty(result) ? 0 : result.Split(',').Select(int.Parse).Max() + 1;
         }
@@ -130,7 +130,7 @@ namespace Music.Test.Web
         {
         }
 
-        public LineContainer<PanelPartDN> CreatePartElement<T>() where T : IPartDN
+        public LineContainer<PanelPartEntity> CreatePartElement<T>() where T : IPartEntity
         {
             var index = NewIndex();
 
@@ -143,7 +143,7 @@ namespace Music.Test.Web
                 new ChooserPopup(this.Selenium, prefix).EndUsing(e => e.Choose<T>());
             }, "create clicked");
 
-            return this.Details<PanelPartDN>(index.Value);
+            return this.Details<PanelPartEntity>(index.Value);
         }
     }
 }

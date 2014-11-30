@@ -79,7 +79,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (UserDN.Current != null)
+                    @if (UserEntity.Current != null)
                     {
                         Html.RenderPartial("Menu");
                     }

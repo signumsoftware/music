@@ -24,27 +24,27 @@ namespace Music.Web
     {
         public ViewResult AlbumStrip()
         {
-            return this.NormalPage(Database.Retrieve<AlbumDN>(1), new NavigateOptions { PartialViewName = "AlbumStrip" });
+            return this.NormalPage(Database.Retrieve<AlbumEntity>(1), new NavigateOptions { PartialViewName = "AlbumStrip" });
         }
 
         public ViewResult BandStrip()
         {
-            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandStrip" });
+            return this.NormalPage(Database.Retrieve<BandEntity>(1), new NavigateOptions { PartialViewName = "BandStrip" });
         }
 
         public ViewResult BandDetail()
         {
-            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandDetail" });
+            return this.NormalPage(Database.Retrieve<BandEntity>(1), new NavigateOptions { PartialViewName = "BandDetail" });
         }
 
         public ViewResult BandRepeater() 
         {
-            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandRepeater" });
+            return this.NormalPage(Database.Retrieve<BandEntity>(1), new NavigateOptions { PartialViewName = "BandRepeater" });
         }
 
         public ViewResult BandTabRepeater()
         {
-            return this.NormalPage(Database.Retrieve<BandDN>(1), new NavigateOptions { PartialViewName = "BandTabRepeater" });
+            return this.NormalPage(Database.Retrieve<BandEntity>(1), new NavigateOptions { PartialViewName = "BandTabRepeater" });
         }
 
         [HttpPost]
@@ -63,7 +63,7 @@ namespace Music.Web
             var model = this.ExtractEntity<AlbumFromBandModel>(modelPrefix)
                 .ApplyChanges(this, modelPrefix).Value;
 
-            AlbumDN newAlbum = this.ExtractLite<BandDN>().ConstructFromLite(AlbumOperation.CreateAlbumFromBand,
+            AlbumEntity newAlbum = this.ExtractLite<BandEntity>().ConstructFromLite(AlbumOperation.CreateAlbumFromBand,
                 model.Name, model.Year, model.Label);
 
             return OperationClient.DefaultConstructResult(this, newAlbum);
@@ -72,7 +72,7 @@ namespace Music.Web
         [HttpPost]
         public ActionResult CreateGreatestHitsAlbum()
         {
-            var sourceAlbums = this.ParseLiteKeys<AlbumDN>();
+            var sourceAlbums = this.ParseLiteKeys<AlbumEntity>();
             
             var newAlbum = OperationLogic.ConstructFromMany(sourceAlbums, AlbumOperation.CreateGreatestHitsAlbum);
 
@@ -82,9 +82,9 @@ namespace Music.Web
         [HttpPost]
         public ActionResult Clone()
         {
-            var album = this.ExtractLite<AlbumDN>();
+            var album = this.ExtractLite<AlbumEntity>();
 
-            AlbumDN newAlbum = album.ConstructFromLite(AlbumOperation.Clone);
+            AlbumEntity newAlbum = album.ConstructFromLite(AlbumOperation.Clone);
             newAlbum.Name = this.ParseValue<string>("newName");
 
             return OperationClient.DefaultConstructResult(this, newAlbum); 

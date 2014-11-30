@@ -1,6 +1,6 @@
 ﻿@using Signum.Test.Environment
 
-@using (var e = Html.TypeContext<BandDN>()) 
+@using (var e = Html.TypeContext<BandEntity>()) 
 {
 	@Html.ValueLine(e, f => f.Name);
 	@Html.EntityStrip(e, f => f.Members, es => { es.Find = true; es.Move = true; es.Vertical = true; es.Create = true; es.Navigate = true; es.View = true; });

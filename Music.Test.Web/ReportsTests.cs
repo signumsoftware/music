@@ -48,7 +48,7 @@ namespace Music.Test.Web
 
             string pathSampleReport = "D:\\Signum\\Music\\Assets\\Album.xlsx";
 
-            SearchPage(typeof(AlbumDN))
+            SearchPage(typeof(AlbumEntity))
             .Using(albums =>
             {
                 using (var report = albums.SearchControl.CreateExcelReport())
@@ -62,7 +62,7 @@ namespace Music.Test.Web
                     report.ExecuteAjax(ExcelReportOperation.Save);
                     selenium.WaitElementPresent("jq=.sf-entity-title:contains('test 2')");
 
-                    return SearchPage(typeof(AlbumDN));
+                    return SearchPage(typeof(AlbumEntity));
                 }
             })
             .Using(albums =>
@@ -72,11 +72,11 @@ namespace Music.Test.Web
                 using (var reports = albums.SearchControl.AdministerExcelReports())
                 {
                     reports.SearchControl.WaitInitialSearchCompleted();
-                    return reports.SearchControl.Results.EntityClick(Lite.Create<ExcelReportDN>(1));
+                    return reports.SearchControl.Results.EntityClick(Lite.Create<ExcelReportEntity>(1));
                 }
             })
             .Using(report => report.DeleteSubmit(ExcelReportOperation.Delete))
-            .Using(reports => SearchPage(typeof(AlbumDN)))
+            .Using(reports => SearchPage(typeof(AlbumEntity)))
             .Using(albums =>
             {
                 albums.Selenium.AssertElementNotPresent(albums.SearchControl.ExcelReportLocator("title 2"));
@@ -85,7 +85,7 @@ namespace Music.Test.Web
                     report.ValueLineValue(a => a.DisplayName, "test 3");
                     report.FileLine(a => a.File).SetPath(pathSampleReport);
                     report.ExecuteAjax(ExcelReportOperation.Save);
-                    return SearchPage(typeof(AlbumDN));
+                    return SearchPage(typeof(AlbumEntity));
                 }
             })
             .EndUsing(albums =>

@@ -79,8 +79,8 @@ namespace Music.Test
                 sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
                 sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
-                MixinDeclarations.Register<OperationLogDN, DiffLogMixin>();
-                MixinDeclarations.Register<ProcessDN, UserProcessSessionMixin>();
+                MixinDeclarations.Register<OperationLogEntity, DiffLogMixin>();
+                MixinDeclarations.Register<ProcessEntity, UserProcessSessionMixin>();
                 OverrideImplementations(sb);
 
                 CacheLogic.Start(sb);
@@ -112,18 +112,18 @@ namespace Music.Test
                 DashboardLogic.RegisterUserTypeCondition(sb, MusicGroups.UserEntities);
                 DashboardLogic.RegisterRoleTypeCondition(sb, MusicGroups.RoleEntities);
 
-                AlertLogic.Start(sb, dqm, new [] { typeof(LabelDN) });
-                NoteLogic.Start(sb, dqm, new[] { typeof(LabelDN) });
+                AlertLogic.Start(sb, dqm, new [] { typeof(LabelEntity) });
+                NoteLogic.Start(sb, dqm, new[] { typeof(LabelEntity) });
 
                 FilePathLogic.Start(sb, dqm);
                 ExcelLogic.Start(sb, dqm, true);
 
                 MusicLogic.Start(sb, dqm);
 
-                TypeConditionLogic.Register<LabelDN>(MusicGroups.JapanEntities, l => l.Country.Name.StartsWith(MusicLoader.Japan) || l.Owner != null && l.Owner.Entity.Country.Name.StartsWith(MusicLoader.Japan));
-                TypeConditionLogic.Register<AlbumDN>(MusicGroups.JapanEntities, a => a.Label.InCondition(MusicGroups.JapanEntities));
+                TypeConditionLogic.Register<LabelEntity>(MusicGroups.JapanEntities, l => l.Country.Name.StartsWith(MusicLoader.Japan) || l.Owner != null && l.Owner.Entity.Country.Name.StartsWith(MusicLoader.Japan));
+                TypeConditionLogic.Register<AlbumEntity>(MusicGroups.JapanEntities, a => a.Label.InCondition(MusicGroups.JapanEntities));
 
-                CacheLogic.CacheTable<LabelDN>(sb);
+                CacheLogic.CacheTable<LabelEntity>(sb);
 
 
                 started = true;
@@ -134,21 +134,21 @@ namespace Music.Test
 
         private static void OverrideImplementations(SchemaBuilder sb)
         {
-            sb.Settings.FieldAttributes((DashboardDN cp) => cp.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
-            sb.Settings.FieldAttributes((UserQueryDN uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
-            sb.Settings.FieldAttributes((UserChartDN uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserDN), typeof(RoleDN)));
+            sb.Settings.FieldAttributes((DashboardEntity cp) => cp.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));
+            sb.Settings.FieldAttributes((UserQueryEntity uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));
+            sb.Settings.FieldAttributes((UserChartEntity uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));
 
-            sb.Schema.Settings.FieldAttributes((ProcessDN cp) => cp.Data).Replace(new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
-            sb.Schema.Settings.FieldAttributes((PackageLineDN cp) => cp.Package).Replace(new ImplementedByAttribute(typeof(PackageDN), typeof(PackageOperationDN)));
-            sb.Schema.Settings.FieldAttributes((ProcessExceptionLineDN cp) => cp.Line).Replace(new ImplementedByAttribute(typeof(PackageLineDN)));
-            sb.Schema.Settings.FieldAttributes((ProcessDN cp) => cp.Mixin<UserProcessSessionMixin>().User).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((ProcessEntity cp) => cp.Data).Replace(new ImplementedByAttribute(typeof(PackageEntity), typeof(PackageOperationEntity)));
+            sb.Schema.Settings.FieldAttributes((PackageLineEntity cp) => cp.Package).Replace(new ImplementedByAttribute(typeof(PackageEntity), typeof(PackageOperationEntity)));
+            sb.Schema.Settings.FieldAttributes((ProcessExceptionLineEntity cp) => cp.Line).Replace(new ImplementedByAttribute(typeof(PackageLineEntity)));
+            sb.Schema.Settings.FieldAttributes((ProcessEntity cp) => cp.Mixin<UserProcessSessionMixin>().User).Replace(new ImplementedByAttribute(typeof(UserEntity)));
 
-            sb.Schema.Settings.FieldAttributes((OperationLogDN ol) => ol.User).Replace(new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.FieldAttributes((ExceptionDN e) => e.User).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((OperationLogEntity ol) => ol.User).Replace(new ImplementedByAttribute(typeof(UserEntity)));
+            sb.Schema.Settings.FieldAttributes((ExceptionEntity e) => e.User).Replace(new ImplementedByAttribute(typeof(UserEntity)));
 
-            sb.Schema.Settings.FieldAttributes((AlertDN e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.FieldAttributes((AlertDN e) => e.AttendedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
-            sb.Schema.Settings.FieldAttributes((NoteDN e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserDN)));
+            sb.Schema.Settings.FieldAttributes((AlertEntity e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));
+            sb.Schema.Settings.FieldAttributes((AlertEntity e) => e.AttendedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));
+            sb.Schema.Settings.FieldAttributes((NoteEntity e) => e.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));
         }
 
     }

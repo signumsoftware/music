@@ -37,7 +37,7 @@ namespace Music.Test.Windows
                     //albums.Search();
                     albums.SortColumn("Name", OrderType.Descending);
                     albums.SortColumn("Author", OrderType.Descending);
-                    using (NormalWindowProxy<AlbumDN> album = albums.ViewElementAt<AlbumDN>(0))
+                    using (NormalWindowProxy<AlbumEntity> album = albums.ViewElementAt<AlbumEntity>(0))
                     {
                         album.ValueLineValue(a => a.Name, "Sartorum");
                         Assert.AreEqual("Sartorum", album.ValueLineValue(a => a.Name));
@@ -46,7 +46,7 @@ namespace Music.Test.Windows
                         Assert.AreEqual(album.ValueLine(a => a.Year).Value, 1234);
 
                         album.EntityLine(a => a.Label).Autocomplete("Son");
-                        Assert.AreEqual(album.EntityLine(a => a.Label).LiteValue.EntityType, typeof(LabelDN));
+                        Assert.AreEqual(album.EntityLine(a => a.Label).LiteValue.EntityType, typeof(LabelEntity));
                         album.EntityCombo(a => a.Author).SelectToString("Smashing");
 
                         var songs = album.EntityList(a => a.Songs);

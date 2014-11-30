@@ -47,13 +47,13 @@ namespace Music.Test.Web
         {
             Login();
 
-            SearchPage(typeof(AlbumDN))
-                .Using(albums => albums.Create<AlbumDN>())
+            SearchPage(typeof(AlbumEntity))
+                .Using(albums => albums.Create<AlbumEntity>())
                 .EndUsing(album =>
             {
                 album.ValueLineValue(a => a.Name, "test");
                 album.ValueLineValue(a => a.Year, 2010);
-                album.EntityLine(a => a.Author).Find(typeof(BandDN)).SelectByPosition(0);
+                album.EntityLine(a => a.Author).Find(typeof(BandEntity)).SelectByPosition(0);
                 album.EntityCombo(a => a.Label).SelectLabel("Virgin");
                 album.ExecuteSubmit(AlbumOperation.Save);
 
@@ -66,7 +66,7 @@ namespace Music.Test.Web
         public void Operations002_Execute_ReloadContent()
         {
             Login();
-            NormalPage<AlbumDN>(1).EndUsing(album =>
+            NormalPage<AlbumEntity>(1).EndUsing(album =>
             {
                 string name = "Siamese Dreamm";
                 album.ValueLineValue(a => a.Name, name);
@@ -80,7 +80,7 @@ namespace Music.Test.Web
         {
             Login();
 
-            NormalPage<AlbumDN>(1).EndUsing(album =>
+            NormalPage<AlbumEntity>(1).EndUsing(album =>
             {
                 Assert.IsFalse(album.OperationEnabled(AlbumOperation.Save));
 
@@ -90,7 +90,7 @@ namespace Music.Test.Web
                     newAlbum.ValueLineValue(a => a.Name, "test3");
                     newAlbum.ValueLineValue(a => a.Year, 2010);
 
-                    newAlbum.EntityLine(a => a.BonusTrack).View<SongDN>().EndUsing(s => Assert.IsNull(s.EntityState()));
+                    newAlbum.EntityLine(a => a.BonusTrack).View<SongEntity>().EndUsing(s => Assert.IsNull(s.EntityState()));
 
                     newAlbum.ExecuteAjax(AlbumOperation.Save);
                     Assert.IsTrue(newAlbum.HasId());
@@ -104,14 +104,14 @@ namespace Music.Test.Web
         {
             Login();
 
-            NormalPage<BandDN>(1).EndUsing(band =>
+            NormalPage<BandEntity>(1).EndUsing(band =>
             {
                 band.OperationPopup<AlbumFromBandModel>(AlbumOperation.CreateAlbumFromBand).Using(model =>
                 {
                     model.ValueLineValue(m => m.Name, "test2");
                     model.ValueLineValue(m => m.Year, 2010);
                     model.EntityLine(a => a.Label).Find().SelectByPosition(0);
-                    return model.OkWaitPopupControl<AlbumDN>();
+                    return model.OkWaitPopupControl<AlbumEntity>();
                 }).EndUsing(album =>
                 {
                     Assert.IsTrue(album.RuntimeInfo().IdOrNull.HasValue);
@@ -126,7 +126,7 @@ namespace Music.Test.Web
         {
             Login();
 
-            NormalPage<AlbumDN>(1).EndUsing(album =>
+            NormalPage<AlbumEntity>(1).EndUsing(album =>
             {
                 album.ButtonClick("CloneWithData");
 
@@ -136,7 +136,7 @@ namespace Music.Test.Web
 
                     popup.ValueLine.StringValue = "test popup";
 
-                    return popup.OkWaitPopupControl<AlbumDN>();
+                    return popup.OkWaitPopupControl<AlbumEntity>();
                 }).EndUsing(album2 =>
                 {
                     Assert.IsTrue(album2.Selenium.IsTextPresent("test popup"));
@@ -149,16 +149,16 @@ namespace Music.Test.Web
         {
             Login();
 
-            Lite<AlbumDN> lite = null;
+            Lite<AlbumEntity> lite = null;
             using (AuthLogic.UnsafeUserSession("internal"))
             {
-                AlbumDN album = Database.Query<AlbumDN>().First().ConstructFrom(AlbumOperation.Clone);
+                AlbumEntity album = Database.Query<AlbumEntity>().First().ConstructFrom(AlbumOperation.Clone);
                 album.Name = "test6";
                 album.Year = 2012;
                 lite = album.Execute(AlbumOperation.Save).ToLite(); 
             }
 
-            NormalPage<AlbumDN>(lite).Using(album =>
+            NormalPage<AlbumEntity>(lite).Using(album =>
             {
                 return album.DeleteSubmit(AlbumOperation.Delete);
             }).EndUsing(albums =>
@@ -173,13 +173,13 @@ namespace Music.Test.Web
         {
             Login();
 
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 albums.Search();
 
                 albums.SearchControl.Results.SelectRow(0, 1);
 
-                using (var alb = albums.SearchControl.Results.SelectedClick().MenuClickPopup<AlbumDN>(AlbumOperation.CreateEmptyGreatestHitsAlbum))
+                using (var alb = albums.SearchControl.Results.SelectedClick().MenuClickPopup<AlbumEntity>(AlbumOperation.CreateEmptyGreatestHitsAlbum))
                 {
                     alb.ValueLineValue(a => a.Name, "test greatest empty");
                     alb.EntityCombo(a => a.Label).SelectLabel("Virgin");

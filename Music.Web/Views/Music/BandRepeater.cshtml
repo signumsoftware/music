@@ -1,6 +1,6 @@
 ﻿@using Signum.Test.Environment
 
-@using (var e = Html.TypeContext<BandDN>()) 
+@using (var e = Html.TypeContext<BandEntity>()) 
 {
 	@Html.ValueLine(e, f => f.Name);
 	@Html.EntityRepeater(e, f => f.Members, er => { er.Find = true; er.Move = true; });

@@ -22,7 +22,7 @@ namespace Music.Test.Web
     {
         protected override string Url(string url)
         {
-            return "http://localhost/Music.Web/" + url;
+            return "http://localhost:1804/" + url;
         }
 
         public static void Start()

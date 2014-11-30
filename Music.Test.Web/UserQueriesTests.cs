@@ -48,10 +48,10 @@ namespace Music.Test.Web
         {
             Login(); 
 
-            SearchPage(typeof(AlbumDN)).Using(album =>
+            SearchPage(typeof(AlbumEntity)).Using(album =>
             {
                 album.Filters.AddFilter("Year", FilterOperation.GreaterThan, 2000);
-                album.Filters.AddFilter("Label", FilterOperation.EqualTo, Lite.Create<LabelDN>(1));
+                album.Filters.AddFilter("Label", FilterOperation.EqualTo, Lite.Create<LabelEntity>(1));
                 album.SearchControl.AddColumn("Label.Owner");
 
                 album.Results.OrderBy("Label.Owner");
@@ -64,7 +64,7 @@ namespace Music.Test.Web
                 uq.ValueLineValue(a => a.DisplayName, "Last albums");
                 uq.ExecuteAjax(UserQueryOperation.Save);
 
-                return SearchPage(typeof(AlbumDN));
+                return SearchPage(typeof(AlbumEntity));
             })
             .EndUsing(albums =>
             {
@@ -82,28 +82,28 @@ namespace Music.Test.Web
 
             var uqName = "uq" + DateTime.Now.Ticks.ToString().Substring(8);
             var userQuery = AuthLogic.UnsafeUserSession("su").Using(_ => 
-                new UserQueryDN(typeof(AlbumDN))
+                new UserQueryEntity(typeof(AlbumEntity))
                 {
-                    Owner = Database.Query<UserDN>().Where(u => u.UserName == "internal").Select(a => a.ToLite<Entity>()).SingleEx(),
+                    Owner = Database.Query<UserEntity>().Where(u => u.UserName == "internal").Select(a => a.ToLite<Entity>()).SingleEx(),
                     DisplayName = uqName,
-                    Filters = { new QueryFilterDN { Token = new QueryTokenDN("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
+                    Filters = { new QueryFilterEntity { Token = new QueryTokenEntity("Id"), Operation = FilterOperation.GreaterThan, ValueString = "3" } },
                 }.ParseAndSave());
 
-            SearchPage(typeof(AlbumDN)).Using(albums =>
+            SearchPage(typeof(AlbumEntity)).Using(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick(uqName);
                 return albums.SearchControl.EditUserQuery();
             }).Using(uq =>
             {
                 uq.EntityRepeater(a => a.Filters).Remove(0);
-                uq.EntityRepeater(a => a.Columns).CreateElement<QueryColumnDN>().Do(qc =>
+                uq.EntityRepeater(a => a.Columns).CreateElement<QueryColumnEntity>().Do(qc =>
                 {
                     qc.ValueLineValue(a => a.DisplayName, "Label owner's country");
                     qc.QueryTokenBuilder(a => a.Token).SelectToken("Label.Owner.Country");
                 });
                 uq.ExecuteAjax(UserQueryOperation.Save);
 
-                return SearchPage(typeof(AlbumDN));
+                return SearchPage(typeof(AlbumEntity));
             })
             .EndUsing(albums =>
             {
@@ -119,7 +119,7 @@ namespace Music.Test.Web
         {
             Login();
 
-            SearchPage(typeof(AlbumDN)).Using(albums =>
+            SearchPage(typeof(AlbumEntity)).Using(albums =>
             {
                 albums.Results.OrderBy("Year");
                 return albums.SearchControl.NewUserQuery();
@@ -129,7 +129,7 @@ namespace Music.Test.Web
                 uq.ValueLineValue(a => a.DisplayName, "test");
                 uq.ExecuteSubmit(UserQueryOperation.Save);
 
-                return SearchPage(typeof(AlbumDN));
+                return SearchPage(typeof(AlbumEntity));
             }).Using(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick("test");

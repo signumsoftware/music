@@ -43,7 +43,7 @@ namespace Music.Test.Web
         public void OperationCtx001_Execute()
         {
             Login();
-            using (var artists = SearchPage(typeof(ArtistDN)))
+            using (var artists = SearchPage(typeof(ArtistEntity)))
             {
                 artists.Results.OrderBy("Id");
 
@@ -59,16 +59,16 @@ namespace Music.Test.Web
         public void OperationCtx002_ConstructFrom_OpenPopup()
         {
             Login();
-            SearchPage(typeof(BandDN)).EndUsing(bands =>
+            SearchPage(typeof(BandEntity)).EndUsing(bands =>
             {
                 bands.SearchControl.Search();
 
-                bands.SearchControl.Results.EntityContextMenu(0).MenuClickPopup<AlbumDN>(AlbumOperation.CreateAlbumFromBand).Using(album =>
+                bands.SearchControl.Results.EntityContextMenu(0).MenuClickPopup<AlbumEntity>(AlbumOperation.CreateAlbumFromBand).Using(album =>
                 {
                     album.ValueLineValue(a => a.Name, "ctxtest");
                     album.ValueLineValue(a => a.Year, DateTime.Now.Year);
                     album.EntityLine(a => a.Label).Find().SelectByPosition(0);
-                    return album.OkWaitPopupControl<AlbumDN>();
+                    return album.OkWaitPopupControl<AlbumEntity>();
                 }).EndUsing(album =>
                 {
                     Assert.IsTrue(album.HasId());
@@ -81,11 +81,11 @@ namespace Music.Test.Web
         public void OperationCtx003_Delete()
         {
             Login();
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 CreateAlbum("blasco");
 
-                int count = Database.Query<AlbumDN>().Count();
+                int count = Database.Query<AlbumEntity>().Count();
 
                 albums.Results.OrderByDescending("Id");
 
@@ -101,12 +101,12 @@ namespace Music.Test.Web
 
         private static void CreateAlbum(string name)
         {
-            using (OperationLogic.AllowSave<AlbumDN>())
-                new AlbumDN
+            using (OperationLogic.AllowSave<AlbumEntity>())
+                new AlbumEntity
                 {
                     Year = 2000,
                     Name = name,
-                    Author = Database.Query<ArtistDN>().First(),
+                    Author = Database.Query<ArtistEntity>().First(),
                     State = AlbumState.Saved
                 }.Save();
         }
@@ -115,12 +115,12 @@ namespace Music.Test.Web
         public void OperationCtx004_ConstructFromMany()
         {
             Login();
-            SearchPage(typeof(AlbumDN)).EndUsing(albums =>
+            SearchPage(typeof(AlbumEntity)).EndUsing(albums =>
             {
                 albums.Search();
                 albums.Results.SelectRow(0, 1);
 
-                using (var album = albums.Results.EntityContextMenu(1).MenuClickPopup<AlbumDN>(AlbumOperation.CreateGreatestHitsAlbum))
+                using (var album = albums.Results.EntityContextMenu(1).MenuClickPopup<AlbumEntity>(AlbumOperation.CreateGreatestHitsAlbum))
                 {
                     album.ValueLineValue(a => a.Name, "test greatest hits");
                     album.EntityCombo(a => a.Label).SelectLabel("Virgin");
@@ -138,13 +138,13 @@ namespace Music.Test.Web
 
             ProcessViewStart();
 
-            using (var artist = SearchPage(typeof(ArtistDN)))
+            using (var artist = SearchPage(typeof(ArtistEntity)))
             {
                 artist.Results.OrderBy("Id");
 
                 artist.Results.SelectRow(0, 1);
 
-                using (var process = artist.Results.EntityContextMenu(1).MenuClickPopup<ProcessDN>(ArtistOperation.AssignPersonalAward))
+                using (var process = artist.Results.EntityContextMenu(1).MenuClickPopup<ProcessEntity>(ArtistOperation.AssignPersonalAward))
                 {
                     process.ExecuteAjax(ProcessOperation.Execute);
 
@@ -163,12 +163,12 @@ namespace Music.Test.Web
 
             ProcessViewStart();
 
-            using (var albums = SearchPage(typeof(AlbumDN)))
+            using (var albums = SearchPage(typeof(AlbumEntity)))
             {
                 CreateAlbum("alb1");
                 CreateAlbum("alb2");
 
-                int count = Database.Query<AlbumDN>().Count();
+                int count = Database.Query<AlbumEntity>().Count();
 
                 albums.Results.OrderByDescending("Id");
 

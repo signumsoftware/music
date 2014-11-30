@@ -51,13 +51,13 @@ namespace Music.Test
         {
             using (AuthLogic.Disable())
             {
-                Assert.AreEqual(AllLab, Database.Query<LabelDN>().Count());
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
+                Assert.AreEqual(AllLab, Database.Query<LabelEntity>().Count());
+                Assert.AreEqual(JapLab, Database.Query<LabelEntity>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
 
-                Assert.AreEqual(AllLab, Database.RetrieveAll<LabelDN>().Count);
-                Assert.AreEqual(AllLab, Database.RetrieveAllLite<LabelDN>().Count);
+                Assert.AreEqual(AllLab, Database.RetrieveAll<LabelEntity>().Count);
+                Assert.AreEqual(AllLab, Database.RetrieveAllLite<LabelEntity>().Count);
 
-                Assert.AreEqual(AllLab, Database.Query<LabelDN>().WhereAllowed().Count());
+                Assert.AreEqual(AllLab, Database.Query<LabelEntity>().WhereAllowed().Count());
             }
         }
 
@@ -66,13 +66,13 @@ namespace Music.Test
         {
             using (AuthLogic.Disable())
             {
-                Assert.AreEqual(AllAlb, Database.Query<AlbumDN>().Count());
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
+                Assert.AreEqual(AllAlb, Database.Query<AlbumEntity>().Count());
+                Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
 
-                Assert.AreEqual(AllAlb, Database.RetrieveAll<AlbumDN>().Count);
-                Assert.AreEqual(AllAlb, Database.RetrieveAllLite<AlbumDN>().Count);
+                Assert.AreEqual(AllAlb, Database.RetrieveAll<AlbumEntity>().Count);
+                Assert.AreEqual(AllAlb, Database.RetrieveAllLite<AlbumEntity>().Count);
 
-                Assert.AreEqual(AllAlb, Database.Query<AlbumDN>().WhereAllowed().Count());
+                Assert.AreEqual(AllAlb, Database.Query<AlbumEntity>().WhereAllowed().Count());
             }
         }
 
@@ -81,17 +81,17 @@ namespace Music.Test
         {
             using (AuthLogic.UnsafeUserSession("external"))
             {
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().Count());
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
+                Assert.AreEqual(JapLab, Database.Query<LabelEntity>().Count());
+                Assert.AreEqual(JapLab, Database.Query<LabelEntity>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
 
-                Assert.AreEqual(JapLab, Database.RetrieveAll<LabelDN>().Count);
-                Assert.AreEqual(JapLab, Database.RetrieveAllLite<LabelDN>().Count);
+                Assert.AreEqual(JapLab, Database.RetrieveAll<LabelEntity>().Count);
+                Assert.AreEqual(JapLab, Database.RetrieveAllLite<LabelEntity>().Count);
 
                 using (TypeAuthLogic.DisableQueryFilter())
                 {
-                    Assert.AreEqual(AllLab, Database.Query<LabelDN>().Count());
-                    Assert.AreEqual(AllLab, Database.RetrieveAllLite<LabelDN>().Count);
-                    Assert.AreEqual(JapLab, Database.Query<LabelDN>().WhereAllowed().Count());
+                    Assert.AreEqual(AllLab, Database.Query<LabelEntity>().Count());
+                    Assert.AreEqual(AllLab, Database.RetrieveAllLite<LabelEntity>().Count);
+                    Assert.AreEqual(JapLab, Database.Query<LabelEntity>().WhereAllowed().Count());
                 }
             }
         }
@@ -101,20 +101,20 @@ namespace Music.Test
         {
             using (AuthLogic.UnsafeUserSession("external"))
             {
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().Count());
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
+                Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().Count());
+                Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().Count(r => r.InCondition(MusicGroups.JapanEntities)));
 
-                Assert.AreEqual(JapAlb, Database.RetrieveAll<AlbumDN>().Count);
-                Assert.AreEqual(JapAlb, Database.RetrieveAllLite<AlbumDN>().Count);
+                Assert.AreEqual(JapAlb, Database.RetrieveAll<AlbumEntity>().Count);
+                Assert.AreEqual(JapAlb, Database.RetrieveAllLite<AlbumEntity>().Count);
 
-                var count = Database.Query<AlbumDN>().SelectMany(a => a.Songs).Count();
-                Assert.AreEqual(count, Database.MListQuery((AlbumDN a) => a.Songs).Count()); 
+                var count = Database.Query<AlbumEntity>().SelectMany(a => a.Songs).Count();
+                Assert.AreEqual(count, Database.MListQuery((AlbumEntity a) => a.Songs).Count()); 
 
                 using (TypeAuthLogic.DisableQueryFilter())
                 {
-                    Assert.AreEqual(AllAlb, Database.Query<AlbumDN>().Count());
-                    Assert.AreEqual(AllAlb, Database.RetrieveAllLite<AlbumDN>().Count);
-                    Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().WhereAllowed().Count());
+                    Assert.AreEqual(AllAlb, Database.Query<AlbumEntity>().Count());
+                    Assert.AreEqual(AllAlb, Database.RetrieveAllLite<AlbumEntity>().Count);
+                    Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().WhereAllowed().Count());
                 }
             }
         }
@@ -124,10 +124,10 @@ namespace Music.Test
         {
             using (AuthLogic.UnsafeUserSession("external"))
             {
-                Assert2.Throws<EntityNotFoundException>(() => Database.Retrieve<LabelDN>(1));
+                Assert2.Throws<EntityNotFoundException>(() => Database.Retrieve<LabelEntity>(1));
                 using (TypeAuthLogic.DisableQueryFilter())
                 {
-                    Database.Query<LabelDN>().SingleEx(r => r.Name == "Virgin");
+                    Database.Query<LabelEntity>().SingleEx(r => r.Name == "Virgin");
                 }
             }
         }
@@ -139,8 +139,8 @@ namespace Music.Test
             using (AuthLogic.UnsafeUserSession("external"))
             using (Transaction tr = new Transaction())
             {
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().UnsafeUpdate().Set(r => r.Name, r=> r.Name + r.Name ).Execute());
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().UnsafeUpdate().Set(r => r.Name, r => r.Name + r.Name).Execute());
+                Assert.AreEqual(JapLab, Database.Query<LabelEntity>().UnsafeUpdate().Set(r => r.Name, r=> r.Name + r.Name ).Execute());
+                Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().UnsafeUpdate().Set(r => r.Name, r => r.Name + r.Name).Execute());
 
                 //tr.Commit();
             }
@@ -152,11 +152,11 @@ namespace Music.Test
             using (AuthLogic.UnsafeUserSession("external"))
             using (Transaction tr = new Transaction())
             {
-                Assert.AreEqual(JapAlb, Database.Query<AlbumDN>().UnsafeDelete());
-                Assert.AreEqual(JapLab, Database.Query<LabelDN>().UnsafeDelete());
+                Assert.AreEqual(JapAlb, Database.Query<AlbumEntity>().UnsafeDelete());
+                Assert.AreEqual(JapLab, Database.Query<LabelEntity>().UnsafeDelete());
 
-                var count = Database.Query<AlbumDN>().SelectMany(a => a.Songs).Count();
-                Assert.AreEqual(count, Database.MListQuery((AlbumDN a) => a.Songs).UnsafeDeleteMList()); 
+                var count = Database.Query<AlbumEntity>().SelectMany(a => a.Songs).Count();
+                Assert.AreEqual(count, Database.MListQuery((AlbumEntity a) => a.Songs).UnsafeDeleteMList()); 
 
                 //tr.Commit();
             }
@@ -167,9 +167,9 @@ namespace Music.Test
         {
             using (AuthLogic.UnsafeUserSession("external"))
             {
-                int coutFast = Database.Query<AlbumDN>().Count();
-                int coutSlow = (from lab in Database.Query<LabelDN>()
-                                join alb in Database.Query<AlbumDN>() on lab equals alb.Label
+                int coutFast = Database.Query<AlbumEntity>().Count();
+                int coutSlow = (from lab in Database.Query<LabelEntity>()
+                                join alb in Database.Query<AlbumEntity>() on lab equals alb.Label
                                 select lab).Count();
                 Assert.AreEqual(coutFast, coutSlow);
             }
@@ -179,13 +179,13 @@ namespace Music.Test
         public void TypeConditionSaveOut()
         {
             using (AuthLogic.UnsafeUserSession("external"))
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             using (TypeAuthLogic.DisableQueryFilter())
             {
                 //Because of target
                 using (Transaction tr = new Transaction())
                 {
-                    var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "MJJ");
+                    var label = Database.Query<LabelEntity>().SingleEx(l => l.Name == "MJJ");
                     label.Owner.Retrieve().Country.Name = "Spain";
                     label.Save();
 
@@ -194,8 +194,8 @@ namespace Music.Test
 
                 using (Transaction tr = new Transaction())
                 {
-                    var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "MJJ");
-                    label.Owner = Database.Query<LabelDN>().Where(l => l.Name == "Virgin").Select(a => a.ToLite()).SingleEx();
+                    var label = Database.Query<LabelEntity>().SingleEx(l => l.Name == "MJJ");
+                    label.Owner = Database.Query<LabelEntity>().Where(l => l.Name == "Virgin").Select(a => a.ToLite()).SingleEx();
                     label.Save();
 
                     //tr.Commit();
@@ -205,7 +205,7 @@ namespace Music.Test
                 //Because of origin
                 using (Transaction tr = new Transaction())
                 {
-                    var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "Virgin");
+                    var label = Database.Query<LabelEntity>().SingleEx(l => l.Name == "Virgin");
                     label.Country.Name = "Japan Empire";
                     label.Save();
                     Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
@@ -213,7 +213,7 @@ namespace Music.Test
 
                 using (Transaction tr = new Transaction())
                 {
-                    var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "WEA International");
+                    var label = Database.Query<LabelEntity>().SingleEx(l => l.Name == "WEA International");
                     label.Owner.Retrieve().Name = "Japan Empire";
                     label.Save();
                     Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
@@ -221,8 +221,8 @@ namespace Music.Test
 
                 using (Transaction tr = new Transaction())
                 {
-                    var label = Database.Query<LabelDN>().SingleEx(l => l.Name == "WEA International");
-                    label.Owner = Database.Query<LabelDN>().Where(l => l.Name == "Sony").Select(a => a.ToLite()).SingleEx();
+                    var label = Database.Query<LabelEntity>().SingleEx(l => l.Name == "WEA International");
+                    label.Owner = Database.Query<LabelEntity>().Where(l => l.Name == "Sony").Select(a => a.ToLite()).SingleEx();
                     label.Save();
 
                     Assert2.Throws<UnauthorizedAccessException>(() => tr.Commit());
@@ -234,18 +234,18 @@ namespace Music.Test
         public void TypeConditionSaveTwice()
         {
             using (AuthLogic.UnsafeUserSession("external"))
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             using (TypeAuthLogic.DisableQueryFilter())
             {
-                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
+                var japan = Database.Query<CountryEntity>().Single(l => l.Name.StartsWith("Japan"));
 
-                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+                var node = Database.Query<LabelEntity>().OrderByDescending(a => a.Id).First().Node;
 
-                LabelDN label;
+                LabelEntity label;
 
                 using (Transaction tr = new Transaction())
                 {   
-                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+                    label = new LabelEntity { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
 
                     label.Name = "Nintendo Sound Systems";
                     label.Save();
@@ -261,17 +261,17 @@ namespace Music.Test
         public void TypeConditionSaveTwiceNamedRollback()
         {
             using (AuthLogic.UnsafeUserSession("external"))
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             using (TypeAuthLogic.DisableQueryFilter())
             {
-                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
-                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+                var japan = Database.Query<CountryEntity>().Single(l => l.Name.StartsWith("Japan"));
+                var node = Database.Query<LabelEntity>().OrderByDescending(a => a.Id).First().Node;
 
-                LabelDN label;
+                LabelEntity label;
 
                 using (Transaction tr = new Transaction())
                 {
-                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+                    label = new LabelEntity { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
 
                     using (Transaction tr2 = Transaction.NamedSavePoint("bla"))
                     {
@@ -296,17 +296,17 @@ namespace Music.Test
         public void TypeConditionSaveTwiceNamed()
         {
             using (AuthLogic.UnsafeUserSession("external"))
-            using (OperationLogic.AllowSave<LabelDN>())
+            using (OperationLogic.AllowSave<LabelEntity>())
             using (TypeAuthLogic.DisableQueryFilter())
             {
-                var japan = Database.Query<CountryDN>().Single(l => l.Name.StartsWith("Japan"));
-                var node = Database.Query<LabelDN>().OrderByDescending(a => a.Id).First().Node;
+                var japan = Database.Query<CountryEntity>().Single(l => l.Name.StartsWith("Japan"));
+                var node = Database.Query<LabelEntity>().OrderByDescending(a => a.Id).First().Node;
 
-                LabelDN label;
+                LabelEntity label;
 
                 using (Transaction tr = new Transaction())
                 {
-                    label = new LabelDN { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
+                    label = new LabelEntity { Name = "Nintendo sound", Country = japan, Node = node.NextSibling() }.Save();
 
                     using (Transaction tr2 = Transaction.NamedSavePoint("bla"))
                     {

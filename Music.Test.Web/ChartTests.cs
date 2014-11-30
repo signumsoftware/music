@@ -47,7 +47,7 @@ namespace Music.Test.Web
 
             string userChartName = "uctest" + DateTime.Now.Ticks.ToString();
 
-            SearchPage(typeof(AlbumDN))
+            SearchPage(typeof(AlbumEntity))
             .Using(a =>
             {
                 a.SearchControl.Filters.AddFilter("Id", FilterOperation.GreaterThan, 1);
@@ -84,7 +84,7 @@ namespace Music.Test.Web
 
                 uc.ExecuteSubmit(UserChartOperation.Save);
 
-                return SearchPage(typeof(AlbumDN));
+                return SearchPage(typeof(AlbumEntity));
             })
             .Using(albums => albums.SearchControl.OpenChart())
             .Using(chart =>

@@ -1,6 +1,6 @@
 ﻿@using Signum.Test.Environment
 
-@using (var nc = Html.TypeContext<NoteWithDateDN>()) 
+@using (var nc = Html.TypeContext<NoteWithDateEntity>()) 
 {
     @Html.ValueLine(nc, n => n.Mixin<CorruptMixin>().Corrupt)
 	@Html.EntityLine(nc, n => n.Target, el => el.ReadOnly = true)

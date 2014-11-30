@@ -31,9 +31,9 @@ namespace Music.Test
             set { Set(ref year, value); }
         }
 
-        LabelDN label;
+        LabelEntity label;
         [NotNullValidator]
-        public LabelDN Label
+        public LabelEntity Label
         {
             get { return label; }
             set { Set(ref label, value); }
