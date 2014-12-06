@@ -14,6 +14,7 @@ using Signum.Engine.Maps;
 using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Entities;
+using OpenQA.Selenium.Chrome;
 
 namespace Music.Test.Web
 {
@@ -32,12 +33,17 @@ namespace Music.Test.Web
             AuthLogic.GloballyEnabled = false;
             Schema.Current.Initialize();
 
-            SeleniumTestClass.LaunchSelenium();
+            selenium = new ChromeDriver();
         }
 
         protected void Login()
         {
             Login("internal", "internal");
+        }
+
+        protected static void MyTestCleanup()
+        {
+            selenium.Close();
         }
     }
 }

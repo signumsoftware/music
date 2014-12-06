@@ -69,7 +69,7 @@ namespace Music.Test.Web
             .EndUsing(albums =>
             {
                 albums.SearchControl.UserQueryLocatorClick("Last albums");
-                albums.Selenium.WaitElementPresent(albums.Filters.GetFilter(0).ValueLine().Prefix);
+                albums.Selenium.WaitElementPresent(albums.Filters.GetFilter(0).ValueLine().Locator);
                 Assert.IsTrue(albums.Results.HasColumn("Label.Owner"));
                 Assert.IsTrue(albums.Results.IsHeaderMarkedSorted("Label.Owner", OrderType.Descending));
             }); 

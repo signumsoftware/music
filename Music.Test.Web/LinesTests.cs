@@ -15,6 +15,7 @@ using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Test.Environment;
 using Signum.Entities;
+using OpenQA.Selenium;
 
 namespace Music.Test.Web
 {
@@ -268,7 +269,7 @@ namespace Music.Test.Web
             using (var band = NormalPageUrl<BandEntity>(Url("Music/BandDetail")))
             {
                 var el = band.EntityListDetail(a => a.Members);
-                el.DetailsDivSelector = "jq=#{0}CurrentMember".FormatWith(band.PrefixUnderscore());
+                el.DetailsDivSelector = By.CssSelector("#{0}CurrentMember".FormatWith(band.PrefixUnderscore()));
 
                 //1st element is shown by default
                 el.HasDetailEntity();
@@ -290,7 +291,7 @@ namespace Music.Test.Web
                 Assert.IsTrue(el.HasDetailEntity());
 
                 var el2 = band.EntityListDetail(a => a.OtherAwards);
-                el2.DetailsDivSelector = "jq=#{0}CurrentAward".FormatWith(band.PrefixUnderscore());
+                el2.DetailsDivSelector = By.CssSelector("#{0}CurrentAward".FormatWith(band.PrefixUnderscore()));
 
                 el2.CreateElement<GrammyAwardEntity>().Do(grammy =>
                 {
@@ -343,8 +344,8 @@ namespace Music.Test.Web
                 selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_0_sfIndex[value='2']";
-                string thirdItemMichael = "jq=#Members_0_sfIndex[value='3']";
+                By secondItemMichael = By.CssSelector("#Members_0_sfIndex[value='2']");
+                By thirdItemMichael = By.CssSelector("#Members_0_sfIndex[value='3']");
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
                 er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));
@@ -403,8 +404,8 @@ namespace Music.Test.Web
                 selenium.Wait(() => er.HasEntity(4));
 
                 //move up
-                string secondItemMichael = "jq=#Members_0_sfIndex[value='2']";
-                string thirdItemMichael = "jq=#Members_0_sfIndex[value='3']";
+                By secondItemMichael = By.CssSelector("#Members_0_sfIndex[value='2']");
+                By thirdItemMichael = By.CssSelector("#Members_0_sfIndex[value='3']");
                 Assert.IsTrue(!selenium.IsElementPresent(secondItemMichael) && !selenium.IsElementPresent(thirdItemMichael));
                 er.MoveUp(0);
                 selenium.Wait(() => selenium.IsElementPresent(thirdItemMichael));

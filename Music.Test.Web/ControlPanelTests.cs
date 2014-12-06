@@ -23,6 +23,7 @@ using Signum.Engine.UserQueries;
 using Signum.Entities.Dashboard;
 using Signum.Test.Environment;
 using Signum.Entities.UserAssets;
+using OpenQA.Selenium.Remote;
 
 namespace Music.Test.Web
 {
@@ -112,12 +113,12 @@ namespace Music.Test.Web
     {
         public override int? NewIndex()
         {
-            string result = Selenium.GetEval("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".FormatWith(Prefix));
+            string result = (string)Selenium.ExecuteScript("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".FormatWith(Prefix));
 
             return string.IsNullOrEmpty(result) ? 0 : result.Split(',').Select(int.Parse).Max() + 1;
         }
 
-        public GridRepeaterProxy(ISelenium selenium, string prefix, PropertyRoute route)
+        public GridRepeaterProxy(RemoteWebDriver selenium, string prefix, PropertyRoute route)
             : base(selenium, prefix, route)
         {
         }
@@ -125,7 +126,7 @@ namespace Music.Test.Web
 
     public class PartsRepeaterProxy : GridRepeaterProxy
     {
-        public PartsRepeaterProxy(ISelenium selenium, string prefix, PropertyRoute route)
+        public PartsRepeaterProxy(RemoteWebDriver selenium, string prefix, PropertyRoute route)
             : base(selenium, prefix, route)
         {
         }
@@ -138,7 +139,7 @@ namespace Music.Test.Web
 
             WaitChanges(() =>
             {
-                Selenium.Click(CreateLocator);
+                Selenium.FindElement(CreateLocator).Click();
 
                 new ChooserPopup(this.Selenium, prefix).EndUsing(e => e.Choose<T>());
             }, "create clicked");

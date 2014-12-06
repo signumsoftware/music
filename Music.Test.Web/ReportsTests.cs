@@ -18,6 +18,7 @@ using System.Resources;
 using Signum.Entities.Excel;
 using Signum.Entities;
 using Signum.Test.Environment;
+using OpenQA.Selenium;
 
 namespace Music.Test.Web
 {
@@ -60,7 +61,7 @@ namespace Music.Test.Web
 
                     report.ValueLineValue(a => a.DisplayName, "test 2");
                     report.ExecuteAjax(ExcelReportOperation.Save);
-                    selenium.WaitElementPresent("jq=.sf-entity-title:contains('test 2')");
+                    selenium.WaitElementPresent(By.CssSelector(".sf-entity-title:contains('test 2')"));
 
                     return SearchPage(typeof(AlbumEntity));
                 }

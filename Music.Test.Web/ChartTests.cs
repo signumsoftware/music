@@ -71,7 +71,7 @@ namespace Music.Test.Web
                 selenium.Wait(() => chart.Results.RowsCount() == 2);
                 chart.DataTab();
                 chart.Results.OrderBy("Author");
-                selenium.WaitElementPresent(chart.Results.RowLocator(0) + ":contains('Michael')");
+                selenium.WaitElementPresent(chart.Results.RowLocator(0).CombineCss(":contains('Michael')"));
 
                 return chart.NewUserChart();
             })
@@ -94,7 +94,7 @@ namespace Music.Test.Web
                 chart.Draw();
 
                 selenium.Wait(() => chart.Results.RowsCount() == 2);
-                selenium.AssertElementPresent(chart.Results.RowLocator(0) + ":contains('Michael')");
+                selenium.AssertElementPresent(chart.Results.RowLocator(0).CombineCss(":contains('Michael')"));
 
                 return chart.EditUserChart();
             })

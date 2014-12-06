@@ -14,6 +14,7 @@ using Signum.Test.Environment;
 using Signum.Engine.Processes;
 using System.IO;
 using Signum.Engine.Operations;
+using OpenQA.Selenium;
 
 namespace Music.Test.Web
 {
@@ -197,19 +198,17 @@ namespace Music.Test.Web
         {
             string url = Url("Process/View");
 
-            selenium.Open(url);
-            selenium.WaitForPageToLoad();
+            selenium.Url = url;
 
-            if (selenium.IsElementPresent("jq=#processMainDiv span:contains('STOPPED')"))
+            if (selenium.IsElementPresent(By.CssSelector("#processMainDiv span:contains('STOPPED')")))
             {
-                selenium.Click("jq=#processMainDiv a:contains('Start')");
+                selenium.FindElement(By.CssSelector("#processMainDiv a:contains('Start')")).Click();
 
                 selenium.Wait(() =>
                 {
-                    selenium.Open(url);
-                    selenium.WaitForPageToLoad();
+                    selenium.Url = url;
 
-                    return !selenium.IsElementPresent("jq=#processMainDiv span:contains('STOPPED')");
+                    return !selenium.IsElementPresent(By.CssSelector("#processMainDiv span:contains('STOPPED')"));
                 });
             }
         }

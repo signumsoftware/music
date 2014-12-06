@@ -17,6 +17,7 @@ using Signum.Entities;
 using Signum.Utilities;
 using Signum.Test.Environment;
 using Signum.Entities.DynamicQuery;
+using OpenQA.Selenium;
 
 namespace Music.Test.Web
 {
@@ -92,7 +93,7 @@ namespace Music.Test.Web
                 albums.Filters.GetFilter(0).Delete();
                 albums.Pagination.SetElementsPerPage(5);
                 Assert.AreEqual(5, albums.Results.RowsCount());
-                Assert.IsTrue(selenium.IsElementPresent("jq=.sf-pagination-left:contains('5')")); ;
+                Assert.IsTrue(selenium.IsElementPresent(By.CssSelector(".sf-pagination-left:contains('5')"))); ;
             }
         }
 
@@ -273,7 +274,7 @@ namespace Music.Test.Web
 
                 return authors.CreateChoose<ArtistEntity>();
 
-            }).EndUsing(artist => selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Prefix));
+            }).EndUsing(artist => selenium.AssertElementPresent(artist.ValueLine(a => a.Dead).Locator));
         }
 
         [TestMethod]
