@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Signum.Web.Selenium;
-using Selenium;
 using System.Diagnostics;
 using Signum.Engine;
 using Signum.Entities.Authorization;
