@@ -131,7 +131,7 @@ namespace Music.Test.Web
 
                 new ValueLinePopup(album.Selenium).Using(popup =>
                 {
-                    selenium.WaitElementPresent(popup.PopupVisibleLocator);
+                    selenium.WaitElementPresent(popup.PopupLocator);
 
                     popup.ValueLine.StringValue = "test popup";
 

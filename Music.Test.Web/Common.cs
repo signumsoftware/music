@@ -18,11 +18,12 @@ using OpenQA.Selenium.Chrome;
 namespace Music.Test.Web
 {
     [TestClass]
+    [DeploymentItem("chromedriver.exe", "")]
     public class Common : SeleniumTestClass
     {
         protected override string Url(string url)
         {
-            return "http://localhost:1804/" + url;
+            return "http://localhost/Music.Web/" + url;
         }
 
         public static void Start()

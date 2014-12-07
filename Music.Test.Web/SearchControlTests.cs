@@ -92,7 +92,7 @@ namespace Music.Test.Web
                 albums.Filters.GetFilter(0).Delete();
                 albums.Pagination.SetElementsPerPage(5);
                 Assert.AreEqual(5, albums.Results.RowsCount());
-                Assert.IsTrue(selenium.IsElementPresent(By.CssSelector(".sf-pagination-left:contains('5')"))); ;
+                Assert.IsTrue(selenium.FindElement(By.CssSelector(".sf-pagination-left")).Text.Contains("5"));
             }
         }
 

@@ -304,10 +304,6 @@ namespace Music.Test.Web
                 //Delete
                 el2.Remove();
                 el2.HasEntity(1);
-
-                //View detail
-                el2.DoubleClick(0);
-                selenium.Wait(() => el2.HasDetailEntity());
             }
         }
 

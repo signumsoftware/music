@@ -149,7 +149,7 @@ namespace Music.Test.Web
                 {
                     process.ExecuteAjax(ProcessOperation.Execute);
 
-                    selenium.Wait(() => selenium.IsElementPresent(process.PopupVisibleLocator) &&
+                    selenium.Wait(() => selenium.IsElementPresent(process.PopupLocator) &&
                         !process.OperationEnabled(ProcessOperation.Execute) &&
                         !process.OperationEnabled(ProcessOperation.Cancel) &&
                         !process.OperationEnabled(ProcessOperation.Suspend));
@@ -181,7 +181,7 @@ namespace Music.Test.Web
                 {
                     process.ExecuteAjax(ProcessOperation.Execute);
 
-                    selenium.Wait(() => selenium.IsElementPresent(process.PopupVisibleLocator) &&
+                    selenium.Wait(() => selenium.IsElementPresent(process.PopupLocator) &&
                         !process.OperationEnabled(ProcessOperation.Execute) &&
                         !process.OperationEnabled(ProcessOperation.Cancel) &&
                         !process.OperationEnabled(ProcessOperation.Suspend));
