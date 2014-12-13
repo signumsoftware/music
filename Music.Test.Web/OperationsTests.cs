@@ -138,7 +138,7 @@ namespace Music.Test.Web
                     return popup.OkWaitPopupControl<AlbumEntity>();
                 }).EndUsing(album2 =>
                 {
-                    Assert.IsTrue(album2.GetLite().ToString().Contains("test popup"));
+                    Assert.IsTrue(album2.GetTitle().Contains("test popup"));
                 });
             });
         }

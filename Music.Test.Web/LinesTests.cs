@@ -330,6 +330,7 @@ namespace Music.Test.Web
                 Assert.IsFalse(er.HasEntity(4));
 
                 //delete old element (created in server)
+                er.Selenium.ExecuteScript("window.scrollTo(0,0)");
                 er.Remove(0);
                 Assert.IsFalse(er.HasEntity(0));
 

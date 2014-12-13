@@ -60,7 +60,8 @@ namespace Music.Test.Web
 
                     report.ValueLineValue(a => a.DisplayName, "test 2");
                     report.ExecuteAjax(ExcelReportOperation.Save);
-                    selenium.WaitElementPresent(By.CssSelector(".sf-entity-title:contains('test 2')"));
+
+                    selenium.Wait(() => report.GetTitle().Contains("test 2"));
 
                     return SearchPage(typeof(AlbumEntity));
                 }

@@ -200,15 +200,18 @@ namespace Music.Test.Web
 
             selenium.Url = url;
 
-            if (selenium.IsElementPresent(By.CssSelector("#processMainDiv span:contains('STOPPED')")))
+            var div = selenium.FindElement(By.CssSelector("#processMainDiv"));
+            if (div.ContainsText("STOPPED"))
             {
-                selenium.FindElement(By.CssSelector("#processMainDiv a:contains('Start')")).Click();
+                var button = div.FindElements(By.CssSelector("a")).FirstEx(a => a.ContainsText("Start"));
+                
+                button.Click();
 
                 selenium.Wait(() =>
                 {
                     selenium.Url = url;
 
-                    return !selenium.IsElementPresent(By.CssSelector("#processMainDiv span:contains('STOPPED')"));
+                    return !selenium.FindElement(By.CssSelector("#processMainDiv")).ContainsText("STOPPED");
                 });
             }
         }

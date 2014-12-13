@@ -14,6 +14,7 @@ using Signum.Engine.Authorization;
 using Signum.Utilities;
 using Signum.Entities;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace Music.Test.Web
 {
@@ -33,7 +34,7 @@ namespace Music.Test.Web
             AuthLogic.GloballyEnabled = false;
             Schema.Current.Initialize();
 
-            selenium = new ChromeDriver();
+            selenium = new ChromeDriver(); //new FirefoxDriver();
         }
 
         protected void Login()

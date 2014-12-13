@@ -186,10 +186,10 @@ namespace Music.Test.Web
                 using (var artists = band.EntityList(b => b.Members).Find())
                 {
                     artists.Results.OrderBy("IsMale");
-                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", ":checkbox:not([checked])"));
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", By.CssSelector(":not([checked])")));
 
                     artists.Results.OrderByDescending("IsMale");
-                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", ":checkbox[checked]"));
+                    Assert.IsTrue(artists.Results.IsElementInCell(0, "IsMale", By.CssSelector("[checked]")));
 
                     artists.Results.ThenBy("Name");
                     Assert.AreEqual(Lite.Create<ArtistEntity>(1), artists.Results.EntityInIndex(0));

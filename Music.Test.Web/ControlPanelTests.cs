@@ -112,7 +112,7 @@ namespace Music.Test.Web
     {
         public override int? NewIndex()
         {
-            string result = (string)Selenium.ExecuteScript("window.$('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".FormatWith(Prefix));
+            string result = (string)Selenium.ExecuteScript("return $('#{0}_sfItemsContainer div.sf-grid-element').get().map(function(a){{return parseInt(a.id.substr('{0}'.length + 1));}}).join()".FormatWith(Prefix));
 
             return string.IsNullOrEmpty(result) ? 0 : result.Split(',').Select(int.Parse).Max() + 1;
         }
